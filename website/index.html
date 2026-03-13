@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>QuantumPINNs — API Demo</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<header>
+  <div class="container">
+    <a class="site-title" href="../index.html">← QuantumPINNs</a>
+    <span style="color:var(--muted);font-size:13px;">Local API Demo</span>
+    <span id="health-status" style="margin-left:auto;font-size:12px;color:var(--muted);">Checking API…</span>
+  </div>
+</header>
+<main>
+  <div class="container">
+    <h1>PINN Inference Interface</h1>
+    <p>Submit spatial and temporal coordinates to evaluate a trained PINN model via the local Flask API.</p>
+
+    <div class="card">
+      <h2>Input</h2>
+      <p>Enter comma-separated values for <code>x</code> and optionally <code>t</code>.</p>
+
+      <label style="display:block;margin-bottom:6px;font-size:12px;color:var(--muted);text-transform:uppercase;">
+        x coordinates
+      </label>
+      <input id="x-input" type="text"
+             placeholder="-2.0, -1.0, 0.0, 1.0, 2.0"
+             style="width:100%;background:var(--surface2);border:1px solid var(--border);
+                    border-radius:6px;color:var(--text);padding:10px 12px;font-size:14px;
+                    outline:none;margin-bottom:12px;"/>
+
+      <label style="display:block;margin-bottom:6px;font-size:12px;color:var(--muted);text-transform:uppercase;">
+        t coordinates (optional, defaults to 0)
+      </label>
+      <input id="t-input" type="text"
+             placeholder="0.0, 0.0, 0.0, 0.0, 0.0"
+             style="width:100%;background:var(--surface2);border:1px solid var(--border);
+                    border-radius:6px;color:var(--text);padding:10px 12px;font-size:14px;
+                    outline:none;margin-bottom:16px;"/>
+
+      <button onclick="submitPrediction()"
+              style="background:var(--accent);color:#0d1117;border:none;padding:10px 24px;
+                     border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">
+        Run Prediction
+      </button>
+      <span id="status" style="margin-left:12px;font-size:13px;color:var(--muted);"></span>
+    </div>
+
+    <div class="card">
+      <h2>Output</h2>
+      <pre id="result" style="min-height:80px;color:#3fb950;">Run a prediction to see results here.</pre>
+    </div>
+
+    <div class="card">
+      <h2>Quick Start</h2>
+      <pre>
+<span style="color:var(--muted)"># 1. Train a model</span>
+python -m src.train --problem harmonic_oscillator --epochs 5000
+
+<span style="color:var(--muted)"># 2. Start the API</span>
+python -m src.server --model-path model.pt
+
+<span style="color:var(--muted)"># 3. Open this page</span>
+python -m http.server 8000
+<span style="color:var(--muted)"># → http://localhost:8000/website/</span>
+      </pre>
+    </div>
+  </div>
+</main>
+<footer>
+  QuantumPINNs — Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling
+</footer>
+<script src="demo.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Model checkpoints
+*.pt
+*.pth
+*.ckpt
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Generated outputs (keep tracked CSVs, ignore large binaries)
+outputs/*.png
+outputs/*.npy
+outputs/*_bench.pt
+
+# VS Code
+.vs/
+.vscode/
+
+# macOS
+.DS_Store
+__MACOSX/
+
+# Logs
+*.log
+runs/
+tb_logs/

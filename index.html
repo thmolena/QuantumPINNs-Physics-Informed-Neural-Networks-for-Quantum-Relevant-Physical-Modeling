@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuantumPINNs — Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #79c0ff;
+      --green: #3fb950;
+      --purple: #d2a8ff;
+      --orange: #ffa657;
+      --red: #ff7b72;
+      --teal: #39d353;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ── header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: -0.3px;
+    }
+    .logo span { color: var(--text-muted); font-weight: 400; }
+    nav { margin-left: auto; display: flex; gap: 4px; }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    nav a:hover { background: var(--surface2); color: var(--text); }
+
+    /* ── hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #0d2137 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 24px 72px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 800;
+      line-height: 1.2;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      letter-spacing: -0.5px;
+    }
+    .hero h1 em { color: var(--accent); font-style: normal; }
+    .hero p {
+      max-width: 660px;
+      margin: 0 auto 36px;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s, transform 0.1s;
+      border: none;
+    }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary { background: var(--accent); color: #0d1117; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    /* ── main layout ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 60px 24px 80px; }
+
+    /* ── section titles ── */
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.3px;
+    }
+    h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--accent2);
+    }
+    p { color: var(--text-muted); margin-bottom: 14px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── cards ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--accent); }
+    .card-icon {
+      width: 38px; height: 38px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .icon-blue   { background: rgba(88,166,255,0.12); }
+    .icon-green  { background: rgba(63,185,80,0.12); }
+    .icon-purple { background: rgba(210,168,255,0.12); }
+    .icon-orange { background: rgba(255,166,87,0.12); }
+    .icon-teal   { background: rgba(57,211,83,0.12); }
+    .icon-red    { background: rgba(255,123,114,0.12); }
+
+    /* ── section dividers ── */
+    .section { margin-bottom: 72px; }
+
+    /* ── equations ── */
+    .eq-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--purple);
+      margin: 20px 0;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* ── pipeline steps ── */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 24px;
+    }
+    .pipeline-step {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+    .pipeline-step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 40px;
+      bottom: -8px;
+      width: 2px;
+      background: var(--border);
+    }
+    .step-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-body { padding-bottom: 28px; }
+    .step-body h3 { color: var(--text); margin-bottom: 6px; font-size: 15px; }
+    .step-body p { font-size: 14px; margin: 0; }
+
+    /* ── demo section ── */
+    .demo-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .demo-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .demo-tab {
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .demo-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .demo-body { padding: 28px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    @media (max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    select, input[type="number"], input[type="range"] {
+      width: 100%;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      padding: 8px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    select:focus, input[type="number"]:focus { border-color: var(--accent); }
+    input[type="range"] { padding: 4px 0; cursor: pointer; accent-color: var(--accent); }
+    .range-val { font-size: 12px; color: var(--accent); font-family: var(--font-mono); }
+    .run-btn {
+      background: var(--accent);
+      color: #0d1117;
+      border: none;
+      padding: 11px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      margin-top: 4px;
+    }
+    .run-btn:hover { opacity: 0.85; }
+    .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .output-box {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 24px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      min-height: 120px;
+    }
+    .output-box .out-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; }
+    .out-metric { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .out-metric:last-child { border-bottom: none; }
+    .out-key { color: var(--text-muted); }
+    .out-val { color: var(--teal); font-weight: 600; }
+    .canvas-wrap { position: relative; margin-top: 20px; }
+    canvas {
+      width: 100%;
+      max-width: 600px;
+      height: 200px;
+      display: block;
+      border-radius: 8px;
+      background: var(--surface2);
+    }
+    .spinner {
+      display: none;
+      width: 20px; height: 20px;
+      border: 2.5px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-left: 12px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── feature list ── */
+    .feature-list { list-style: none; margin-top: 16px; }
+    .feature-list li {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── code block ── */
+    pre {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      overflow-x: auto;
+      color: var(--text);
+      margin: 16px 0;
+    }
+    pre .comment { color: var(--text-muted); }
+    pre .kw { color: var(--purple); }
+    pre .str { color: var(--orange); }
+    pre .fn { color: var(--accent2); }
+    pre .num { color: var(--green); }
+
+    /* ── two-col layout ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* ── roadmap ── */
+    .roadmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    @media (max-width: 700px) { .roadmap-grid { grid-template-columns: 1fr; } }
+    .roadmap-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .roadmap-period {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .period-near { color: var(--green); }
+    .period-mid  { color: var(--orange); }
+    .period-long { color: var(--purple); }
+
+    /* ── footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── scrollbar ── */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#">Quantum<em style="color:var(--accent)">PINNs</em> <span>/ Physics-Informed Neural Networks</span></a>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#demo">Demo</a>
+      <a href="#quickstart">Quick Start</a>
+      <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ════════════════════════════════ HERO ════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">Research Framework</div>
+  <h1><em>Physics-Informed</em> Neural Networks<br>for Quantum-Relevant Physical Modeling</h1>
+  <p>
+    Machine-learning models that embed governing equations and physical constraints directly
+    into the learning process — for accurate modeling of quantum systems under sparse,
+    noisy, or limited observational data.
+  </p>
+  <div class="hero-buttons">
+    <a href="#demo" class="btn btn-primary">Try the Demo</a>
+    <a href="#quickstart" class="btn btn-secondary">Quick Start</a>
+    <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" class="btn btn-secondary" target="_blank">View on GitHub</a>
+  </div>
+</section>
+
+<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+  <!-- ── OVERVIEW ── -->
+  <section class="section" id="overview">
+    <div class="section-label">Overview</div>
+    <h2>What Is This Project?</h2>
+    <div class="two-col">
+      <div>
+        <p>
+          This repository presents a research-oriented framework for applying
+          <strong style="color:var(--text)">Physics-Informed Neural Networks (PINNs)</strong>
+          to quantum-relevant physical systems. The central objective is to develop
+          machine-learning models that embed governing equations and physical constraints
+          directly into the learning process, enabling accurate modeling of complex quantum
+          systems even when observational data is limited, noisy, or expensive to obtain.
+        </p>
+        <p>
+          The framework targets physical systems governed by partial differential equations
+          and Hamiltonians that arise in quantum simulation and related
+          physics-constrained domains.
+        </p>
+      </div>
+      <div>
+        <ul class="feature-list">
+          <li>Time-dependent and time-independent Schrödinger equations</li>
+          <li>Quantum harmonic oscillator and anharmonic potential systems</li>
+          <li>Hamiltonian-governed dynamical systems</li>
+          <li>Density matrix evolution and open quantum system approximations</li>
+          <li>Collocation-based and residual-based training formulations</li>
+          <li>GPU-accelerated training via PyTorch autograd</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MOTIVATION ── -->
+  <section class="section" id="motivation">
+    <div class="section-label">Motivation</div>
+    <h2>Why Physics-Informed Learning?</h2>
+    <p>
+      Direct simulation of quantum systems is computationally expensive, and experimental
+      data from quantum platforms is frequently sparse, noisy, or constrained by hardware
+      limitations. These challenges motivate a learning-theoretic approach that incorporates
+      physical structure as an inductive bias.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon icon-blue">⚡</div>
+        <h3>Governing Equations as Constraints</h3>
+        <p>PDE residuals are enforced as soft constraints through residual terms in the training objective, encoding known physics directly into the model.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-green">∂</div>
+        <h3>Automatic Differentiation</h3>
+        <p>Exact spatial and temporal derivatives are computed via reverse-mode autodiff, eliminating finite-difference approximation error.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-purple">◎</div>
+        <h3>Sparse Data Augmentation</h3>
+        <p>Collocation points augment limited measurements, reducing dependence on dense experimental observations while maintaining physical consistency.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-orange">▲</div>
+        <h3>GPU-Accelerated Training</h3>
+        <p>Scalable training across high-dimensional parameter spaces without modifying the core codebase, supporting large collocation grids.</p>
+      </div>
+    </div>
+
+    <div class="eq-block">  iℏ ∂ψ/∂t = −(ℏ²/2m) ∂²ψ/∂x² + V(x)ψ      [Schrödinger equation — enforced as PDE residual]
+
+  L_total = λ_pde · L_pde + λ_bc · L_bc + λ_ic · L_ic + λ_data · L_data</div>
+  </section>
+
+  <!-- ── ARCHITECTURE ── -->
+  <section class="section" id="architecture">
+    <div class="section-label">System Architecture</div>
+    <h2>How the Pipeline Works</h2>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Physical Problem Formulation</h3>
+          <p>Each target system is specified by a governing PDE or ODE, boundary and initial conditions, domain geometry, and optional measurement data. The formulation determines the structure of the physics residual and the data fidelity term in the composite loss.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Neural Network Approximation</h3>
+          <p>A deep neural network approximates the solution field — e.g., wavefunction ψ(x, t) or probability density |ψ|². Architectures use tanh or sine activations to reproduce smooth oscillatory solutions characteristic of quantum systems.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Collocation Sampling</h3>
+          <p>The PDE residual is evaluated at a set of interior collocation points sampled from the domain, without requiring a mesh. Boundary and initial condition points are sampled separately and weighted in the composite loss.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Residual-Based Optimization</h3>
+          <p>The total loss combines the PDE residual, boundary condition violation, initial condition error, and optional data mismatch terms with tunable weights. Optimization proceeds via Adam or L-BFGS with exact gradient computation through autograd.</p>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Evaluation and Analysis</h3>
+          <p>Metrics tracked include PDE residual norm, relative L² error against analytic or numerical reference, convergence under varying collocation density, and stability under observation noise.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEMO ── -->
+  <section class="section" id="demo">
+    <div class="section-label">Interactive Demo</div>
+    <h2>Run a PINN Experiment</h2>
+    <p>Configure a quantum system problem, adjust training parameters, and observe simulated PINN behavior below.</p>
+
+    <div class="demo-panel">
+      <div class="demo-tabs">
+        <div class="demo-tab active" onclick="switchTab(this,'config')">Configuration</div>
+        <div class="demo-tab" onclick="switchTab(this,'results')">Results &amp; Metrics</div>
+        <div class="demo-tab" onclick="switchTab(this,'residual')">Residual Plot</div>
+      </div>
+
+      <!-- CONFIG TAB -->
+      <div class="demo-body" id="tab-config">
+        <div class="form-row">
+          <div>
+            <label>Problem</label>
+            <select id="sel-problem">
+              <option value="harmonic">Quantum Harmonic Oscillator</option>
+              <option value="schrodinger">Schrödinger Equation (1D)</option>
+              <option value="anharmonic">Anharmonic Double-Well Potential</option>
+              <option value="hamiltonian">Hamiltonian Dynamics</option>
+            </select>
+          </div>
+          <div>
+            <label>Network Depth</label>
+            <select id="sel-depth">
+              <option value="3">3 hidden layers</option>
+              <option value="4" selected>4 hidden layers</option>
+              <option value="6">6 hidden layers</option>
+              <option value="8">8 hidden layers</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Collocation Points — <span class="range-val" id="col-val">2000</span></label>
+            <input type="range" id="sl-collocation" min="200" max="10000" step="200" value="2000"
+              oninput="document.getElementById('col-val').textContent=this.value">
+          </div>
+          <div>
+            <label>Epochs — <span class="range-val" id="ep-val">5000</span></label>
+            <input type="range" id="sl-epochs" min="500" max="20000" step="500" value="5000"
+              oninput="document.getElementById('ep-val').textContent=this.value">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>PDE Weight λ_pde — <span class="range-val" id="pde-val">1.0</span></label>
+            <input type="range" id="sl-pde" min="0.1" max="10" step="0.1" value="1.0"
+              oninput="document.getElementById('pde-val').textContent=parseFloat(this.value).toFixed(1)">
+          </div>
+          <div>
+            <label>Data Weight λ_data — <span class="range-val" id="data-val">1.0</span></label>
+            <input type="range" id="sl-data" min="0.0" max="5" step="0.1" value="1.0"
+              oninput="document.getElementById('data-val').textContent=parseFloat(this.value).toFixed(1)">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <button class="run-btn" id="run-btn" onclick="runDemo()">Run Experiment</button>
+          <span class="spinner" id="spinner"></span>
+        </div>
+      </div>
+
+      <!-- RESULTS TAB -->
+      <div class="demo-body" id="tab-results" style="display:none;">
+        <div class="output-box" id="out-metrics">
+          <div class="out-label">Metrics — run an experiment first</div>
+        </div>
+      </div>
+
+      <!-- RESIDUAL TAB -->
+      <div class="demo-body" id="tab-residual" style="display:none;">
+        <div class="canvas-wrap">
+          <canvas id="chart-canvas"></canvas>
+        </div>
+        <p id="chart-note" style="font-size:12px;margin-top:10px;">Run an experiment to visualize the training loss curve.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── APPLICATIONS ── -->
+  <section class="section" id="applications">
+    <div class="section-label">Example Applications</div>
+    <h2>Target Physical Systems</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon icon-blue">Ψ</div>
+        <h3>Schrödinger Equation (1D)</h3>
+        <p>Solve the time-dependent Schrödinger equation for a particle in a potential well. The PINN learns the wavefunction evolution over a time window from an initial Gaussian wavepacket condition.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-purple">H</div>
+        <h3>Quantum Harmonic Oscillator</h3>
+        <p>Approximate energy eigenstates and eigenvalues under orthonormality constraints, recovering ground-state and excited-state solutions with sub-percent relative error.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-orange">≋</div>
+        <h3>Anharmonic Potential</h3>
+        <p>Extend to quartic and double-well potentials to study the impact of nonlinearity on PINN convergence and solution accuracy under varying collocation densities.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-teal">∮</div>
+        <h3>Hamiltonian Dynamics</h3>
+        <p>Learn trajectory solutions under energy conservation constraints, serving as a controlled benchmark comparing physical fidelity across collocation densities and network architectures.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── QUICK START ── -->
+  <section class="section" id="quickstart">
+    <div class="section-label">Quick Start</div>
+    <h2>Get Running in Minutes</h2>
+
+    <pre><span class="comment"># 1. Install dependencies</span>
+<span class="fn">pip</span> install -r requirements.txt
+
+<span class="comment"># 2. Train a PINN on the harmonic oscillator</span>
+<span class="fn">python</span> -m src.train \
+  --problem harmonic_oscillator \
+  --epochs <span class="num">5000</span> \
+  --collocation <span class="num">2000</span> \
+  --model-path model.pt
+
+<span class="comment"># 3. Start the inference API</span>
+<span class="fn">python</span> -m src.server
+
+<span class="comment"># 4. Serve the demo (separate terminal)</span>
+<span class="fn">python</span> -m http.server <span class="num">8000</span>
+<span class="comment"># → open http://localhost:8000</span></pre>
+  </section>
+
+  <!-- ── KEY FEATURES ── -->
+  <section class="section" id="features">
+    <div class="section-label">Key Features</div>
+    <h2>What Makes This Framework Useful</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon icon-blue">⊕</div>
+        <h3>Residual-Based Physics Enforcement</h3>
+        <p>Governing differential equations are penalized at collocation points without a discretization mesh, enabling flexible domain sampling and adaptive refinement.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-green">∇</div>
+        <h3>Exact Derivative Computation</h3>
+        <p>All spatial and temporal derivatives are computed via PyTorch autograd, eliminating finite-difference approximation error with seamless gradient flow.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-purple">⇄</div>
+        <h3>Collocation vs. Data-Driven Comparison</h3>
+        <p>Controlled experiments vary the ratio of collocation points to observed data, enabling direct empirical comparison of the physical fidelity versus data efficiency tradeoff.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-orange">σ</div>
+        <h3>Stability Under Sparse Observations</h3>
+        <p>Systematic variation of observation density, noise level, and domain coverage characterizes PINN stability rigorously across quantum system benchmarks.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-teal">⬡</div>
+        <h3>GPU-Accelerated Training</h3>
+        <p>Full GPU execution support via PyTorch enables experiments at larger network sizes, finer collocation grids, and higher-dimensional parameter spaces.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-red">⬡</div>
+        <h3>Web Demo and API Interface</h3>
+        <p>A Flask inference endpoint and static web interface provide interactive evaluation of physical parameters, PINN model outputs, and solution field visualizations.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ROADMAP ── -->
+  <section class="section" id="roadmap">
+    <div class="section-label">Roadmap</div>
+    <h2>Development Direction</h2>
+    <div class="roadmap-grid">
+      <div class="roadmap-card">
+        <div class="roadmap-period period-near">Near-Term</div>
+        <h3>Expanded Benchmarks</h3>
+        <p>Add multi-dimensional Schrödinger equations, Gross-Pitaevskii equations for Bose-Einstein condensates, and time-dependent perturbation problems. Improve convergence diagnostics and residual visualization tools.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-period period-mid">Mid-Term</div>
+        <h3>Adaptive Collocation</h3>
+        <p>Implement dynamic collocation strategies that concentrate sampling in high-residual regions. Introduce hard constraint enforcement for boundary and initial conditions via distance-function multipliers.</p>
+      </div>
+      <div class="roadmap-card">
+        <div class="roadmap-period period-long">Longer-Term</div>
+        <h3>Open Quantum Systems</h3>
+        <p>Extend the framework toward Lindblad master equations and open system dynamics. Explore integration with quantum hardware data for hybrid experimental-computational validation workflows.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
+<footer>
+  <p>
+    <strong style="color:var(--text)">QuantumPINNs</strong> —
+    Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling
+  </p>
+  <p style="margin-top:8px;">
+    <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub Repository</a>
+    &nbsp;·&nbsp;
+    <a href="README.md">README</a>
+    &nbsp;·&nbsp;
+    Released under the project LICENSE
+  </p>
+</footer>
+
+<!-- ════════════════════════════════ JS ════════════════════════════════ -->
+<script>
+// ── Tab switching ──────────────────────────────────────────────────────────
+function switchTab(el, id) {
+  document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  ['config','results','residual'].forEach(name => {
+    const el = document.getElementById('tab-' + name);
+    if (el) el.style.display = name === id ? '' : 'none';
+  });
+}
+
+// ── Demo simulation ────────────────────────────────────────────────────────
+const PROBLEMS = {
+  harmonic:    { name: 'Quantum Harmonic Oscillator',    baseL2: 0.0041,  basePDE: 2.1e-4 },
+  schrodinger: { name: 'Schrödinger Equation (1D)',      baseL2: 0.0083,  basePDE: 5.3e-4 },
+  anharmonic:  { name: 'Anharmonic Double-Well Potential', baseL2: 0.0129, basePDE: 8.7e-4 },
+  hamiltonian: { name: 'Hamiltonian Dynamics',           baseL2: 0.0022,  basePDE: 1.4e-4 },
+};
+
+function simulateLossCurve(epochs, colPts, lambdaPDE) {
+  const N = 60;
+  const decay = Math.log(200 + epochs * 0.01) / Math.log(epochs + 1);
+  const noise = 0.04;
+  return Array.from({length: N}, (_, i) => {
+    const t = i / (N - 1);
+    const base = Math.exp(-4.5 * t * decay) + 0.001;
+    return base * (1 + (Math.random() - 0.5) * noise * (1 - t));
+  });
+}
+
+function runDemo() {
+  const btn = document.getElementById('run-btn');
+  const spinner = document.getElementById('spinner');
+  btn.disabled = true;
+  spinner.style.display = 'inline-block';
+
+  const prob  = document.getElementById('sel-problem').value;
+  const depth = parseInt(document.getElementById('sel-depth').value);
+  const col   = parseInt(document.getElementById('sl-collocation').value);
+  const ep    = parseInt(document.getElementById('sl-epochs').value);
+  const lPDE  = parseFloat(document.getElementById('sl-pde').value);
+  const lData = parseFloat(document.getElementById('sl-data').value);
+
+  // Simulate async compute
+  setTimeout(() => {
+    const info  = PROBLEMS[prob];
+    const colScale  = Math.sqrt(col / 2000);
+    const epScale   = Math.sqrt(ep / 5000);
+    const depthBonus = depth / 4;
+    const L2    = (info.baseL2 / (colScale * epScale * depthBonus)).toFixed(5);
+    const PDE   = (info.basePDE / (colScale * epScale)).toExponential(2);
+    const trainTime = (ep / 5000 * col / 2000 * depth * 3.4).toFixed(1);
+    const params = (depth * 80 * 80 + 80 * 1);
+
+    // Metrics tab
+    const metricsEl = document.getElementById('out-metrics');
+    metricsEl.innerHTML = `
+      <div class="out-label">Results — ${info.name}</div>
+      <div class="out-metric"><span class="out-key">Relative L² Error</span><span class="out-val">${L2}</span></div>
+      <div class="out-metric"><span class="out-key">PDE Residual Norm</span><span class="out-val">${PDE}</span></div>
+      <div class="out-metric"><span class="out-key">Network Parameters</span><span class="out-val">${params.toLocaleString()}</span></div>
+      <div class="out-metric"><span class="out-key">Collocation Points</span><span class="out-val">${col.toLocaleString()}</span></div>
+      <div class="out-metric"><span class="out-key">Training Epochs</span><span class="out-val">${ep.toLocaleString()}</span></div>
+      <div class="out-metric"><span class="out-key">λ_pde / λ_data</span><span class="out-val">${lPDE.toFixed(1)} / ${lData.toFixed(1)}</span></div>
+      <div class="out-metric"><span class="out-key">Est. Training Time (simulated)</span><span class="out-val">${trainTime}s</span></div>
+    `;
+
+    // Loss curve tab
+    const losses = simulateLossCurve(ep, col, lPDE);
+    drawLossCurve(losses);
+    document.getElementById('chart-note').textContent =
+      `Training loss curve for ${info.name} — ${ep.toLocaleString()} epochs, ${col.toLocaleString()} collocation points`;
+
+    btn.disabled = false;
+    spinner.style.display = 'none';
+
+    // Switch to results tab
+    document.querySelectorAll('.demo-tab').forEach((t, i) => t.classList.toggle('active', i === 1));
+    document.getElementById('tab-config').style.display = 'none';
+    document.getElementById('tab-results').style.display = '';
+    document.getElementById('tab-residual').style.display = 'none';
+  }, 900);
+}
+
+function drawLossCurve(losses) {
+  const canvas = document.getElementById('chart-canvas');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth || 560, H = 200;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 16, right: 20, bottom: 36, left: 54 };
+  const cW = W - pad.left - pad.right;
+  const cH = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const maxV = Math.max(...losses);
+  const minV = Math.min(...losses);
+
+  // Grid lines
+  ctx.strokeStyle = '#30363d';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.top + cH * (i / 4);
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(pad.left + cW, y);
+    ctx.stroke();
+  }
+
+  // Axes labels
+  ctx.fillStyle = '#8b949e';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'right';
+  for (let i = 0; i <= 4; i++) {
+    const v = maxV - (maxV - minV) * (i / 4);
+    const y = pad.top + cH * (i / 4);
+    ctx.fillText(v.toExponential(1), pad.left - 6, y + 4);
+  }
+  ctx.textAlign = 'center';
+  for (let i = 0; i <= 5; i++) {
+    const x = pad.left + cW * (i / 5);
+    ctx.fillText(Math.round((i / 5) * losses.length * (1 / losses.length * 100)) + '%', x, H - pad.bottom + 18);
+  }
+  ctx.fillStyle = '#8b949e';
+  ctx.fillText('Training Progress', W / 2, H - 4);
+
+  // Gradient fill
+  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
+  grad.addColorStop(0,   'rgba(88,166,255,0.25)');
+  grad.addColorStop(1,   'rgba(88,166,255,0.0)');
+  ctx.beginPath();
+  losses.forEach((v, i) => {
+    const x = pad.left + (i / (losses.length - 1)) * cW;
+    const y = pad.top  + (1 - (v - minV) / (maxV - minV)) * cH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(pad.left + cW, pad.top + cH);
+  ctx.lineTo(pad.left, pad.top + cH);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#58a6ff';
+  ctx.lineWidth = 2;
+  losses.forEach((v, i) => {
+    const x = pad.left + (i / (losses.length - 1)) * cW;
+    const y = pad.top  + (1 - (v - minV) / (maxV - minV)) * cH;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
+</script>
+</body>
+</html>
