@@ -408,6 +408,7 @@
     <nav>
       <a href="#overview">Overview</a>
       <a href="#architecture">Architecture</a>
+      <a href="#tutorials">Tutorials</a>
       <a href="#demo">Demo</a>
       <a href="#quickstart">Quick Start</a>
       <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub ↗</a>
@@ -740,6 +741,81 @@
         <h3>Open Quantum Systems</h3>
         <p>Extend the framework toward Lindblad master equations and open system dynamics. Explore integration with quantum hardware data for hybrid experimental-computational validation workflows.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ── TUTORIALS ── -->
+  <section class="section" id="tutorials">
+    <div class="section-label">Interactive Tutorials</div>
+    <h2>Executed Jupyter Notebook Tutorials</h2>
+    <p style="color:var(--subtext);max-width:760px;margin-bottom:32px;">
+      Each notebook was executed end-to-end and exported to self-contained HTML — complete with figures, equations, and narrative explanations.
+      Open any tutorial below to read it directly in your browser without installing anything.
+    </p>
+    <div class="card-grid">
+
+      <div class="card" style="border-top:3px solid var(--accent);">
+        <div class="card-icon icon-blue">ψ₀</div>
+        <h3>Quantum Harmonic Oscillator</h3>
+        <p style="color:var(--subtext);font-size:14px;margin-bottom:12px;">
+          Ground-state and excited-state eigenfunctions via PINN with Gaussian envelope ansatz,
+          orthogonality constraints, Heisenberg uncertainty validation,
+          and a full ablation study over network depth, width, and activation function.
+        </p>
+        <ul style="color:var(--subtext);font-size:13px;padding-left:1.2em;margin-bottom:16px;">
+          <li>15-section annotated tutorial</li>
+          <li>TISE residual derivation from first principles</li>
+          <li>Excited-state training with orthogonality penalty</li>
+          <li>Overlap matrix &amp; wavefunction symmetry checks</li>
+        </ul>
+        <a href="notebooks/pinn_harmonic_oscillator.html" target="_blank"
+           style="display:inline-block;padding:8px 20px;background:var(--accent);color:#0d1117;
+                  border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;">
+          Open Tutorial →
+        </a>
+      </div>
+
+      <div class="card" style="border-top:3px solid #3fb950;">
+        <div class="card-icon icon-green">Ψ(x,t)</div>
+        <h3>1D Schrödinger Equation</h3>
+        <p style="color:var(--subtext);font-size:14px;margin-bottom:12px;">
+          Time-dependent wavepacket propagation with complex-valued PINN splitting real and imaginary components,
+          probability current visualization, and Ehrenfest theorem verification as an independent accuracy check.
+        </p>
+        <ul style="color:var(--subtext);font-size:13px;padding-left:1.2em;margin-bottom:16px;">
+          <li>Complex-valued PINN architecture explained</li>
+          <li>Madelung equations &amp; probability current</li>
+          <li>Position/momentum expectation ⟨x⟩(t), ⟨p⟩(t)</li>
+          <li>Norm conservation over time</li>
+        </ul>
+        <a href="notebooks/pinn_schrodinger.html" target="_blank"
+           style="display:inline-block;padding:8px 20px;background:#3fb950;color:#0d1117;
+                  border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;">
+          Open Tutorial →
+        </a>
+      </div>
+
+      <div class="card" style="border-top:3px solid #d2a8ff;">
+        <div class="card-icon icon-purple">⊕</div>
+        <h3>Multi-System PINN Benchmark</h3>
+        <p style="color:var(--subtext);font-size:14px;margin-bottom:12px;">
+          Systematic comparison across harmonic, anharmonic, and double-well potentials.
+          Collocation density ablations, observation noise robustness tests,
+          and architecture depth/width sweeps — all in a single reproducible notebook.
+        </p>
+        <ul style="color:var(--subtext);font-size:13px;padding-left:1.2em;margin-bottom:16px;">
+          <li>Unified benchmark harness for 3 potentials</li>
+          <li>Error taxonomy: collocation vs. boundary vs. data</li>
+          <li>Noise robustness at σ = 0%, 5%, 20%</li>
+          <li>Architecture sweep: depth 2–6, width 32–256</li>
+        </ul>
+        <a href="notebooks/quantum_pinn_combined.html" target="_blank"
+           style="display:inline-block;padding:8px 20px;background:#d2a8ff;color:#0d1117;
+                  border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;">
+          Open Tutorial →
+        </a>
+      </div>
+
     </div>
   </section>
 
