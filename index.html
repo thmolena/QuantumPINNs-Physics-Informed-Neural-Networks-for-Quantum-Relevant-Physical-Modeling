@@ -6,19 +6,19 @@
   <title>QuantumPINNs — Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</title>
   <style>
     :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface2: #21262d;
-      --border: #30363d;
-      --text: #e6edf3;
-      --text-muted: #8b949e;
-      --accent: #58a6ff;
-      --accent2: #79c0ff;
-      --green: #3fb950;
-      --purple: #d2a8ff;
-      --orange: #ffa657;
-      --red: #ff7b72;
-      --teal: #39d353;
+      --bg: #ffffff;
+      --surface: #f6f8fa;
+      --surface2: #edf0f3;
+      --border: #d0d7de;
+      --text: #1f2328;
+      --text-muted: #57606a;
+      --accent: #0969da;
+      --accent2: #0550ae;
+      --green: #1a7f37;
+      --purple: #6639ba;
+      --orange: #953800;
+      --red: #d1242f;
+      --teal: #0e6b56;
       --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     }
@@ -69,7 +69,7 @@
 
     /* ── hero ── */
     .hero {
-      background: linear-gradient(135deg, #0d1117 0%, #161b22 40%, #0d2137 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #f0f6ff 50%, #e8f2fd 100%);
       border-bottom: 1px solid var(--border);
       padding: 80px 24px 72px;
       text-align: center;
@@ -113,7 +113,7 @@
       border: none;
     }
     .btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-primary { background: var(--accent); color: #0d1117; }
+    .btn-primary { background: var(--accent); color: #ffffff; }
     .btn-secondary {
       background: transparent;
       color: var(--text);
@@ -273,7 +273,7 @@
     .range-val { font-size: 12px; color: var(--accent); font-family: var(--font-mono); }
     .run-btn {
       background: var(--accent);
-      color: #0d1117;
+      color: #ffffff;
       border: none;
       padding: 11px 28px;
       border-radius: 8px;
@@ -397,6 +397,102 @@
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* ── notebook viewer ── */
+    .notebook-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 24px;
+    }
+    .nb-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      transition: border-color .2s, background .2s, transform .15s;
+    }
+    .nb-card:hover { border-color: var(--accent); background: #eef5ff; transform: translateY(-2px); }
+    .nb-card.active { border-color: var(--accent); background: #e8f2fd; box-shadow: 0 0 0 2px rgba(9,105,218,0.12); }
+    .nb-icon { font-size: 1.8rem; flex-shrink: 0; line-height: 1; margin-top: 4px; }
+    .nb-body { flex: 1; }
+    .nb-body h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .nb-body p  { font-size: 0.80rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 8px; }
+    .nb-arrow { color: var(--accent); font-size: 1rem; flex-shrink: 0; margin-top: 4px; }
+    .nb-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .nb-tag {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e8f2fd;
+      color: #1e3a8a;
+      border: 1px solid #bfd3ff;
+      white-space: nowrap;
+    }
+    .nb-viewer-container { margin-top: 20px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .nb-viewer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .nb-viewer-title { font-size: 0.88rem; font-weight: 600; color: var(--text); }
+    .nb-viewer-actions { display: flex; gap: 8px; }
+    .btn-sm {
+      display: inline-block;
+      font-size: 0.78rem;
+      padding: 5px 12px;
+      border-radius: 6px;
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      font-weight: 500;
+      transition: background .15s;
+    }
+    .btn-sm:hover { background: var(--border); color: var(--text); text-decoration: none; }
+    .nb-iframe { width: 100%; height: 78vh; border: none; background: #fff; display: block; }
+
+    /* ── collapsible more section ── */
+    details.more-section { margin-bottom: 72px; }
+    details.more-section > summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      list-style: none;
+      padding: 18px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      transition: background .15s;
+      user-select: none;
+    }
+    details.more-section > summary::-webkit-details-marker { display: none; }
+    details.more-section > summary::before {
+      content: '\25B6';
+      font-size: 11px;
+      color: var(--accent);
+      transition: transform .2s;
+      flex-shrink: 0;
+    }
+    details.more-section[open] > summary::before { transform: rotate(90deg); }
+    details.more-section > summary:hover { background: var(--surface2); }
+    details.more-section > .more-content { padding-top: 16px; }
   </style>
 </head>
 <body>
@@ -407,11 +503,11 @@
     <a class="logo" href="#">Quantum<em style="color:var(--accent)">PINNs</em> <span>/ Physics-Informed Neural Networks</span></a>
     <nav>
       <a href="#overview">Overview</a>
-      <a href="#architecture">Architecture</a>
-      <a href="#tutorials">Tutorials</a>
       <a href="#demo">Demo</a>
+      <a href="#tutorials">Tutorials</a>
+      <a href="#motivation">Motivation</a>
       <a href="#quickstart">Quick Start</a>
-      <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub ↗</a>
+      <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub &#8599;</a>
     </nav>
   </div>
 </header>
@@ -467,6 +563,157 @@
       </div>
     </div>
   </section>
+
+  <!-- ── DEMO ── -->
+  <section class="section" id="demo">
+    <div class="section-label">Interactive Demo</div>
+    <h2>Run a PINN Experiment</h2>
+    <p>Configure a quantum system problem, adjust training parameters, and observe simulated PINN behavior below.</p>
+
+    <div class="demo-panel">
+      <div class="demo-tabs">
+        <div class="demo-tab active" onclick="switchTab(this,'config')">Configuration</div>
+        <div class="demo-tab" onclick="switchTab(this,'results')">Results &amp; Metrics</div>
+        <div class="demo-tab" onclick="switchTab(this,'residual')">Residual Plot</div>
+      </div>
+
+      <!-- CONFIG TAB -->
+      <div class="demo-body" id="tab-config">
+        <div class="form-row">
+          <div>
+            <label>Problem</label>
+            <select id="sel-problem">
+              <option value="harmonic">Quantum Harmonic Oscillator</option>
+              <option value="schrodinger">Schr&#246;dinger Equation (1D)</option>
+              <option value="anharmonic">Anharmonic Double-Well Potential</option>
+              <option value="hamiltonian">Hamiltonian Dynamics</option>
+            </select>
+          </div>
+          <div>
+            <label>Network Depth</label>
+            <select id="sel-depth">
+              <option value="3">3 hidden layers</option>
+              <option value="4" selected>4 hidden layers</option>
+              <option value="6">6 hidden layers</option>
+              <option value="8">8 hidden layers</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Collocation Points &mdash; <span class="range-val" id="col-val">2000</span></label>
+            <input type="range" id="sl-collocation" min="200" max="10000" step="200" value="2000"
+              oninput="document.getElementById('col-val').textContent=this.value">
+          </div>
+          <div>
+            <label>Epochs &mdash; <span class="range-val" id="ep-val">5000</span></label>
+            <input type="range" id="sl-epochs" min="500" max="20000" step="500" value="5000"
+              oninput="document.getElementById('ep-val').textContent=this.value">
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>PDE Weight &lambda;_pde &mdash; <span class="range-val" id="pde-val">1.0</span></label>
+            <input type="range" id="sl-pde" min="0.1" max="10" step="0.1" value="1.0"
+              oninput="document.getElementById('pde-val').textContent=parseFloat(this.value).toFixed(1)">
+          </div>
+          <div>
+            <label>Data Weight &lambda;_data &mdash; <span class="range-val" id="data-val">1.0</span></label>
+            <input type="range" id="sl-data" min="0.0" max="5" step="0.1" value="1.0"
+              oninput="document.getElementById('data-val').textContent=parseFloat(this.value).toFixed(1)">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;">
+          <button class="run-btn" id="run-btn" onclick="runDemo()">Run Experiment</button>
+          <span class="spinner" id="spinner"></span>
+        </div>
+      </div>
+
+      <!-- RESULTS TAB -->
+      <div class="demo-body" id="tab-results" style="display:none;">
+        <div class="output-box" id="out-metrics">
+          <div class="out-label">Metrics &mdash; run an experiment first</div>
+        </div>
+      </div>
+
+      <!-- RESIDUAL TAB -->
+      <div class="demo-body" id="tab-residual" style="display:none;">
+        <div class="canvas-wrap">
+          <canvas id="chart-canvas"></canvas>
+        </div>
+        <p id="chart-note" style="font-size:12px;margin-top:10px;">Run an experiment to visualize the training loss curve.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TUTORIALS ── -->
+  <section class="section" id="tutorials">
+    <div class="section-label">Interactive Tutorials</div>
+    <h2>Executed Jupyter Notebook Tutorials</h2>
+    <p>Fully executed, deeply annotated HTML notebooks &mdash; complete with figures, equations, and narrative explanations. Select a notebook below to read it inline, or open it in a full tab.</p>
+
+    <div class="notebook-grid">
+      <button class="nb-card nb-tab-btn active" onclick="showNotebook('harmonic', this)">
+        <div class="nb-icon">&psi;&#8320;</div>
+        <div class="nb-body">
+          <h3>Quantum Harmonic Oscillator</h3>
+          <p>Ground-state and excited-state eigenfunctions via PINN with Gaussian envelope ansatz, orthogonality constraints, Heisenberg uncertainty validation, and a full ablation study.</p>
+          <div class="nb-tags">
+            <span class="nb-tag">15-Section Tutorial</span>
+            <span class="nb-tag">TISE Residual</span>
+            <span class="nb-tag">Orthogonality</span>
+            <span class="nb-tag">Ablation Study</span>
+          </div>
+        </div>
+        <div class="nb-arrow">&#9654;</div>
+      </button>
+
+      <button class="nb-card nb-tab-btn" onclick="showNotebook('schrodinger', this)">
+        <div class="nb-icon">&Psi;</div>
+        <div class="nb-body">
+          <h3>1D Schr&#246;dinger Equation</h3>
+          <p>Time-dependent wavepacket propagation with complex-valued PINN, probability current visualization, and Ehrenfest theorem verification.</p>
+          <div class="nb-tags">
+            <span class="nb-tag">Complex PINN</span>
+            <span class="nb-tag">Wavepacket</span>
+            <span class="nb-tag">Ehrenfest</span>
+            <span class="nb-tag">Norm Conservation</span>
+          </div>
+        </div>
+        <div class="nb-arrow">&#9654;</div>
+      </button>
+
+      <button class="nb-card nb-tab-btn" onclick="showNotebook('combined', this)">
+        <div class="nb-icon">&#8853;</div>
+        <div class="nb-body">
+          <h3>Multi-System PINN Benchmark</h3>
+          <p>Systematic comparison across harmonic, anharmonic, and double-well potentials with collocation ablations, noise robustness tests, and architecture sweeps.</p>
+          <div class="nb-tags">
+            <span class="nb-tag">3 Potentials</span>
+            <span class="nb-tag">Noise Robustness</span>
+            <span class="nb-tag">Architecture Sweep</span>
+            <span class="nb-tag">Benchmarks</span>
+          </div>
+        </div>
+        <div class="nb-arrow">&#9654;</div>
+      </button>
+    </div>
+
+    <div class="nb-viewer-container">
+      <div class="nb-viewer-header">
+        <span id="nb-viewer-title" class="nb-viewer-title">&psi;&#8320; Quantum Harmonic Oscillator</span>
+        <div class="nb-viewer-actions">
+          <a id="nb-open-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" class="btn-sm">Open in full tab &#8599;</a>
+        </div>
+      </div>
+      <iframe id="nb-iframe" src="notebooks/pinn_harmonic_oscillator.html" class="nb-iframe" title="Notebook viewer" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <!-- ── MORE (collapsible) ── -->
+  <details class="more-section">
+    <summary>More &mdash; Motivation, Architecture, Applications, Quick&nbsp;Start, Features &amp; Roadmap</summary>
+    <div class="more-content">
 
   <!-- ── MOTIVATION ── -->
   <section class="section" id="motivation">
@@ -546,88 +793,6 @@
           <h3>Evaluation and Analysis</h3>
           <p>Metrics tracked include PDE residual norm, relative L² error against analytic or numerical reference, convergence under varying collocation density, and stability under observation noise.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── DEMO ── -->
-  <section class="section" id="demo">
-    <div class="section-label">Interactive Demo</div>
-    <h2>Run a PINN Experiment</h2>
-    <p>Configure a quantum system problem, adjust training parameters, and observe simulated PINN behavior below.</p>
-
-    <div class="demo-panel">
-      <div class="demo-tabs">
-        <div class="demo-tab active" onclick="switchTab(this,'config')">Configuration</div>
-        <div class="demo-tab" onclick="switchTab(this,'results')">Results &amp; Metrics</div>
-        <div class="demo-tab" onclick="switchTab(this,'residual')">Residual Plot</div>
-      </div>
-
-      <!-- CONFIG TAB -->
-      <div class="demo-body" id="tab-config">
-        <div class="form-row">
-          <div>
-            <label>Problem</label>
-            <select id="sel-problem">
-              <option value="harmonic">Quantum Harmonic Oscillator</option>
-              <option value="schrodinger">Schrödinger Equation (1D)</option>
-              <option value="anharmonic">Anharmonic Double-Well Potential</option>
-              <option value="hamiltonian">Hamiltonian Dynamics</option>
-            </select>
-          </div>
-          <div>
-            <label>Network Depth</label>
-            <select id="sel-depth">
-              <option value="3">3 hidden layers</option>
-              <option value="4" selected>4 hidden layers</option>
-              <option value="6">6 hidden layers</option>
-              <option value="8">8 hidden layers</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label>Collocation Points — <span class="range-val" id="col-val">2000</span></label>
-            <input type="range" id="sl-collocation" min="200" max="10000" step="200" value="2000"
-              oninput="document.getElementById('col-val').textContent=this.value">
-          </div>
-          <div>
-            <label>Epochs — <span class="range-val" id="ep-val">5000</span></label>
-            <input type="range" id="sl-epochs" min="500" max="20000" step="500" value="5000"
-              oninput="document.getElementById('ep-val').textContent=this.value">
-          </div>
-        </div>
-        <div class="form-row">
-          <div>
-            <label>PDE Weight λ_pde — <span class="range-val" id="pde-val">1.0</span></label>
-            <input type="range" id="sl-pde" min="0.1" max="10" step="0.1" value="1.0"
-              oninput="document.getElementById('pde-val').textContent=parseFloat(this.value).toFixed(1)">
-          </div>
-          <div>
-            <label>Data Weight λ_data — <span class="range-val" id="data-val">1.0</span></label>
-            <input type="range" id="sl-data" min="0.0" max="5" step="0.1" value="1.0"
-              oninput="document.getElementById('data-val').textContent=parseFloat(this.value).toFixed(1)">
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;">
-          <button class="run-btn" id="run-btn" onclick="runDemo()">Run Experiment</button>
-          <span class="spinner" id="spinner"></span>
-        </div>
-      </div>
-
-      <!-- RESULTS TAB -->
-      <div class="demo-body" id="tab-results" style="display:none;">
-        <div class="output-box" id="out-metrics">
-          <div class="out-label">Metrics — run an experiment first</div>
-        </div>
-      </div>
-
-      <!-- RESIDUAL TAB -->
-      <div class="demo-body" id="tab-residual" style="display:none;">
-        <div class="canvas-wrap">
-          <canvas id="chart-canvas"></canvas>
-        </div>
-        <p id="chart-note" style="font-size:12px;margin-top:10px;">Run an experiment to visualize the training loss curve.</p>
       </div>
     </div>
   </section>
@@ -744,80 +909,9 @@
     </div>
   </section>
 
-  <!-- ── TUTORIALS ── -->
-  <section class="section" id="tutorials">
-    <div class="section-label">Interactive Tutorials</div>
-    <h2>Executed Jupyter Notebook Tutorials</h2>
-    <p style="color:var(--subtext);max-width:760px;margin-bottom:32px;">
-      Each notebook was executed end-to-end and exported to self-contained HTML — complete with figures, equations, and narrative explanations.
-      Open any tutorial below to read it directly in your browser without installing anything.
-    </p>
-    <div class="card-grid">
-
-      <div class="card" style="border-top:3px solid var(--accent);">
-        <div class="card-icon icon-blue">ψ₀</div>
-        <h3>Quantum Harmonic Oscillator</h3>
-        <p style="color:var(--subtext);font-size:14px;margin-bottom:12px;">
-          Ground-state and excited-state eigenfunctions via PINN with Gaussian envelope ansatz,
-          orthogonality constraints, Heisenberg uncertainty validation,
-          and a full ablation study over network depth, width, and activation function.
-        </p>
-        <ul style="color:var(--subtext);font-size:13px;padding-left:1.2em;margin-bottom:16px;">
-          <li>15-section annotated tutorial</li>
-          <li>TISE residual derivation from first principles</li>
-          <li>Excited-state training with orthogonality penalty</li>
-          <li>Overlap matrix &amp; wavefunction symmetry checks</li>
-        </ul>
-        <a href="notebooks/pinn_harmonic_oscillator.html" target="_blank"
-           style="display:inline-block;padding:8px 20px;background:var(--accent);color:#0d1117;
-                  border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;">
-          Open Tutorial →
-        </a>
-      </div>
-
-      <div class="card" style="border-top:3px solid #3fb950;">
-        <div class="card-icon icon-green">Ψ(x,t)</div>
-        <h3>1D Schrödinger Equation</h3>
-        <p style="color:var(--subtext);font-size:14px;margin-bottom:12px;">
-          Time-dependent wavepacket propagation with complex-valued PINN splitting real and imaginary components,
-          probability current visualization, and Ehrenfest theorem verification as an independent accuracy check.
-        </p>
-        <ul style="color:var(--subtext);font-size:13px;padding-left:1.2em;margin-bottom:16px;">
-          <li>Complex-valued PINN architecture explained</li>
-          <li>Madelung equations &amp; probability current</li>
-          <li>Position/momentum expectation ⟨x⟩(t), ⟨p⟩(t)</li>
-          <li>Norm conservation over time</li>
-        </ul>
-        <a href="notebooks/pinn_schrodinger.html" target="_blank"
-           style="display:inline-block;padding:8px 20px;background:#3fb950;color:#0d1117;
-                  border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;">
-          Open Tutorial →
-        </a>
-      </div>
-
-      <div class="card" style="border-top:3px solid #d2a8ff;">
-        <div class="card-icon icon-purple">⊕</div>
-        <h3>Multi-System PINN Benchmark</h3>
-        <p style="color:var(--subtext);font-size:14px;margin-bottom:12px;">
-          Systematic comparison across harmonic, anharmonic, and double-well potentials.
-          Collocation density ablations, observation noise robustness tests,
-          and architecture depth/width sweeps — all in a single reproducible notebook.
-        </p>
-        <ul style="color:var(--subtext);font-size:13px;padding-left:1.2em;margin-bottom:16px;">
-          <li>Unified benchmark harness for 3 potentials</li>
-          <li>Error taxonomy: collocation vs. boundary vs. data</li>
-          <li>Noise robustness at σ = 0%, 5%, 20%</li>
-          <li>Architecture sweep: depth 2–6, width 32–256</li>
-        </ul>
-        <a href="notebooks/quantum_pinn_combined.html" target="_blank"
-           style="display:inline-block;padding:8px 20px;background:#d2a8ff;color:#0d1117;
-                  border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;">
-          Open Tutorial →
-        </a>
-      </div>
 
     </div>
-  </section>
+  </details>
 
 </main>
 
@@ -838,6 +932,21 @@
 
 <!-- ════════════════════════════════ JS ════════════════════════════════ -->
 <script>
+// ── Notebook viewer ───────────────────────────────────────────────────────
+const NB_MAP = {
+  harmonic:   { src: 'notebooks/pinn_harmonic_oscillator.html', title: '\u03c8\u2080 Quantum Harmonic Oscillator' },
+  schrodinger:{ src: 'notebooks/pinn_schrodinger.html',         title: '\u03a8 1D Schr\u00f6dinger Equation' },
+  combined:   { src: 'notebooks/quantum_pinn_combined.html',    title: '\u2295 Multi-System PINN Benchmark' },
+};
+function showNotebook(key, btn) {
+  const nb = NB_MAP[key];
+  document.getElementById('nb-iframe').src = nb.src;
+  document.getElementById('nb-viewer-title').textContent = nb.title;
+  document.getElementById('nb-open-link').href = nb.src;
+  document.querySelectorAll('.nb-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
 // ── Tab switching ──────────────────────────────────────────────────────────
 function switchTab(el, id) {
   document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
@@ -940,7 +1049,7 @@ function drawLossCurve(losses) {
   const minV = Math.min(...losses);
 
   // Grid lines
-  ctx.strokeStyle = '#30363d';
+  ctx.strokeStyle = '#d0d7de';
   ctx.lineWidth = 1;
   for (let i = 0; i <= 4; i++) {
     const y = pad.top + cH * (i / 4);
@@ -951,7 +1060,7 @@ function drawLossCurve(losses) {
   }
 
   // Axes labels
-  ctx.fillStyle = '#8b949e';
+  ctx.fillStyle = '#57606a';
   ctx.font = '11px sans-serif';
   ctx.textAlign = 'right';
   for (let i = 0; i <= 4; i++) {
@@ -964,13 +1073,13 @@ function drawLossCurve(losses) {
     const x = pad.left + cW * (i / 5);
     ctx.fillText(Math.round((i / 5) * losses.length * (1 / losses.length * 100)) + '%', x, H - pad.bottom + 18);
   }
-  ctx.fillStyle = '#8b949e';
+  ctx.fillStyle = '#57606a';
   ctx.fillText('Training Progress', W / 2, H - 4);
 
   // Gradient fill
   const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
-  grad.addColorStop(0,   'rgba(88,166,255,0.25)');
-  grad.addColorStop(1,   'rgba(88,166,255,0.0)');
+  grad.addColorStop(0,   'rgba(9,105,218,0.18)');
+  grad.addColorStop(1,   'rgba(9,105,218,0.0)');
   ctx.beginPath();
   losses.forEach((v, i) => {
     const x = pad.left + (i / (losses.length - 1)) * cW;
@@ -985,7 +1094,7 @@ function drawLossCurve(losses) {
 
   // Line
   ctx.beginPath();
-  ctx.strokeStyle = '#58a6ff';
+  ctx.strokeStyle = '#0969da';
   ctx.lineWidth = 2;
   losses.forEach((v, i) => {
     const x = pad.left + (i / (losses.length - 1)) * cW;
