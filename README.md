@@ -10,7 +10,7 @@ This project studies whether physics-informed neural networks can serve as a cre
 
 The project covers both major one-dimensional settings. For the time-independent Schrodinger equation, it trains neural networks to recover wavefunctions and eigenvalues simultaneously. For the time-dependent Schrodinger equation, it learns complex-valued spacetime dynamics for a Gaussian wavepacket under free-particle evolution. These specialist studies are then consolidated into a broader multi-problem benchmark that evaluates cross-problem transfer, architecture sensitivity, collocation scaling, and robustness to noisy initial-condition data.
 
-The strongest accuracy-first results are obtained in the two specialist notebooks. In the harmonic-oscillator study, the ground-state PINN reaches relative L2 error $1.56934 \times 10^{-3}$, max pointwise error $1.25322 \times 10^{-3}$, learned energy $0.50001526$, absolute energy error $1.52588 \times 10^{-5}$, fidelity $0.99999754$, and Rayleigh-consistency gap $3.59893 \times 10^{-6}$. In the time-dependent study, the upgraded ComplexPINN reaches initial density relative L2 error $8.0 \times 10^{-8}$, mean density relative L2 error $4.18\%$ over $t \in [0,1]$, final-time density relative L2 error $6.71\%$, norm range $[0.990997, 1.010868]$, mean Ehrenfest position error $2.56 \times 10^{-2}$, mean Ehrenfest momentum error $2.99 \times 10^{-2}$, and five-snapshot probability-current L2 error $7.494 \times 10^{-2}$. The combined benchmark complements these specialist results by showing that a shared PINN framework remains informative across four quantum problems, with the best depth-width configuration reaching relative L2 error $0.26585$ and the noise study varying by only $0.00619$ in relative L2 between noise amplitudes $0.00$ and $0.20$.
+The strongest results are distributed across the three executed notebooks and should be read together. In the harmonic-oscillator study, the ground-state PINN reaches relative L2 error $1.56934 \times 10^{-3}$, max pointwise error $1.25322 \times 10^{-3}$, learned energy $0.50001526$, absolute energy error $1.52588 \times 10^{-5}$, squared overlap $0.99999754$, and Rayleigh-consistency gap $3.59893 \times 10^{-6}$. In the time-dependent study, the upgraded ComplexPINN reaches initial density relative L2 error $8.0 \times 10^{-8}$, mean density relative L2 error $4.18\%$ over $t \in [0,1]$, final-time density relative L2 error $6.71\%$, norm range $[0.990997, 1.010868]$, mean Ehrenfest position error $2.56 \times 10^{-2}$, mean Ehrenfest momentum error $2.99 \times 10^{-2}$, and five-snapshot probability-current L2 error $7.494 \times 10^{-2}$. The combined benchmark contributes the broadest project-level evidence by showing that the same PINN framework remains informative across four quantum problems, with the best depth-width configuration reaching relative L2 error $0.26585$ and the noise study varying by only $0.00619$ in relative L2 between noise amplitudes $0.00$ and $0.20$.
 
 ---
 
@@ -18,9 +18,10 @@ The strongest accuracy-first results are obtained in the two specialist notebook
 
 | Theme | Result |
 |---|---|
-| Best stationary-state accuracy | QHO ground state: rel-L2 $1.56934 \times 10^{-3}$, $\hat{E}_0 = 0.50001526$, $|\Delta E| = 1.52588 \times 10^{-5}$, fidelity $0.99999754$ |
+| Best stationary-state accuracy | QHO ground state: rel-L2 $1.56934 \times 10^{-3}$, $\hat{E}_0 = 0.50001526$, $|\Delta E| = 1.52588 \times 10^{-5}$, squared overlap $0.99999754$ |
 | Best time-dependent accuracy | TDSE Gaussian wavepacket: initial density rel-L2 $8.0 \times 10^{-8}$, mean rel-L2 $4.18\%$, final-time rel-L2 $6.71\%$ |
 | Strongest physical consistency check | TDSE norm range $[0.990997, 1.010868]$ with mean Ehrenfest errors $2.56 \times 10^{-2}$ for position and $2.99 \times 10^{-2}$ for momentum |
+| Best integrative contribution | Unified four-problem benchmark with architecture, scaling, and noise ablations that identify the best shared configuration as 5 layers x 64 units |
 | Broadest benchmark evidence | Four-problem benchmark covering QHO ground state, QHO first excited state, anharmonic confinement, and double-well tunneling |
 | Best architecture in the combined ablation | 5 layers x 64 hidden units, rel-L2 $0.26585$ |
 | Noise robustness | Relative L2 changes from $0.25654$ to $0.25035$ as noise amplitude increases from $0.00$ to $0.20$ |
@@ -54,9 +55,9 @@ The project answers these questions through a layered experimental design. Two n
 
 | Notebook | Role in the project | Best reported result | Contribution |
 |---|---|---|---|
-| `notebooks/pinn_harmonic_oscillator.ipynb` | Accuracy-first stationary-state benchmark | rel-L2 $1.56934 \times 10^{-3}$; learned energy $0.50001526$; energy error $1.52588 \times 10^{-5}$; fidelity $0.99999754$ | Establishes that the time-independent Schrodinger equation can be solved to near-analytic precision with a physics-informed neural formulation |
-| `notebooks/pinn_schrodinger.ipynb` | Accuracy-first time-dependent benchmark | initial density rel-L2 $8.0 \times 10^{-8}$; mean rel-L2 $4.18\%$; final-time rel-L2 $6.71\%$; norm range $[0.990997, 1.010868]$ | Establishes that the same project can handle complex-valued spacetime dynamics with strong physical-consistency diagnostics |
-| `notebooks/quantum_pinn_combined.ipynb` | Comparative benchmark and ablation layer | best architecture rel-L2 $0.26585$; noise study $0.25654 \rightarrow 0.25035$ | Explains how the framework behaves across problem classes and which design choices remain effective under broader transfer |
+| `notebooks/pinn_harmonic_oscillator.ipynb` | Accuracy-first stationary-state benchmark | rel-L2 $1.56934 \times 10^{-3}$; learned energy $0.50001526$; energy error $1.52588 \times 10^{-5}$; squared overlap $0.99999754$ | Establishes the project's strongest stationary-state result and shows near-analytic recovery of a canonical eigenproblem |
+| `notebooks/pinn_schrodinger.ipynb` | Accuracy-first time-dependent benchmark | initial density rel-L2 $8.0 \times 10^{-8}$; mean rel-L2 $4.18\%$; final-time rel-L2 $6.71\%$; norm range $[0.990997, 1.010868]$ | Establishes the project's strongest time-dependent result and shows that complex-valued quantum propagation can be learned with strong physical diagnostics |
+| `notebooks/quantum_pinn_combined.ipynb` | Comparative benchmark and ablation layer | best architecture rel-L2 $0.26585$; noise study $0.25654 \rightarrow 0.25035$ | Supplies the project's integrative contribution by explaining transferability, architecture sensitivity, and robustness across multiple quantum problems |
 
 ---
 
@@ -71,7 +72,7 @@ The project answers these questions through a layered experimental design. Two n
 | Learned energy | $0.50001526$ |
 | Exact energy | $0.50000000$ |
 | Absolute energy error | $1.52588 \times 10^{-5}$ |
-| Fidelity | $0.99999754$ |
+| Squared overlap | $0.99999754$ |
 | Rayleigh energy | $0.50001166$ |
 | Rayleigh-consistency gap | $3.59893 \times 10^{-6}$ |
 
@@ -100,7 +101,7 @@ This result shows that the time-dependent branch is not only visually plausible,
 | Anharmonic quartic well | $0.57282$ | $0.53750$ | $0.03532$ | - | $2.56$ s |
 | Double well | $0.23770$ | about $0.300$ | - | - | $2.46$ s |
 
-The combined benchmark should be interpreted differently from the specialist notebooks. It is a transferability and ablation study, not the final accuracy ceiling for each individual problem.
+The combined benchmark should be interpreted differently from the specialist notebooks. It is the project's main transferability and ablation contribution, not the final accuracy ceiling for each individual problem.
 
 ### Architecture and Noise Findings
 
@@ -157,8 +158,8 @@ The combined notebook applies shared PINN ideas across four problem classes and 
 This notebook is the project's highest-accuracy stationary-state study. It should be read when the priority is precision on a canonical quantum eigenvalue problem.
 
 - Focus: QHO ground state, excited states, symmetry-aware regularization, Rayleigh consistency
-- Strongest result: rel-L2 $1.56934 \times 10^{-3}$, learned energy $0.50001526$
-- Impact: shows that an accuracy-oriented PINN can recover the exact harmonic-oscillator physics to near-analytic precision
+- Strongest result: rel-L2 $1.56934 \times 10^{-3}$, learned energy $0.50001526$, squared overlap $0.99999754$
+- Impact: shows that an accuracy-oriented PINN can recover the exact harmonic-oscillator physics to near-analytic precision with both eigenvalue and wavefunction agreement
 
 ### `notebooks/pinn_schrodinger.ipynb`
 
@@ -166,7 +167,7 @@ This notebook is the project's highest-accuracy time-dependent study. It should 
 
 - Focus: Gaussian wavepacket propagation, dual-output ComplexPINN, current and Ehrenfest diagnostics
 - Strongest result: initial density rel-L2 $8.0 \times 10^{-8}$, mean rel-L2 $4.18\%$, final-time rel-L2 $6.71\%$
-- Impact: shows that the project can move beyond stationary states and still preserve physically interpretable structure
+- Impact: shows that the project can move beyond stationary states and still preserve physically interpretable structure under stringent propagation diagnostics
 
 ### `notebooks/quantum_pinn_combined.ipynb`
 
@@ -174,7 +175,7 @@ This notebook is the integrative benchmark study. It should be read when the pri
 
 - Focus: four-problem benchmark, architecture grid, scaling study, noise robustness
 - Strongest result: 5 layers x 64 units reaches rel-L2 $0.26585$ in the standard benchmark grid
-- Impact: explains which parts of the framework transfer across qualitatively different quantum problems and which settings are most robust
+- Impact: explains which parts of the framework transfer across qualitatively different quantum problems, which architecture is strongest in the shared benchmark, and how robust the method remains under corrupted inputs
 
 ---
 
@@ -256,7 +257,7 @@ For the clearest reading path, start with the harmonic-oscillator notebook for t
 
 ## Interpretation
 
-The project supports a clear overall conclusion. Physics-informed neural networks are not limited here to a single demonstration on an easy quantum system. In this project, they recover a canonical stationary-state benchmark to near-analytic precision, propagate a complex-valued wavepacket with strong conservation behavior, and remain informative under broader cross-problem comparisons and ablation studies. The specialist notebooks establish the strongest accuracy claims; the combined benchmark explains why those claims matter in the wider methodological picture.
+The project supports a clear overall conclusion. Physics-informed neural networks are not limited here to a single demonstration on an easy quantum system. In this project, they recover a canonical stationary-state benchmark to near-analytic precision, propagate a complex-valued wavepacket with strong conservation behavior, and remain informative under broader cross-problem comparisons and ablation studies. The harmonic-oscillator notebook provides the strongest stationary-state accuracy, the TDSE notebook provides the strongest time-dependent accuracy, and the combined notebook provides the strongest project-level evidence for transferability, architecture guidance, and robustness.
 
 ---
 

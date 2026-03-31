@@ -21,6 +21,7 @@
       --teal: #0e6b56;
       --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -92,6 +93,7 @@
       max-width: 800px;
       margin: 0 auto 20px;
       letter-spacing: -0.5px;
+      font-family: var(--font-serif);
     }
     .hero h1 em { color: var(--accent); font-style: normal; }
     .hero p {
@@ -101,6 +103,41 @@
       font-size: 16px;
     }
     .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .hero-metrics {
+      max-width: 1040px;
+      margin: 32px auto 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .metric-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      text-align: left;
+      box-shadow: 0 12px 28px rgba(9,105,218,0.06);
+    }
+    .metric-card strong {
+      display: block;
+      color: var(--accent2);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 8px;
+    }
+    .metric-card .metric-value {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .metric-card p {
+      font-size: 13px;
+      line-height: 1.55;
+      margin: 0;
+    }
     .btn {
       display: inline-block;
       padding: 10px 22px;
@@ -137,12 +174,14 @@
       font-weight: 700;
       margin-bottom: 16px;
       letter-spacing: -0.3px;
+      font-family: var(--font-serif);
     }
     h3 {
       font-size: 17px;
       font-weight: 600;
       margin-bottom: 10px;
       color: var(--accent2);
+      font-family: var(--font-serif);
     }
     p { color: var(--text-muted); margin-bottom: 14px; }
     p:last-child { margin-bottom: 0; }
@@ -175,6 +214,55 @@
     .icon-orange { background: rgba(255,166,87,0.12); }
     .icon-teal   { background: rgba(57,211,83,0.12); }
     .icon-red    { background: rgba(255,123,114,0.12); }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .figure-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .figure-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .figure-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+    }
+    .figure-body {
+      padding: 18px 20px 20px;
+    }
+    .figure-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .figure-body h3 {
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .figure-body p {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .figure-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
 
     /* ── section dividers ── */
     .section { margin-bottom: 72px; }
@@ -514,17 +602,38 @@
 
 <!-- ════════════════════════════════ HERO ════════════════════════════════ -->
 <section class="hero">
-  <div class="hero-badge">Research Framework</div>
-  <h1><em>Physics-Informed</em> Neural Networks<br>for Quantum-Relevant Physical Modeling</h1>
+  <div class="hero-badge">Executable Research Study</div>
+  <h1>Physics-Informed Neural Networks<br>for Quantum-Relevant Physical Modeling</h1>
   <p>
-    Machine-learning models that embed governing equations and physical constraints directly
-    into the learning process — for accurate modeling of quantum systems under sparse,
-    noisy, or limited observational data.
+    A research-oriented study of physics-informed neural networks for stationary and time-dependent
+    quantum systems, with emphasis on whether governing equations, normalization constraints,
+    and physically motivated regularization are sufficient to recover accurate quantum solutions
+    when dense supervision is limited or unavailable. The project combines a high-accuracy
+    harmonic-oscillator eigenvalue study, a complex-valued time-dependent Schrödinger propagation
+    study, and a comparative multi-problem benchmark that evaluates transferability, architecture
+    sensitivity, and robustness under a shared experimental framework.
   </p>
   <div class="hero-buttons">
-    <a href="#demo" class="btn btn-primary">Try the Demo</a>
-    <a href="#quickstart" class="btn btn-secondary">Quick Start</a>
+    <a href="#tutorials" class="btn btn-primary">Inspect Notebook Results</a>
+    <a href="#quickstart" class="btn btn-secondary">Reproduce Experiments</a>
     <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" class="btn btn-secondary" target="_blank">View on GitHub</a>
+  </div>
+  <div class="hero-metrics">
+    <div class="metric-card">
+      <strong>Best Stationary-State Result</strong>
+      <div class="metric-value">1.56934 × 10<sup>−3</sup></div>
+      <p>Relative L² error for the QHO ground state, with learned energy 0.50001526 and absolute energy error 1.52588 × 10<sup>−5</sup>.</p>
+    </div>
+    <div class="metric-card">
+      <strong>Best Time-Dependent Result</strong>
+      <div class="metric-value">8.0 × 10<sup>−8</sup></div>
+      <p>Initial density relative L² error for Gaussian wavepacket propagation, with mean density error 4.18% across the full spacetime interval.</p>
+    </div>
+    <div class="metric-card">
+      <strong>Best Integrative Contribution</strong>
+      <div class="metric-value">5L × 64</div>
+      <p>Best shared benchmark architecture in the combined notebook, reaching relative L² error 0.26585 with stable noise behavior from 0.25654 to 0.25035.</p>
+    </div>
   </div>
 </section>
 
@@ -533,42 +642,110 @@
 
   <!-- ── OVERVIEW ── -->
   <section class="section" id="overview">
-    <div class="section-label">Overview</div>
-    <h2>What Is This Project?</h2>
+    <div class="section-label">Problem Setting</div>
+    <h2>Project Scope and Empirical Claim</h2>
     <div class="two-col">
       <div>
         <p>
-          This repository presents a research-oriented framework for applying
+          This project presents a research-oriented framework for applying
           <strong style="color:var(--text)">Physics-Informed Neural Networks (PINNs)</strong>
-          to quantum-relevant physical systems. The central objective is to develop
-          machine-learning models that embed governing equations and physical constraints
-          directly into the learning process, enabling accurate modeling of complex quantum
-          systems even when observational data is limited, noisy, or expensive to obtain.
+          to quantum-relevant physical systems. The central objective is to determine whether
+          governing equations, normalization structure, and physically motivated consistency terms
+          can act as a sufficient supervisory signal for recovering high-quality quantum solutions
+          in regimes where dense labeled data is unnecessary, scarce, or expensive to generate.
         </p>
         <p>
-          The framework targets physical systems governed by partial differential equations
-          and Hamiltonians that arise in quantum simulation and related
-          physics-constrained domains.
+          The empirical argument is organized around three complementary notebooks. The harmonic-oscillator notebook establishes the strongest stationary-state result, the time-dependent Schrödinger notebook establishes the strongest propagation result, and the combined benchmark notebook provides the broadest methodological evidence by quantifying transferability, architecture sensitivity, and robustness across multiple quantum regimes.
         </p>
       </div>
       <div>
         <ul class="feature-list">
-          <li>Time-dependent and time-independent Schrödinger equations</li>
-          <li>Quantum harmonic oscillator and anharmonic potential systems</li>
-          <li>Hamiltonian-governed dynamical systems</li>
-          <li>Density matrix evolution and open quantum system approximations</li>
-          <li>Collocation-based and residual-based training formulations</li>
-          <li>GPU-accelerated training via PyTorch autograd</li>
+          <li>QHO ground state recovered with rel-L² 1.56934 × 10^-3 and energy error 1.52588 × 10^-5</li>
+          <li>TDSE wavepacket benchmark reaches 8.0 × 10^-8 initial density rel-L² error</li>
+          <li>Norm remains within [0.990997, 1.010868] under time-dependent propagation</li>
+          <li>Combined four-problem benchmark identifies 5 layers × 64 units as the strongest shared architecture</li>
+          <li>Noise robustness remains stable from rel-L² 0.25654 to 0.25035 as amplitude increases from 0.00 to 0.20</li>
+          <li>Executable notebooks, exported benchmark artifacts, API endpoint, and browser interface</li>
         </ul>
       </div>
     </div>
   </section>
 
+  <section class="section" id="best-results">
+    <div class="section-label">Principal Results</div>
+    <h2>Best Results Across the Three Notebook Studies</h2>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon icon-blue">ψ</div>
+        <h3>Stationary-State Accuracy Study</h3>
+        <p>The project's strongest stationary-state result is the QHO ground-state benchmark: relative L² error 1.56934 × 10^-3, max pointwise error 1.25322 × 10^-3, learned energy 0.50001526, absolute energy error 1.52588 × 10^-5, squared overlap 0.99999754, and Rayleigh-consistency gap 3.59893 × 10^-6.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-green">∂</div>
+        <h3>Time-Dependent Propagation Study</h3>
+        <p>The strongest time-dependent result is the Gaussian wavepacket benchmark: initial density relative L² error 8.0 × 10^-8, mean density relative L² error 4.18%, final-time density relative L² error 6.71%, norm range [0.990997, 1.010868], and mean Ehrenfest errors 2.56 × 10^-2 and 2.99 × 10^-2.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-purple">⊕</div>
+        <h3>Comparative Benchmark Study</h3>
+        <p>The project's broadest contribution is the integrative benchmark layer: a unified four-problem study with architecture, scaling, and noise ablations. In the executed sweep, the best shared configuration is 5 layers × 64 units with relative L² error 0.26585, while the noise study varies by only 0.00619 across amplitudes 0.00 to 0.20.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="figures">
+    <div class="section-label">Visual Evidence</div>
+    <h2>Representative Figures for the Strongest Results</h2>
+    <p>The root website now highlights the strongest results from the three notebook studies through representative figures drawn directly from the executed benchmark outputs.</p>
+
+    <div class="figure-grid">
+      <article class="figure-card">
+        <img src="outputs/qho_ground_state_analysis.png" alt="Quantum harmonic oscillator ground-state benchmark figure" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Stationary-State Accuracy</div>
+          <h3>Ground-State Harmonic-Oscillator Benchmark</h3>
+          <p>This figure summarizes the strongest stationary-state result in the project: relative L² error 1.56934 × 10^-3, max pointwise error 1.25322 × 10^-3, learned energy 0.50001526, and absolute energy error 1.52588 × 10^-5.</p>
+          <div class="figure-note">The harmonic-oscillator notebook combines wavefunction agreement, energy recovery, and operator consistency in a single accuracy-oriented benchmark.</div>
+        </div>
+      </article>
+
+      <article class="figure-card">
+        <img src="outputs/schrodinger_density_heatmap.png" alt="Time-dependent Schrödinger density heatmap" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Time-Dependent Propagation</div>
+          <h3>Spacetime Density Reconstruction</h3>
+          <p>This density map highlights the strongest time-dependent result in the project, where the benchmark reaches 8.0 × 10^-8 initial density rel-L² error, 4.18% mean density rel-L² error, and 6.71% final-time rel-L² error.</p>
+          <div class="figure-note">The figure emphasizes full-domain propagation quality rather than only snapshot-level agreement, which is central to the TDSE notebook's contribution.</div>
+        </div>
+      </article>
+
+      <article class="figure-card">
+        <img src="outputs/schrodinger_ehrenfest.png" alt="Ehrenfest diagnostics figure" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Physical Consistency</div>
+          <h3>Ehrenfest and Conservation Diagnostics</h3>
+          <p>This figure complements the TDSE density benchmark by showing the physical diagnostics that support the result: norm range [0.990997, 1.010868] together with mean Ehrenfest errors 2.56 × 10^-2 and 2.99 × 10^-2.</p>
+          <div class="figure-note">The time-dependent notebook is therefore evaluated not only as a function approximation problem, but also as a test of physically interpretable quantum dynamics.</div>
+        </div>
+      </article>
+
+      <article class="figure-card">
+        <img src="outputs/combined_arch_grid.png" alt="Architecture grid figure from the combined benchmark" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Comparative Benchmark Evidence</div>
+          <h3>Depth-Width Architecture Sweep</h3>
+          <p>This figure highlights the main integrative contribution of the combined notebook: under a shared benchmark protocol, the strongest architecture in the executed sweep is 5 layers × 64 units with relative L² error 0.26585.</p>
+          <div class="figure-note">The combined notebook's role is comparative rather than absolute: it identifies transferable design choices and quantifies their behavior across multiple quantum problems.</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <!-- ── DEMO ── -->
   <section class="section" id="demo">
-    <div class="section-label">Interactive Demo</div>
-    <h2>Run a PINN Experiment</h2>
-    <p>Configure a quantum system problem, adjust training parameters, and observe simulated PINN behavior below.</p>
+    <div class="section-label">Illustrative Interface</div>
+    <h2>Interactive Configuration Study</h2>
+    <p>Configure a representative quantum problem, vary core training parameters, and inspect a lightweight simulated view of how PINN metrics respond to architectural and optimization choices.</p>
 
     <div class="demo-panel">
       <div class="demo-tabs">
@@ -648,18 +825,18 @@
 
   <!-- ── TUTORIALS ── -->
   <section class="section" id="tutorials">
-    <div class="section-label">Interactive Tutorials</div>
-    <h2>Executed Jupyter Notebook Tutorials</h2>
-    <p>Fully executed, deeply annotated HTML notebooks &mdash; complete with figures, equations, and narrative explanations. Select a notebook below to read it inline, or open it in a full tab.</p>
+    <div class="section-label">Notebook Evidence</div>
+    <h2>Executed Research Notebooks</h2>
+    <p>Fully executed HTML notebooks with figures, equations, benchmark tables, and interpretive narrative. These documents form the primary evidence layer of the project and should be read as complementary studies rather than interchangeable tutorials.</p>
 
     <div class="notebook-grid">
       <button class="nb-card nb-tab-btn active" onclick="showNotebook('harmonic', this)">
         <div class="nb-icon">&psi;&#8320;</div>
         <div class="nb-body">
           <h3>Quantum Harmonic Oscillator</h3>
-          <p>Ground-state and excited-state eigenfunctions via PINN with Gaussian envelope ansatz, orthogonality constraints, Heisenberg uncertainty validation, and a full ablation study.</p>
+          <p>Highest stationary-state accuracy in the project: the QHO ground-state notebook reaches rel-L² 1.56934 × 10^-3, learned energy 0.50001526, squared overlap 0.99999754, and a 1.52588 × 10^-5 absolute energy error.</p>
           <div class="nb-tags">
-            <span class="nb-tag">15-Section Tutorial</span>
+            <span class="nb-tag">Highest Stationary Accuracy</span>
             <span class="nb-tag">TISE Residual</span>
             <span class="nb-tag">Orthogonality</span>
             <span class="nb-tag">Ablation Study</span>
@@ -672,8 +849,9 @@
         <div class="nb-icon">&Psi;</div>
         <div class="nb-body">
           <h3>1D Schr&#246;dinger Equation</h3>
-          <p>Time-dependent wavepacket propagation with complex-valued PINN, probability current visualization, and Ehrenfest theorem verification.</p>
+          <p>Highest time-dependent accuracy in the project: the TDSE notebook reaches 8.0 × 10^-8 initial density rel-L² error, 4.18% mean density error, 6.71% final-time error, and strong norm and Ehrenfest agreement.</p>
           <div class="nb-tags">
+            <span class="nb-tag">Highest Time-Dependent Accuracy</span>
             <span class="nb-tag">Complex PINN</span>
             <span class="nb-tag">Wavepacket</span>
             <span class="nb-tag">Ehrenfest</span>
@@ -687,9 +865,10 @@
         <div class="nb-icon">&#8853;</div>
         <div class="nb-body">
           <h3>Multi-System PINN Benchmark</h3>
-          <p>Systematic comparison across harmonic, anharmonic, and double-well potentials with collocation ablations, noise robustness tests, and architecture sweeps.</p>
+          <p>Strongest project-level comparative contribution: systematic comparison across harmonic, anharmonic, and double-well settings with architecture sweeps, collocation ablations, and noise-robustness tests. The best shared architecture is 5 layers × 64 units.</p>
           <div class="nb-tags">
-            <span class="nb-tag">3 Potentials</span>
+            <span class="nb-tag">Strongest Integrative Evidence</span>
+            <span class="nb-tag">4 Problems</span>
             <span class="nb-tag">Noise Robustness</span>
             <span class="nb-tag">Architecture Sweep</span>
             <span class="nb-tag">Benchmarks</span>
@@ -712,24 +891,25 @@
 
   <!-- ── MORE (collapsible) ── -->
   <details class="more-section">
-    <summary>More &mdash; Motivation, Architecture, Applications, Quick&nbsp;Start, Features &amp; Roadmap</summary>
+    <summary>More &mdash; Motivation, Method, Problem Classes, Reproducibility, Features &amp; Research Direction</summary>
     <div class="more-content">
 
   <!-- ── MOTIVATION ── -->
   <section class="section" id="motivation">
     <div class="section-label">Motivation</div>
-    <h2>Why Physics-Informed Learning?</h2>
+    <h2>Why Physics-Informed Learning Is Appropriate Here</h2>
     <p>
       Direct simulation of quantum systems is computationally expensive, and experimental
       data from quantum platforms is frequently sparse, noisy, or constrained by hardware
-      limitations. These challenges motivate a learning-theoretic approach that incorporates
-      physical structure as an inductive bias.
+      limitations. These conditions motivate a learning-theoretic approach in which physical
+      structure is not added after training, but built directly into the optimization problem
+      as an inductive bias.
     </p>
     <div class="card-grid">
       <div class="card">
         <div class="card-icon icon-blue">⚡</div>
-        <h3>Governing Equations as Constraints</h3>
-        <p>PDE residuals are enforced as soft constraints through residual terms in the training objective, encoding known physics directly into the model.</p>
+        <h3>Governing Equations as Supervisory Structure</h3>
+        <p>PDE residuals are enforced as soft constraints through residual terms in the training objective, turning the governing equation itself into the dominant source of supervision.</p>
       </div>
       <div class="card">
         <div class="card-icon icon-green">∂</div>
@@ -738,13 +918,13 @@
       </div>
       <div class="card">
         <div class="card-icon icon-purple">◎</div>
-        <h3>Sparse Data Augmentation</h3>
-        <p>Collocation points augment limited measurements, reducing dependence on dense experimental observations while maintaining physical consistency.</p>
+        <h3>Sparse-Data Compatibility</h3>
+        <p>Collocation points augment limited measurements, reducing dependence on dense observational sampling while preserving agreement with known physical structure.</p>
       </div>
       <div class="card">
         <div class="card-icon icon-orange">▲</div>
-        <h3>GPU-Accelerated Training</h3>
-        <p>Scalable training across high-dimensional parameter spaces without modifying the core codebase, supporting large collocation grids.</p>
+        <h3>Scalable Numerical Training</h3>
+        <p>GPU-compatible training supports larger collocation grids and broader architecture sweeps without changing the underlying scientific workflow.</p>
       </div>
     </div>
 
@@ -755,22 +935,22 @@
 
   <!-- ── ARCHITECTURE ── -->
   <section class="section" id="architecture">
-    <div class="section-label">System Architecture</div>
-    <h2>How the Pipeline Works</h2>
+    <div class="section-label">Method</div>
+    <h2>Experimental and Modeling Pipeline</h2>
 
     <div class="pipeline">
       <div class="pipeline-step">
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>Physical Problem Formulation</h3>
-          <p>Each target system is specified by a governing PDE or ODE, boundary and initial conditions, domain geometry, and optional measurement data. The formulation determines the structure of the physics residual and the data fidelity term in the composite loss.</p>
+          <p>Each target system is specified by a governing PDE or ODE, boundary and initial conditions, domain geometry, and optional measurement data. The formulation determines the structure of the physics residual and the data-consistency term in the composite loss.</p>
         </div>
       </div>
       <div class="pipeline-step">
         <div class="step-num">2</div>
         <div class="step-body">
           <h3>Neural Network Approximation</h3>
-          <p>A deep neural network approximates the solution field — e.g., wavefunction ψ(x, t) or probability density |ψ|². Architectures use tanh or sine activations to reproduce smooth oscillatory solutions characteristic of quantum systems.</p>
+          <p>A deep neural network approximates the solution field — e.g., wavefunction ψ(x, t) or probability density |ψ|². Architectures are then specialized when needed: the project's strongest stationary-state result comes from an accuracy-oriented harmonic-oscillator configuration, while the strongest time-dependent result comes from a dual-output ComplexPINN with hard initial conditioning and analytic anchors.</p>
         </div>
       </div>
       <div class="pipeline-step">
@@ -791,7 +971,7 @@
         <div class="step-num">5</div>
         <div class="step-body">
           <h3>Evaluation and Analysis</h3>
-          <p>Metrics tracked include PDE residual norm, relative L² error against analytic or numerical reference, convergence under varying collocation density, and stability under observation noise.</p>
+          <p>Metrics tracked include PDE residual norm, relative L² error against analytic or numerical reference, energy consistency, norm preservation, Ehrenfest agreement, convergence under varying collocation density, and stability under observation noise.</p>
         </div>
       </div>
     </div>
@@ -799,36 +979,36 @@
 
   <!-- ── APPLICATIONS ── -->
   <section class="section" id="applications">
-    <div class="section-label">Example Applications</div>
-    <h2>Target Physical Systems</h2>
+    <div class="section-label">Problem Classes</div>
+    <h2>Quantum Systems Studied in This Project</h2>
     <div class="card-grid">
       <div class="card">
         <div class="card-icon icon-blue">Ψ</div>
         <h3>Schrödinger Equation (1D)</h3>
-        <p>Solve the time-dependent Schrödinger equation for a particle in a potential well. The PINN learns the wavefunction evolution over a time window from an initial Gaussian wavepacket condition.</p>
+        <p>Solve the time-dependent Schrödinger equation for a particle in a potential well. In the executed benchmark, the model learns Gaussian wavepacket evolution with 8.0 × 10^-8 initial density rel-L² error and controlled transport diagnostics across the full time window.</p>
       </div>
       <div class="card">
         <div class="card-icon icon-purple">H</div>
         <h3>Quantum Harmonic Oscillator</h3>
-        <p>Approximate energy eigenstates and eigenvalues under orthonormality constraints, recovering ground-state and excited-state solutions with sub-percent relative error.</p>
+        <p>Approximate energy eigenstates and eigenvalues under orthonormality constraints, recovering the QHO ground state with rel-L² 1.56934 × 10^-3 and an absolute energy error of 1.52588 × 10^-5.</p>
       </div>
       <div class="card">
         <div class="card-icon icon-orange">≋</div>
         <h3>Anharmonic Potential</h3>
-        <p>Extend to quartic and double-well potentials to study the impact of nonlinearity on PINN convergence and solution accuracy under varying collocation densities.</p>
+        <p>Extend to quartic and double-well potentials to study the impact of nonlinearity on PINN convergence and solution accuracy, and to place those systems inside a unified comparative benchmark with shared architecture and noise studies.</p>
       </div>
       <div class="card">
         <div class="card-icon icon-teal">∮</div>
         <h3>Hamiltonian Dynamics</h3>
-        <p>Learn trajectory solutions under energy conservation constraints, serving as a controlled benchmark comparing physical fidelity across collocation densities and network architectures.</p>
+        <p>Learn trajectory solutions under energy conservation constraints, serving as a controlled benchmark for comparing physical agreement across collocation densities and network architectures.</p>
       </div>
     </div>
   </section>
 
   <!-- ── QUICK START ── -->
   <section class="section" id="quickstart">
-    <div class="section-label">Quick Start</div>
-    <h2>Get Running in Minutes</h2>
+    <div class="section-label">Reproducibility</div>
+    <h2>Minimal Reproduction Path</h2>
 
     <pre><span class="comment"># 1. Install dependencies</span>
 <span class="fn">pip</span> install -r requirements.txt
@@ -850,8 +1030,8 @@
 
   <!-- ── KEY FEATURES ── -->
   <section class="section" id="features">
-    <div class="section-label">Key Features</div>
-    <h2>What Makes This Framework Useful</h2>
+    <div class="section-label">Methodological Advantages</div>
+    <h2>Why the Framework Is Scientifically Useful</h2>
     <div class="card-grid">
       <div class="card">
         <div class="card-icon icon-blue">⊕</div>
@@ -865,8 +1045,8 @@
       </div>
       <div class="card">
         <div class="card-icon icon-purple">⇄</div>
-        <h3>Collocation vs. Data-Driven Comparison</h3>
-        <p>Controlled experiments vary the ratio of collocation points to observed data, enabling direct empirical comparison of the physical fidelity versus data efficiency tradeoff.</p>
+        <h3>Collocation Versus Data Tradeoff</h3>
+        <p>Controlled experiments vary the ratio of collocation points to observed data, enabling direct empirical comparison of physical agreement versus data efficiency.</p>
       </div>
       <div class="card">
         <div class="card-icon icon-orange">σ</div>
@@ -880,16 +1060,16 @@
       </div>
       <div class="card">
         <div class="card-icon icon-red">⬡</div>
-        <h3>Web Demo and API Interface</h3>
-        <p>A Flask inference endpoint and static web interface provide interactive evaluation of physical parameters, PINN model outputs, and solution field visualizations.</p>
+        <h3>Executable Interface Layer</h3>
+        <p>A lightweight API endpoint and browser interface provide an accessible front end for inspecting model outputs, parameter choices, and qualitative solution behavior.</p>
       </div>
     </div>
   </section>
 
   <!-- ── ROADMAP ── -->
   <section class="section" id="roadmap">
-    <div class="section-label">Roadmap</div>
-    <h2>Development Direction</h2>
+    <div class="section-label">Research Direction</div>
+    <h2>Future Experimental Extensions</h2>
     <div class="roadmap-grid">
       <div class="roadmap-card">
         <div class="roadmap-period period-near">Near-Term</div>
@@ -959,9 +1139,9 @@ function switchTab(el, id) {
 
 // ── Demo simulation ────────────────────────────────────────────────────────
 const PROBLEMS = {
-  harmonic:    { name: 'Quantum Harmonic Oscillator',    baseL2: 0.0041,  basePDE: 2.1e-4 },
-  schrodinger: { name: 'Schrödinger Equation (1D)',      baseL2: 0.0083,  basePDE: 5.3e-4 },
-  anharmonic:  { name: 'Anharmonic Double-Well Potential', baseL2: 0.0129, basePDE: 8.7e-4 },
+  harmonic:    { name: 'Quantum Harmonic Oscillator',    baseL2: 0.00157, basePDE: 2.1e-4 },
+  schrodinger: { name: 'Schrödinger Equation (1D)',      baseL2: 0.04183, basePDE: 5.3e-4 },
+  anharmonic:  { name: 'Anharmonic Double-Well Potential', baseL2: 0.26585, basePDE: 8.7e-4 },
   hamiltonian: { name: 'Hamiltonian Dynamics',           baseL2: 0.0022,  basePDE: 1.4e-4 },
 };
 
