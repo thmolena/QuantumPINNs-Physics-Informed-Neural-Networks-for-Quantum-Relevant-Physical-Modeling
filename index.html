@@ -611,12 +611,14 @@
     when dense supervision is limited or unavailable. The project combines a high-accuracy
     harmonic-oscillator eigenvalue study, a complex-valued time-dependent Schrödinger propagation
     study, and a comparative multi-problem benchmark that evaluates transferability, architecture
-    sensitivity, and robustness under a shared experimental framework.
+    sensitivity, and robustness under a shared experimental framework. Each executed notebook is
+    written as a distinct technical claim: specialist stationary-state accuracy, specialist
+    time-dependent accuracy, and shared-design transferability.
   </p>
   <div class="hero-buttons">
     <a href="#tutorials" class="btn btn-primary">Inspect Notebook Results</a>
     <a href="#quickstart" class="btn btn-secondary">Reproduce Experiments</a>
-    <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" class="btn btn-secondary" target="_blank">View on GitHub</a>
+    <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Back to GitHub Repository</a>
   </div>
   <div class="hero-metrics">
     <div class="metric-card">
@@ -673,7 +675,7 @@
 
   <section class="section" id="best-results">
     <div class="section-label">Principal Results</div>
-    <h2>Best Results Across the Three Notebook Studies</h2>
+    <h2>Three Claims, Three Best Results</h2>
     <div class="card-grid">
       <div class="card">
         <div class="card-icon icon-blue">ψ</div>
@@ -693,14 +695,38 @@
     </div>
   </section>
 
+  <section class="section" id="contributions">
+    <div class="section-label">Notebook Contributions</div>
+    <h2>Distinct Technical Contributions</h2>
+    <p>The three notebooks are intentionally non-redundant. The first two establish the strongest specialist results in the repository, whereas the third asks the harder methodological question: which PINN design decisions remain credible once the problem class changes.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon icon-blue">ψ</div>
+        <h3>Adaptive Eigenstate Recovery</h3>
+        <p>The harmonic-oscillator notebook contributes the project's strongest stationary-state formulation through a Gaussian-envelope ansatz, joint wavefunction-energy learning, parity control, and Rayleigh-consistency validation. Its role is to show that a carefully structured PINN can recover near-analytic eigenstates on CPU-scale experiments.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-green">∂</div>
+        <h3>Complex-Valued Propagation</h3>
+        <p>The time-dependent Schrödinger notebook contributes the project's strongest propagation formulation through a dual-output complex PINN, hard initial conditioning, sparse analytic anchors, and transport-aware diagnostics. Its role is to show that low-supervision training can still preserve meaningful dynamical structure.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-purple">⊕</div>
+        <h3>Unified Benchmark Logic</h3>
+        <p>The combined notebook contributes the project's strongest comparative evidence by evaluating shared architectures, collocation budgets, and observation noise under a unified benchmark protocol. Its role is to identify which modeling choices remain credible once the problem class changes.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="figures">
     <div class="section-label">Visual Evidence</div>
-    <h2>Representative Figures for the Strongest Results</h2>
-    <p>The root website now highlights the strongest results from the three notebook studies through representative figures drawn directly from the executed benchmark outputs.</p>
+    <h2>Figure Sequence for the Core Technical Claims</h2>
+    <p>The gallery is ordered to match the technical narrative of the project: strongest stationary-state evidence first, strongest time-dependent evidence second, and comparative transferability evidence last. The sequence is meant to move from specialist accuracy to broader methodological interpretation without overstating what the shared benchmark is intended to prove.</p>
 
     <div class="figure-grid">
       <article class="figure-card">
-        <img src="outputs/qho_ground_state_analysis.png" alt="Quantum harmonic oscillator ground-state benchmark figure" loading="lazy">
+        <img src="outputs/qho_ground_state_analysis.png" alt="Ground-state harmonic-oscillator benchmark showing near-analytic agreement, energy recovery, and low relative error" loading="lazy">
         <div class="figure-body">
           <div class="figure-kicker">Stationary-State Accuracy</div>
           <h3>Ground-State Harmonic-Oscillator Benchmark</h3>
@@ -710,7 +736,17 @@
       </article>
 
       <article class="figure-card">
-        <img src="outputs/schrodinger_density_heatmap.png" alt="Time-dependent Schrödinger density heatmap" loading="lazy">
+        <img src="outputs/qho_excited_states.png" alt="Excited-state harmonic-oscillator comparison highlighting higher-mode recovery and orthogonality structure" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Higher-Order Structure</div>
+          <h3>Excited-State Recovery and Orthogonality Behavior</h3>
+          <p>This figure expands the stationary-state story beyond the easiest ground-state target and shows that the notebook evaluates higher eigenmodes, relative shape fidelity, and orthogonality structure rather than only one scalar accuracy number.</p>
+          <div class="figure-note">The stationary notebook is therefore presented as an eigenstate-recovery study, not merely as a single-curve fit.</div>
+        </div>
+      </article>
+
+      <article class="figure-card">
+        <img src="outputs/schrodinger_density_heatmap.png" alt="Time-dependent Schrodinger density heatmap showing full spacetime reconstruction of the wavepacket benchmark" loading="lazy">
         <div class="figure-body">
           <div class="figure-kicker">Time-Dependent Propagation</div>
           <h3>Spacetime Density Reconstruction</h3>
@@ -720,7 +756,7 @@
       </article>
 
       <article class="figure-card">
-        <img src="outputs/schrodinger_ehrenfest.png" alt="Ehrenfest diagnostics figure" loading="lazy">
+        <img src="outputs/schrodinger_ehrenfest.png" alt="Ehrenfest and norm diagnostics for the time-dependent Schrodinger benchmark" loading="lazy">
         <div class="figure-body">
           <div class="figure-kicker">Physical Consistency</div>
           <h3>Ehrenfest and Conservation Diagnostics</h3>
@@ -730,11 +766,31 @@
       </article>
 
       <article class="figure-card">
-        <img src="outputs/combined_arch_grid.png" alt="Architecture grid figure from the combined benchmark" loading="lazy">
+        <img src="outputs/schrodinger_phase.png" alt="Phase-sensitive and current-level diagnostics for the time-dependent Schrodinger benchmark" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Wavefunction Structure</div>
+          <h3>Phase and Current-Level Dynamics</h3>
+          <p>This figure highlights that the time-dependent study does not stop at density agreement. It also inspects phase-sensitive structure and current-related behavior, which is essential when arguing that the learned solution remains physically informative.</p>
+          <div class="figure-note">The strongest TDSE claim in the project is therefore about structured quantum dynamics, not only amplitude matching.</div>
+        </div>
+      </article>
+
+      <article class="figure-card">
+        <img src="outputs/combined_benchmark.png" alt="Combined benchmark summary contrasting specialist accuracy with shared-protocol transferability" loading="lazy">
+        <div class="figure-body">
+          <div class="figure-kicker">Transferability Summary</div>
+          <h3>Shared-Protocol Comparison Across Quantum Problems</h3>
+          <p>This figure summarizes the integrative benchmark logic of the project by contrasting specialist notebook results with the broader shared-architecture study. It makes explicit where the project achieves near-analytic accuracy and where the emphasis shifts to transferable model design.</p>
+          <div class="figure-note">This distinction is central to presenting the project honestly: the combined study is about methodological stability across tasks, not about outperforming the specialist notebooks on their native benchmarks.</div>
+        </div>
+      </article>
+
+      <article class="figure-card">
+        <img src="outputs/combined_arch_grid.png" alt="Combined benchmark architecture grid showing relative error across depth-width configurations" loading="lazy">
         <div class="figure-body">
           <div class="figure-kicker">Comparative Benchmark Evidence</div>
           <h3>Depth-Width Architecture Sweep</h3>
-          <p>This figure highlights the main integrative contribution of the combined notebook: under a shared benchmark protocol, the strongest architecture in the executed sweep is 5 layers × 64 units with relative L² error 0.26585.</p>
+          <p>This figure follows the transferability summary with the design-level evidence behind it: under a shared benchmark protocol, the strongest architecture in the executed sweep is 5 layers × 64 units with relative L² error 0.26585.</p>
           <div class="figure-note">The combined notebook's role is comparative rather than absolute: it identifies transferable design choices and quantifies their behavior across multiple quantum problems.</div>
         </div>
       </article>
@@ -827,7 +883,7 @@
   <section class="section" id="tutorials">
     <div class="section-label">Notebook Evidence</div>
     <h2>Executed Research Notebooks</h2>
-    <p>Fully executed HTML notebooks with figures, equations, benchmark tables, and interpretive narrative. These documents form the primary evidence layer of the project and should be read as complementary studies rather than interchangeable tutorials.</p>
+    <p>Fully executed HTML notebooks with figures, equations, benchmark tables, and interpretive narrative. These documents form the primary evidence layer of the project and should be read as complementary studies rather than interchangeable tutorials: one for specialist stationary-state accuracy, one for specialist time-dependent accuracy, and one for transferable benchmark design.</p>
 
     <div class="notebook-grid">
       <button class="nb-card nb-tab-btn active" onclick="showNotebook('harmonic', this)">
@@ -1010,20 +1066,31 @@
     <div class="section-label">Reproducibility</div>
     <h2>Minimal Reproduction Path</h2>
 
-    <pre><span class="comment"># 1. Install dependencies</span>
+    <pre><span class="comment"># 1. Use the same environment as the executed notebooks</span>
+<span class="fn">conda</span> activate qaoa
+
+<span class="comment"># 2. Install dependencies</span>
 <span class="fn">pip</span> install -r requirements.txt
 
-<span class="comment"># 2. Train a PINN on the harmonic oscillator</span>
+<span class="comment"># 3. Execute and export the research notebooks</span>
+<span class="fn">jupyter</span> nbconvert --to notebook --execute --inplace notebooks/pinn_harmonic_oscillator.ipynb
+<span class="fn">jupyter</span> nbconvert --to notebook --execute --inplace notebooks/pinn_schrodinger.ipynb
+<span class="fn">jupyter</span> nbconvert --to notebook --execute --inplace notebooks/quantum_pinn_combined.ipynb
+<span class="fn">jupyter</span> nbconvert --to html notebooks/pinn_harmonic_oscillator.ipynb --output pinn_harmonic_oscillator.html
+<span class="fn">jupyter</span> nbconvert --to html notebooks/pinn_schrodinger.ipynb --output pinn_schrodinger.html
+<span class="fn">jupyter</span> nbconvert --to html notebooks/quantum_pinn_combined.ipynb --output quantum_pinn_combined.html
+
+<span class="comment"># 4. Train a PINN on the harmonic oscillator</span>
 <span class="fn">python</span> -m src.train \
   --problem harmonic_oscillator \
   --epochs <span class="num">5000</span> \
   --collocation <span class="num">2000</span> \
   --model-path model.pt
 
-<span class="comment"># 3. Start the inference API</span>
+<span class="comment"># 5. Start the inference API</span>
 <span class="fn">python</span> -m src.server
 
-<span class="comment"># 4. Serve the demo (separate terminal)</span>
+<span class="comment"># 6. Serve the demo (separate terminal)</span>
 <span class="fn">python</span> -m http.server <span class="num">8000</span>
 <span class="comment"># → open http://localhost:8000</span></pre>
   </section>

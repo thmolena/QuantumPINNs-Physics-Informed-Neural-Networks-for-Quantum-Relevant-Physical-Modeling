@@ -1,5 +1,7 @@
 # QuantumPINNs: Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling
 
+[![Project Website](https://img.shields.io/badge/Project%20Website-GitHub%20Pages-0969da?style=for-the-badge)](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
+
 > A physics-informed learning framework for stationary and time-dependent quantum systems, developed as a unified project spanning eigenvalue recovery, complex wavepacket propagation, cross-problem benchmarking, architecture ablations, and robustness analysis.
 
 ---
@@ -26,6 +28,52 @@ The strongest results are distributed across the three executed notebooks and sh
 | Best architecture in the combined ablation | 5 layers x 64 hidden units, rel-L2 $0.26585$ |
 | Noise robustness | Relative L2 changes from $0.25654$ to $0.25035$ as noise amplitude increases from $0.00$ to $0.20$ |
 | Cross-problem energy estimates | QHO $(n=0)$: $0.54976$; QHO $(n=1)$: $1.56084$; anharmonic: $0.57282$; double well: $0.23770$ |
+
+---
+
+## Visual Evidence Gallery
+
+The strongest project-level argument is visual as well as numerical. The figures below are the primary presentation assets from the three executed notebooks and should be interpreted as the clearest evidence for the project's accuracy-first and transferability claims.
+
+### Harmonic-Oscillator Notebook
+
+**Ground-state benchmark:** near-analytic stationary-state recovery with rel-L2 $1.56934 \times 10^{-3}$, energy error $1.52588 \times 10^{-5}$, and overlap squared $0.99999754$.
+
+![QHO ground-state analysis](outputs/qho_ground_state_analysis.png)
+
+**Excited-state and orthogonality evidence:** the notebook goes beyond the single easiest mode and visualizes higher eigenstates, overlap structure, and uncertainty consistency.
+
+![QHO excited-state recovery](outputs/qho_excited_states.png)
+
+### Time-Dependent Schrödinger Notebook
+
+**Spacetime density benchmark:** full-domain density reconstruction for the Gaussian wavepacket benchmark, with $8.0 \times 10^{-8}$ initial density relative L2 error and controlled final-time degradation.
+
+![TDSE density heatmap](outputs/schrodinger_density_heatmap.png)
+
+**Physical-consistency diagnostics:** the contribution is not only density matching, but also transport-aware evaluation through norm stability and Ehrenfest structure.
+
+![TDSE Ehrenfest diagnostics](outputs/schrodinger_ehrenfest.png)
+
+### Combined Benchmark Notebook
+
+**Shared-architecture evidence:** the combined study identifies the strongest shared benchmark configuration as 5 layers x 64 units under a unified protocol.
+
+![Combined architecture grid](outputs/combined_arch_grid.png)
+
+**Comparative benchmark synthesis:** the notebook's integrative role is to expose transferability, scaling, and robustness rather than to replace the specialist accuracy-first studies.
+
+![Combined benchmark summary](outputs/combined_benchmark.png)
+
+---
+
+## Notebook-Level Contributions
+
+Each notebook makes a different claim, and the project should be presented as the composition of these three claims rather than as a single undifferentiated PINN demonstration.
+
+1. **Harmonic-oscillator notebook:** introduces the strongest stationary-state formulation in the project through a hard Gaussian envelope, joint eigenvalue learning, parity regularization, and Rayleigh consistency.
+2. **Time-dependent Schrödinger notebook:** introduces the strongest propagation formulation in the project through a dual-output complex-valued model, hard initial conditioning, sparse analytic anchors, and transport-aware diagnostics.
+3. **Combined benchmark notebook:** introduces the strongest project-level comparative evidence by distinguishing specialist accuracy from transferable modeling choices through architecture, scaling, and noise ablations.
 
 ---
 
@@ -222,12 +270,18 @@ QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Mode
 ## Reproducing the Results
 
 ```bash
+conda activate qaoa
 pip install -r requirements.txt
 
 # Execute the notebooks in the recommended order
 jupyter nbconvert --to notebook --execute --inplace notebooks/pinn_harmonic_oscillator.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/pinn_schrodinger.ipynb
 jupyter nbconvert --to notebook --execute --inplace notebooks/quantum_pinn_combined.ipynb
+
+# Regenerate the HTML exports used by the website
+jupyter nbconvert --to html notebooks/pinn_harmonic_oscillator.ipynb --output pinn_harmonic_oscillator.html
+jupyter nbconvert --to html notebooks/pinn_schrodinger.ipynb --output pinn_schrodinger.html
+jupyter nbconvert --to html notebooks/quantum_pinn_combined.ipynb --output quantum_pinn_combined.html
 
 # Optional: run the training and serving modules directly
 python -m src.train
