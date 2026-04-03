@@ -4,1352 +4,553 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuantumPINNs — Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230d5c63'/%3E%3Cpath d='M24 68c14-42 38-42 52 0' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='34' cy='46' r='6' fill='%23ffffff'/%3E%3Ccircle cx='66' cy='46' r='6' fill='%23ffffff'/%3E%3C/svg%3E" />
   <style>
     :root {
-      --bg: #ffffff;
-      --surface: #f6f8fa;
-      --surface2: #edf0f3;
-      --border: #d0d7de;
-      --text: #1f2328;
-      --text-muted: #57606a;
-      --accent: #0969da;
-      --accent2: #0550ae;
-      --green: #1a7f37;
-      --purple: #6639ba;
-      --orange: #953800;
-      --red: #d1242f;
-      --teal: #0e6b56;
-      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --bg: #f6f7f4;
+      --paper: #fffefb;
+      --paper-2: #f1efe8;
+      --ink: #17222f;
+      --muted: #5b6572;
+      --line: #d7d2c4;
+      --accent: #0d5c63;
+      --accent-2: #a84a2a;
+      --accent-3: #2b6cb0;
+      --shadow: 0 22px 48px rgba(23, 34, 47, 0.08);
+      --font-sans: "Avenir Next", "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-serif: Georgia, "Times New Roman", serif;
+      --font-mono: "SFMono-Regular", Consolas, Menlo, monospace;
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * { box-sizing: border-box; }
     body {
-      background: var(--bg);
-      color: var(--text);
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(13, 92, 99, 0.10), transparent 28%),
+        radial-gradient(circle at top right, rgba(168, 74, 42, 0.10), transparent 30%),
+        var(--bg);
+      color: var(--ink);
       font-family: var(--font-sans);
-      font-size: 15px;
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { display: block; width: 100%; height: auto; }
+    .shell { max-width: 1180px; margin: 0 auto; padding: 0 24px 88px; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      background: rgba(246, 247, 244, 0.88);
+      border-bottom: 1px solid rgba(215, 210, 196, 0.7);
+    }
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .brand {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+    }
+    .brand span { color: var(--accent); }
+    nav {
+      margin-left: auto;
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      padding: 72px 0 42px;
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .hero-copy {
+      background: rgba(255, 254, 251, 0.82);
+      border: 1px solid rgba(215, 210, 196, 0.9);
+      border-radius: 28px;
+      padding: 38px;
+      box-shadow: var(--shadow);
+    }
+    .eyebrow {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(13, 92, 99, 0.10);
+      color: var(--accent);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3 {
+      margin: 0 0 14px;
+      font-family: var(--font-serif);
+      line-height: 1.15;
+    }
+    h1 { font-size: clamp(2.4rem, 5vw, 4.5rem); }
+    h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+    h3 { font-size: 1.2rem; }
+    p { margin: 0 0 14px; color: var(--muted); }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    .button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .hero-panel {
+      display: grid;
+      gap: 14px;
+    }
+    .metric {
+      background: rgba(255, 254, 251, 0.88);
+      border: 1px solid rgba(215, 210, 196, 0.9);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+    .metric-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--accent-2);
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    section { margin-top: 42px; }
+    .section-head {
+      max-width: 780px;
+      margin-bottom: 22px;
+    }
+    .section-kicker {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-2);
+      margin-bottom: 10px;
+    }
+
+    .grid-3,
+    .grid-2 {
+      display: grid;
+      gap: 18px;
+    }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .card,
+    .figure,
+    .code-block,
+    .viewer,
+    .summary-table {
+      background: rgba(255, 254, 251, 0.88);
+      border: 1px solid rgba(215, 210, 196, 0.9);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    .card {
+      padding: 24px;
+    }
+    .card p:last-child { margin-bottom: 0; }
+
+    .figure {
+      overflow: hidden;
+    }
+    .figure-copy {
+      padding: 20px 22px 24px;
+    }
+    .figure-copy p:last-child { margin-bottom: 0; }
+
+    .summary-table {
+      overflow: hidden;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.96rem;
+    }
+    th, td {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(215, 210, 196, 0.75);
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background: rgba(13, 92, 99, 0.07);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    tr:last-child td { border-bottom: 0; }
+
+    .code-block {
+      padding: 0;
+      overflow: hidden;
+    }
+    .code-block pre {
+      margin: 0;
+      padding: 22px 24px;
+      overflow-x: auto;
+      background: transparent;
+      font-family: var(--font-mono);
+      font-size: 0.92rem;
+      color: var(--ink);
       line-height: 1.7;
     }
 
-    /* ── header ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 20px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .logo {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent);
-      text-decoration: none;
-      letter-spacing: -0.3px;
-    }
-    .logo span { color: var(--text-muted); font-weight: 400; }
-    nav { margin-left: auto; display: flex; gap: 4px; }
-    nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 13px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
-    nav a:hover { background: var(--surface2); color: var(--text); }
-
-    /* ── hero ── */
-    .hero {
-      background: linear-gradient(135deg, #ffffff 0%, #f0f6ff 50%, #e8f2fd 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 80px 24px 72px;
-      text-align: center;
-    }
-    .hero-badge {
-      display: inline-block;
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      font-size: 12px;
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    .hero h1 {
-      font-size: clamp(24px, 4vw, 40px);
-      font-weight: 800;
-      line-height: 1.2;
-      max-width: 800px;
-      margin: 0 auto 20px;
-      letter-spacing: -0.5px;
-      font-family: var(--font-serif);
-    }
-    .hero h1 em { color: var(--accent); font-style: normal; }
-    .hero p {
-      max-width: 660px;
-      margin: 0 auto 36px;
-      color: var(--text-muted);
-      font-size: 16px;
-    }
-    .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .hero-metrics {
-      max-width: 1040px;
-      margin: 32px auto 0;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-    }
-    .metric-card {
-      background: rgba(255,255,255,0.78);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 18px;
-      text-align: left;
-      box-shadow: 0 12px 28px rgba(9,105,218,0.06);
-    }
-    .metric-card strong {
-      display: block;
-      color: var(--accent2);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 8px;
-    }
-    .metric-card .metric-value {
-      font-size: 24px;
-      font-weight: 800;
-      letter-spacing: -0.4px;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .metric-card p {
-      font-size: 13px;
-      line-height: 1.55;
-      margin: 0;
-    }
-    .btn {
-      display: inline-block;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.15s, transform 0.1s;
-      border: none;
-    }
-    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-primary { background: var(--accent); color: #ffffff; }
-    .btn-secondary {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    /* ── main layout ── */
-    main { max-width: 1100px; margin: 0 auto; padding: 60px 24px 80px; }
-
-    /* ── section titles ── */
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    h2 {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      letter-spacing: -0.3px;
-      font-family: var(--font-serif);
-    }
-    h3 {
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--accent2);
-      font-family: var(--font-serif);
-    }
-    p { color: var(--text-muted); margin-bottom: 14px; }
-    p:last-child { margin-bottom: 0; }
-
-    /* ── cards ── */
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 22px;
-      transition: border-color 0.2s;
-    }
-    .card:hover { border-color: var(--accent); }
-    .card-icon {
-      width: 38px; height: 38px;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-      margin-bottom: 14px;
-    }
-    .icon-blue   { background: rgba(88,166,255,0.12); }
-    .icon-green  { background: rgba(63,185,80,0.12); }
-    .icon-purple { background: rgba(210,168,255,0.12); }
-    .icon-orange { background: rgba(255,166,87,0.12); }
-    .icon-teal   { background: rgba(57,211,83,0.12); }
-    .icon-red    { background: rgba(255,123,114,0.12); }
-
-    .figure-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
-      margin-top: 24px;
-    }
-    .figure-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      transition: border-color 0.2s, transform 0.15s;
-    }
-    .figure-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-    .figure-card img {
-      display: block;
-      width: 100%;
-      height: auto;
-      background: #ffffff;
-      border-bottom: 1px solid var(--border);
-    }
-    .figure-body {
-      padding: 18px 20px 20px;
-    }
-    .figure-kicker {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.9px;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-    .figure-body h3 {
-      margin-bottom: 8px;
-      color: var(--text);
-    }
-    .figure-body p {
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    .figure-note {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    /* ── section dividers ── */
-    .section { margin-bottom: 72px; }
-
-    /* ── equations ── */
-    .eq-block {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 8px;
-      padding: 16px 20px;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      color: var(--purple);
-      margin: 20px 0;
-      overflow-x: auto;
-      white-space: pre;
-    }
-
-    /* ── pipeline steps ── */
-    .pipeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      margin-top: 24px;
-    }
-    .pipeline-step {
-      display: flex;
-      gap: 20px;
-      position: relative;
-    }
-    .pipeline-step:not(:last-child)::before {
-      content: '';
-      position: absolute;
-      left: 19px;
-      top: 40px;
-      bottom: -8px;
-      width: 2px;
-      background: var(--border);
-    }
-    .step-num {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      background: var(--surface2);
-      border: 2px solid var(--accent);
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 14px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .step-body { padding-bottom: 28px; }
-    .step-body h3 { color: var(--text); margin-bottom: 6px; font-size: 15px; }
-    .step-body p { font-size: 14px; margin: 0; }
-
-    /* ── demo section ── */
-    .demo-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .demo-tabs {
-      display: flex;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface2);
-    }
-    .demo-tab {
-      padding: 12px 20px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color 0.15s, border-color 0.15s;
-    }
-    .demo-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-    .demo-body { padding: 28px; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    @media (max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
-    label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    select, input[type="number"], input[type="range"] {
-      width: 100%;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-      padding: 8px 12px;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    select:focus, input[type="number"]:focus { border-color: var(--accent); }
-    input[type="range"] { padding: 4px 0; cursor: pointer; accent-color: var(--accent); }
-    .range-val { font-size: 12px; color: var(--accent); font-family: var(--font-mono); }
-    .run-btn {
-      background: var(--accent);
-      color: #ffffff;
-      border: none;
-      padding: 11px 28px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.15s;
-      margin-top: 4px;
-    }
-    .run-btn:hover { opacity: 0.85; }
-    .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .output-box {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 24px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      min-height: 120px;
-    }
-    .output-box .out-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; }
-    .out-metric { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); }
-    .out-metric:last-child { border-bottom: none; }
-    .out-key { color: var(--text-muted); }
-    .out-val { color: var(--teal); font-weight: 600; }
-    .canvas-wrap { position: relative; margin-top: 20px; }
-    canvas {
-      width: 100%;
-      max-width: 600px;
-      height: 200px;
-      display: block;
-      border-radius: 8px;
-      background: var(--surface2);
-    }
-    .spinner {
-      display: none;
-      width: 20px; height: 20px;
-      border: 2.5px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin-left: 12px;
-      vertical-align: middle;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── feature list ── */
-    .feature-list { list-style: none; margin-top: 16px; }
-    .feature-list li {
-      display: flex;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-      color: var(--text-muted);
-    }
-    .feature-list li:last-child { border-bottom: none; }
-    .feature-list li::before {
-      content: '✓';
-      color: var(--green);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    /* ── code block ── */
-    pre {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 18px 20px;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      overflow-x: auto;
-      color: var(--text);
-      margin: 16px 0;
-    }
-    pre .comment { color: var(--text-muted); }
-    pre .kw { color: var(--purple); }
-    pre .str { color: var(--orange); }
-    pre .fn { color: var(--accent2); }
-    pre .num { color: var(--green); }
-
-    /* ── two-col layout ── */
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
-    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
-
-    /* ── roadmap ── */
-    .roadmap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
-    @media (max-width: 700px) { .roadmap-grid { grid-template-columns: 1fr; } }
-    .roadmap-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-    }
-    .roadmap-period {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
-    .period-near { color: var(--green); }
-    .period-mid  { color: var(--orange); }
-    .period-long { color: var(--purple); }
-
-    /* ── footer ── */
-    footer {
-      border-top: 1px solid var(--border);
-      background: var(--surface);
-      padding: 32px 24px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 13px;
-    }
-    footer a { color: var(--accent); text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* ── scrollbar ── */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-    /* ── notebook viewer ── */
     .notebook-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-top: 24px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 18px;
     }
-    .nb-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px 22px;
-      color: inherit;
-      cursor: pointer;
-      text-align: left;
+    .nb-btn {
       width: 100%;
-      font-family: var(--font-sans);
-      font-size: 14px;
-      transition: border-color .2s, background .2s, transform .15s;
+      text-align: left;
+      border: 1px solid rgba(215, 210, 196, 0.9);
+      border-radius: 20px;
+      background: rgba(255, 254, 251, 0.88);
+      padding: 20px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      color: var(--ink);
     }
-    .nb-card:hover { border-color: var(--accent); background: #eef5ff; transform: translateY(-2px); }
-    .nb-card.active { border-color: var(--accent); background: #e8f2fd; box-shadow: 0 0 0 2px rgba(9,105,218,0.12); }
-    .nb-icon { font-size: 1.8rem; flex-shrink: 0; line-height: 1; margin-top: 4px; }
-    .nb-body { flex: 1; }
-    .nb-body h3 { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-    .nb-body p  { font-size: 0.80rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 8px; }
-    .nb-arrow { color: var(--accent); font-size: 1rem; flex-shrink: 0; margin-top: 4px; }
-    .nb-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .nb-btn.active {
+      border-color: rgba(13, 92, 99, 0.65);
+      background: rgba(13, 92, 99, 0.08);
+    }
     .nb-tag {
-      font-size: 0.68rem;
-      padding: 2px 8px;
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 10px;
       border-radius: 999px;
-      background: #e8f2fd;
-      color: #1e3a8a;
-      border: 1px solid #bfd3ff;
-      white-space: nowrap;
+      background: rgba(43, 108, 176, 0.10);
+      color: var(--accent-3);
+      font-size: 0.78rem;
+      margin-right: 6px;
     }
-    .nb-viewer-container { margin-top: 20px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .nb-viewer-header {
+
+    .viewer-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 16px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      gap: 18px;
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(215, 210, 196, 0.75);
     }
-    .nb-viewer-title { font-size: 0.88rem; font-weight: 600; color: var(--text); }
-    .nb-viewer-actions { display: flex; gap: 8px; }
-    .btn-sm {
-      display: inline-block;
-      font-size: 0.78rem;
-      padding: 5px 12px;
-      border-radius: 6px;
-      background: var(--surface2);
-      color: var(--text);
-      border: 1px solid var(--border);
-      text-decoration: none;
-      font-weight: 500;
-      transition: background .15s;
+    iframe {
+      width: 100%;
+      height: 76vh;
+      border: 0;
+      display: block;
+      background: #ffffff;
     }
-    .btn-sm:hover { background: var(--border); color: var(--text); text-decoration: none; }
-    .nb-iframe { width: 100%; height: 78vh; border: none; background: #fff; display: block; }
 
-    /* ── collapsible more section ── */
-    details.more-section { margin-bottom: 72px; }
-    details.more-section > summary {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      list-style: none;
-      padding: 18px 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      transition: background .15s;
-      user-select: none;
+    footer {
+      margin-top: 44px;
+      padding: 28px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      border-top: 1px solid rgba(215, 210, 196, 0.8);
     }
-    details.more-section > summary::-webkit-details-marker { display: none; }
-    details.more-section > summary::before {
-      content: '\25B6';
-      font-size: 11px;
-      color: var(--accent);
-      transition: transform .2s;
-      flex-shrink: 0;
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid-3,
+      .grid-2,
+      .notebook-grid {
+        grid-template-columns: 1fr;
+      }
+      nav { margin-left: 0; }
+      .viewer-head { flex-direction: column; align-items: flex-start; }
     }
-    details.more-section[open] > summary::before { transform: rotate(90deg); }
-    details.more-section > summary:hover { background: var(--surface2); }
-    details.more-section > .more-content { padding-top: 16px; }
   </style>
 </head>
 <body>
-
-<!-- ════════════════════════════════ HEADER ════════════════════════════════ -->
-<header>
-  <div class="header-inner">
-    <a class="logo" href="#">Quantum<em style="color:var(--accent)">PINNs</em> <span>/ Physics-Informed Neural Networks</span></a>
-    <nav>
-      <a href="#overview">Overview</a>
-      <a href="#demo">Demo</a>
-      <a href="#tutorials">Tutorials</a>
-      <a href="#motivation">Motivation</a>
-      <a href="#quickstart">Quick Start</a>
-      <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub &#8599;</a>
-    </nav>
-  </div>
-</header>
-
-<!-- ════════════════════════════════ HERO ════════════════════════════════ -->
-<section class="hero">
-  <div class="hero-badge">Executable Research Study</div>
-  <h1>Physics-Informed Neural Networks<br>for Quantum-Relevant Physical Modeling</h1>
-  <p>
-    A research-oriented study of physics-informed neural networks for stationary and time-dependent
-    quantum systems, with emphasis on whether governing equations, normalization constraints,
-    and physically motivated regularization are sufficient to recover accurate quantum solutions
-    when dense supervision is limited or unavailable. The project combines a high-accuracy
-    harmonic-oscillator eigenvalue study, a complex-valued time-dependent Schrödinger propagation
-    study, and a comparative multi-problem benchmark that evaluates transferability, architecture
-    sensitivity, and robustness under a shared experimental framework. Each executed notebook is
-    written as a distinct technical claim: specialist stationary-state accuracy, specialist
-    time-dependent accuracy, and shared-design transferability.
-  </p>
-  <div class="hero-buttons">
-    <a href="#tutorials" class="btn btn-primary">Inspect Notebook Results</a>
-    <a href="#quickstart" class="btn btn-secondary">Reproduce Experiments</a>
-    <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Back to GitHub Repository</a>
-  </div>
-  <div class="hero-metrics">
-    <div class="metric-card">
-      <strong>Best Stationary-State Result</strong>
-      <div class="metric-value">1.56934 × 10<sup>−3</sup></div>
-      <p>Relative L² error for the QHO ground state, with learned energy 0.50001526 and absolute energy error 1.52588 × 10<sup>−5</sup>.</p>
+  <header>
+    <div class="nav">
+      <div class="brand">Quantum<span>PINNs</span></div>
+      <nav>
+        <a href="#results">Results</a>
+        <a href="#figures">Figures</a>
+        <a href="#notebooks">Notebooks</a>
+        <a href="#reproduce">Reproduce</a>
+        <a href="README.md">README</a>
+        <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
     </div>
-    <div class="metric-card">
-      <strong>Best Time-Dependent Result</strong>
-      <div class="metric-value">8.0 × 10<sup>−8</sup></div>
-      <p>Initial density relative L² error for Gaussian wavepacket propagation, with mean density error 4.18% across the full spacetime interval.</p>
-    </div>
-    <div class="metric-card">
-      <strong>Best Integrative Contribution</strong>
-      <div class="metric-value">5L × 64</div>
-      <p>Best shared benchmark architecture in the combined notebook, reaching relative L² error 0.26585 with stable noise behavior from 0.25654 to 0.25035.</p>
-    </div>
-  </div>
-</section>
+  </header>
 
-<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
-<main>
-
-  <!-- ── OVERVIEW ── -->
-  <section class="section" id="overview">
-    <div class="section-label">Problem Setting</div>
-    <h2>Project Scope and Empirical Claim</h2>
-    <div class="two-col">
-      <div>
+  <div class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Research Project</div>
+        <h1>Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</h1>
         <p>
-          This project presents a research-oriented framework for applying
-          <strong style="color:var(--text)">Physics-Informed Neural Networks (PINNs)</strong>
-          to quantum-relevant physical systems. The central objective is to determine whether
-          governing equations, normalization structure, and physically motivated consistency terms
-          can act as a sufficient supervisory signal for recovering high-quality quantum solutions
-          in regimes where dense labeled data is unnecessary, scarce, or expensive to generate.
+          This project is organized around one coherent question: when the governing quantum physics is known, how far can a PINN go without dense labeled solution data? The answer in this repository is built from three non-redundant studies: a specialist harmonic-oscillator benchmark, a specialist time-dependent Schrödinger benchmark, and a shared cross-problem benchmark that tests transferability rather than repeating the same accuracy claim.
         </p>
         <p>
-          The empirical argument is organized around three complementary notebooks. The harmonic-oscillator notebook establishes the strongest stationary-state result, the time-dependent Schrödinger notebook establishes the strongest propagation result, and the combined benchmark notebook provides the broadest methodological evidence by quantifying transferability, architecture sensitivity, and robustness across multiple quantum regimes.
+          The landing page uses only figures backed by CSV artifacts committed in the repository, so the visual evidence shown here is stable and reproducible.
         </p>
-      </div>
-      <div>
-        <ul class="feature-list">
-          <li>QHO ground state recovered with rel-L² 1.56934 × 10^-3 and energy error 1.52588 × 10^-5</li>
-          <li>TDSE wavepacket benchmark reaches 8.0 × 10^-8 initial density rel-L² error</li>
-          <li>Norm remains within [0.990997, 1.010868] under time-dependent propagation</li>
-          <li>Combined four-problem benchmark identifies 5 layers × 64 units as the strongest shared architecture</li>
-          <li>Noise robustness remains stable from rel-L² 0.25654 to 0.25035 as amplitude increases from 0.00 to 0.20</li>
-          <li>Executable notebooks, exported benchmark artifacts, API endpoint, and browser interface</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="best-results">
-    <div class="section-label">Principal Results</div>
-    <h2>Three Claims, Three Best Results</h2>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon icon-blue">ψ</div>
-        <h3>Stationary-State Accuracy Study</h3>
-        <p>The project's strongest stationary-state result is the QHO ground-state benchmark: relative L² error 1.56934 × 10^-3, max pointwise error 1.25322 × 10^-3, learned energy 0.50001526, absolute energy error 1.52588 × 10^-5, squared overlap 0.99999754, and Rayleigh-consistency gap 3.59893 × 10^-6.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-green">∂</div>
-        <h3>Time-Dependent Propagation Study</h3>
-        <p>The strongest time-dependent result is the Gaussian wavepacket benchmark: initial density relative L² error 8.0 × 10^-8, mean density relative L² error 4.18%, final-time density relative L² error 6.71%, norm range [0.990997, 1.010868], and mean Ehrenfest errors 2.56 × 10^-2 and 2.99 × 10^-2.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-purple">⊕</div>
-        <h3>Comparative Benchmark Study</h3>
-        <p>The project's broadest contribution is the integrative benchmark layer: a unified four-problem study with architecture, scaling, and noise ablations. In the executed sweep, the best shared configuration is 5 layers × 64 units with relative L² error 0.26585, while the noise study varies by only 0.00619 across amplitudes 0.00 to 0.20.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="contributions">
-    <div class="section-label">Notebook Contributions</div>
-    <h2>Distinct Technical Contributions</h2>
-    <p>The three notebooks are intentionally non-redundant. The first two establish the strongest specialist results in the repository, whereas the third asks the harder methodological question: which PINN design decisions remain credible once the problem class changes.</p>
-
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon icon-blue">ψ</div>
-        <h3>Adaptive Eigenstate Recovery</h3>
-        <p>The harmonic-oscillator notebook contributes the project's strongest stationary-state formulation through a Gaussian-envelope ansatz, joint wavefunction-energy learning, parity control, and Rayleigh-consistency validation. Its role is to show that a carefully structured PINN can recover near-analytic eigenstates on CPU-scale experiments.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-green">∂</div>
-        <h3>Complex-Valued Propagation</h3>
-        <p>The time-dependent Schrödinger notebook contributes the project's strongest propagation formulation through a dual-output complex PINN, hard initial conditioning, sparse analytic anchors, and transport-aware diagnostics. Its role is to show that low-supervision training can still preserve meaningful dynamical structure.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-purple">⊕</div>
-        <h3>Unified Benchmark Logic</h3>
-        <p>The combined notebook contributes the project's strongest comparative evidence by evaluating shared architectures, collocation budgets, and observation noise under a unified benchmark protocol. Its role is to identify which modeling choices remain credible once the problem class changes.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="figures">
-    <div class="section-label">Visual Evidence</div>
-    <h2>Figure Sequence for the Core Technical Claims</h2>
-    <p>The gallery is ordered to match the technical narrative of the project: strongest stationary-state evidence first, strongest time-dependent evidence second, and comparative transferability evidence last. The sequence is meant to move from specialist accuracy to broader methodological interpretation without overstating what the shared benchmark is intended to prove.</p>
-
-    <div class="figure-grid">
-      <article class="figure-card">
-        <img src="outputs/qho_ground_state_analysis.png" alt="Ground-state harmonic-oscillator benchmark showing near-analytic agreement, energy recovery, and low relative error" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Stationary-State Accuracy</div>
-          <h3>Ground-State Harmonic-Oscillator Benchmark</h3>
-          <p>This figure summarizes the strongest stationary-state result in the project: relative L² error 1.56934 × 10^-3, max pointwise error 1.25322 × 10^-3, learned energy 0.50001526, and absolute energy error 1.52588 × 10^-5.</p>
-          <div class="figure-note">The harmonic-oscillator notebook combines wavefunction agreement, energy recovery, and operator consistency in a single accuracy-oriented benchmark.</div>
+        <div class="hero-actions">
+          <a class="button primary" href="#figures">View Benchmark Figures</a>
+          <a class="button" href="#notebooks">Open Executed Notebooks</a>
+          <a class="button" href="#reproduce">Reproduction Path</a>
         </div>
-      </article>
-
-      <article class="figure-card">
-        <img src="outputs/qho_excited_states.png" alt="Excited-state harmonic-oscillator comparison highlighting higher-mode recovery and orthogonality structure" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Higher-Order Structure</div>
-          <h3>Excited-State Recovery and Orthogonality Behavior</h3>
-          <p>This figure expands the stationary-state story beyond the easiest ground-state target and shows that the notebook evaluates higher eigenmodes, relative shape fidelity, and orthogonality structure rather than only one scalar accuracy number.</p>
-          <div class="figure-note">The stationary notebook is therefore presented as an eigenstate-recovery study, not merely as a single-curve fit.</div>
-        </div>
-      </article>
-
-      <article class="figure-card">
-        <img src="outputs/schrodinger_density_heatmap.png" alt="Time-dependent Schrodinger density heatmap showing full spacetime reconstruction of the wavepacket benchmark" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Time-Dependent Propagation</div>
-          <h3>Spacetime Density Reconstruction</h3>
-          <p>This density map highlights the strongest time-dependent result in the project, where the benchmark reaches 8.0 × 10^-8 initial density rel-L² error, 4.18% mean density rel-L² error, and 6.71% final-time rel-L² error.</p>
-          <div class="figure-note">The figure emphasizes full-domain propagation quality rather than only snapshot-level agreement, which is central to the TDSE notebook's contribution.</div>
-        </div>
-      </article>
-
-      <article class="figure-card">
-        <img src="outputs/schrodinger_ehrenfest.png" alt="Ehrenfest and norm diagnostics for the time-dependent Schrodinger benchmark" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Physical Consistency</div>
-          <h3>Ehrenfest and Conservation Diagnostics</h3>
-          <p>This figure complements the TDSE density benchmark by showing the physical diagnostics that support the result: norm range [0.990997, 1.010868] together with mean Ehrenfest errors 2.56 × 10^-2 and 2.99 × 10^-2.</p>
-          <div class="figure-note">The time-dependent notebook is therefore evaluated not only as a function approximation problem, but also as a test of physically interpretable quantum dynamics.</div>
-        </div>
-      </article>
-
-      <article class="figure-card">
-        <img src="outputs/schrodinger_phase.png" alt="Phase-sensitive and current-level diagnostics for the time-dependent Schrodinger benchmark" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Wavefunction Structure</div>
-          <h3>Phase and Current-Level Dynamics</h3>
-          <p>This figure highlights that the time-dependent study does not stop at density agreement. It also inspects phase-sensitive structure and current-related behavior, which is essential when arguing that the learned solution remains physically informative.</p>
-          <div class="figure-note">The strongest TDSE claim in the project is therefore about structured quantum dynamics, not only amplitude matching.</div>
-        </div>
-      </article>
-
-      <article class="figure-card">
-        <img src="outputs/combined_benchmark.png" alt="Combined benchmark summary contrasting specialist accuracy with shared-protocol transferability" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Transferability Summary</div>
-          <h3>Shared-Protocol Comparison Across Quantum Problems</h3>
-          <p>This figure summarizes the integrative benchmark logic of the project by contrasting specialist notebook results with the broader shared-architecture study. It makes explicit where the project achieves near-analytic accuracy and where the emphasis shifts to transferable model design.</p>
-          <div class="figure-note">This distinction is central to presenting the project honestly: the combined study is about methodological stability across tasks, not about outperforming the specialist notebooks on their native benchmarks.</div>
-        </div>
-      </article>
-
-      <article class="figure-card">
-        <img src="outputs/combined_arch_grid.png" alt="Combined benchmark architecture grid showing relative error across depth-width configurations" loading="lazy">
-        <div class="figure-body">
-          <div class="figure-kicker">Comparative Benchmark Evidence</div>
-          <h3>Depth-Width Architecture Sweep</h3>
-          <p>This figure follows the transferability summary with the design-level evidence behind it: under a shared benchmark protocol, the strongest architecture in the executed sweep is 5 layers × 64 units with relative L² error 0.26585.</p>
-          <div class="figure-note">The combined notebook's role is comparative rather than absolute: it identifies transferable design choices and quantifies their behavior across multiple quantum problems.</div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <!-- ── DEMO ── -->
-  <section class="section" id="demo">
-    <div class="section-label">Illustrative Interface</div>
-    <h2>Interactive Configuration Study</h2>
-    <p>Configure a representative quantum problem, vary core training parameters, and inspect a lightweight simulated view of how PINN metrics respond to architectural and optimization choices.</p>
-
-    <div class="demo-panel">
-      <div class="demo-tabs">
-        <div class="demo-tab active" onclick="switchTab(this,'config')">Configuration</div>
-        <div class="demo-tab" onclick="switchTab(this,'results')">Results &amp; Metrics</div>
-        <div class="demo-tab" onclick="switchTab(this,'residual')">Residual Plot</div>
       </div>
 
-      <!-- CONFIG TAB -->
-      <div class="demo-body" id="tab-config">
-        <div class="form-row">
+      <div class="hero-panel">
+        <article class="metric">
+          <div class="metric-label">Best stationary-state result</div>
+          <div class="metric-value">1.569e-3</div>
+          <p>Ground-state relative L2 error for the harmonic oscillator, with learned energy 0.50001526.</p>
+        </article>
+        <article class="metric">
+          <div class="metric-label">Best time-dependent result</div>
+          <div class="metric-value">7.92e-8</div>
+          <p>Initial density relative L2 error for Gaussian wavepacket propagation, with controlled error at final time.</p>
+        </article>
+        <article class="metric">
+          <div class="metric-label">Best shared architecture</div>
+          <div class="metric-value">5 × 64</div>
+          <p>Deepest and widest tested model in the combined benchmark, reaching relative L2 0.26585.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="section-head">
+        <div class="section-kicker">Research Logic</div>
+        <h2>Three Studies With Different Jobs</h2>
+        <p>The repository is strongest when read as a sequence. The harmonic-oscillator notebook establishes specialist stationary-state accuracy, the time-dependent notebook establishes structured complex-valued propagation, and the combined benchmark explains which design choices survive when the problem class changes.</p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card">
+          <h3>Stationary-state benchmark</h3>
+          <p>The harmonic-oscillator study jointly learns the wavefunction and eigenvalue. Its ground-state result is the most accurate numerical result in the repository.</p>
+        </article>
+        <article class="card">
+          <h3>Time-dependent benchmark</h3>
+          <p>The Schrödinger study predicts the real and imaginary wavefunction components across space and time, then evaluates them with density and norm diagnostics.</p>
+        </article>
+        <article class="card">
+          <h3>Comparative benchmark</h3>
+          <p>The combined study is intentionally broader than the specialist notebooks. Its role is to quantify transferability, architecture sensitivity, and robustness.</p>
+        </article>
+      </div>
+
+      <div class="summary-table" style="margin-top:18px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Study</th>
+              <th>Main result</th>
+              <th>Interpretation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Harmonic oscillator</td>
+              <td>Relative L2 1.56927 × 10^-3 and learned energy 0.50001526</td>
+              <td>Near-analytic recovery on the canonical eigenproblem.</td>
+            </tr>
+            <tr>
+              <td>Time-dependent Schrödinger</td>
+              <td>Initial density relative L2 7.92 × 10^-8 and final density relative L2 5.66 × 10^-2</td>
+              <td>Accurate propagation with predicted norm close to one.</td>
+            </tr>
+            <tr>
+              <td>Combined benchmark</td>
+              <td>Best shared architecture 5 layers × 64 units with relative L2 0.26585</td>
+              <td>Design guidance across problem classes rather than another specialist ceiling result.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="figures">
+      <div class="section-head">
+        <div class="section-kicker">CSV-Backed Visual Evidence</div>
+        <h2>Stable Figures for the Main Claims</h2>
+        <p>These figures come from the benchmark tables in outputs, not from absent notebook-export PNG files. That makes the landing page self-consistent and keeps the README and the site aligned.</p>
+      </div>
+
+      <div class="grid-2">
+        <article class="figure">
+          <img src="outputs/qho_benchmark.svg" alt="Harmonic oscillator benchmark chart" loading="lazy" />
+          <div class="figure-copy">
+            <h3>Harmonic-oscillator specialist result</h3>
+            <p>The ground state is the clearest success case in the repository: very low relative error together with very low energy error.</p>
+          </div>
+        </article>
+
+        <article class="figure">
+          <img src="outputs/schrodinger_benchmark.svg" alt="Time-dependent Schrodinger benchmark chart" loading="lazy" />
+          <div class="figure-copy">
+            <h3>Wavepacket propagation benchmark</h3>
+            <p>The time-dependent study begins essentially exact at the initial condition and stays physically plausible through the interval, with the norm remaining close to unity.</p>
+          </div>
+        </article>
+
+        <article class="figure">
+          <img src="outputs/combined_architecture.svg" alt="Combined benchmark architecture grid" loading="lazy" />
+          <div class="figure-copy">
+            <h3>Architecture sensitivity in the shared benchmark</h3>
+            <p>Depth is the strongest lever in the tested sweep, and the 5-layer, 64-unit model is the best shared configuration.</p>
+          </div>
+        </article>
+
+        <article class="figure">
+          <img src="outputs/combined_summary.svg" alt="Combined benchmark summary and noise robustness" loading="lazy" />
+          <div class="figure-copy">
+            <h3>Transferability and robustness</h3>
+            <p>The combined notebook adds breadth: multiple problems under one protocol and only modest variation as input noise is increased.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="notebooks">
+      <div class="section-head">
+        <div class="section-kicker">Executed Evidence Layer</div>
+        <h2>Notebook Viewer</h2>
+        <p>The notebooks remain the primary technical evidence. The cards below switch the embedded viewer without duplicating the full narrative on this page.</p>
+      </div>
+
+      <div class="notebook-grid">
+        <button class="nb-btn active" data-key="harmonic" onclick="showNotebook('harmonic', this)">
+          <h3>Harmonic oscillator</h3>
+          <p>Specialist stationary-state notebook with the strongest accuracy result in the repository.</p>
+          <span class="nb-tag">Highest stationary accuracy</span>
+          <span class="nb-tag">Eigenvalue recovery</span>
+        </button>
+        <button class="nb-btn" data-key="schrodinger" onclick="showNotebook('schrodinger', this)">
+          <h3>Time-dependent Schrödinger</h3>
+          <p>Complex-valued propagation notebook with density and norm diagnostics.</p>
+          <span class="nb-tag">Wavepacket propagation</span>
+          <span class="nb-tag">Complex PINN</span>
+        </button>
+        <button class="nb-btn" data-key="combined" onclick="showNotebook('combined', this)">
+          <h3>Combined benchmark</h3>
+          <p>Cross-problem benchmark that compares architecture, scaling, and noise sensitivity.</p>
+          <span class="nb-tag">Transferability</span>
+          <span class="nb-tag">Architecture sweep</span>
+        </button>
+      </div>
+
+      <div class="viewer">
+        <div class="viewer-head">
           <div>
-            <label>Problem</label>
-            <select id="sel-problem">
-              <option value="harmonic">Quantum Harmonic Oscillator</option>
-              <option value="schrodinger">Schr&#246;dinger Equation (1D)</option>
-              <option value="anharmonic">Anharmonic Double-Well Potential</option>
-              <option value="hamiltonian">Hamiltonian Dynamics</option>
-            </select>
+            <h3 id="viewer-title" style="margin-bottom:4px;">Harmonic oscillator notebook</h3>
+            <p id="viewer-subtitle" style="margin:0;">Executed HTML export for the strongest stationary-state benchmark.</p>
           </div>
-          <div>
-            <label>Network Depth</label>
-            <select id="sel-depth">
-              <option value="3">3 hidden layers</option>
-              <option value="4" selected>4 hidden layers</option>
-              <option value="6">6 hidden layers</option>
-              <option value="8">8 hidden layers</option>
-            </select>
-          </div>
+          <a class="button" id="viewer-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" rel="noopener noreferrer">Open in full tab</a>
         </div>
-        <div class="form-row">
-          <div>
-            <label>Collocation Points &mdash; <span class="range-val" id="col-val">2000</span></label>
-            <input type="range" id="sl-collocation" min="200" max="10000" step="200" value="2000"
-              oninput="document.getElementById('col-val').textContent=this.value">
-          </div>
-          <div>
-            <label>Epochs &mdash; <span class="range-val" id="ep-val">5000</span></label>
-            <input type="range" id="sl-epochs" min="500" max="20000" step="500" value="5000"
-              oninput="document.getElementById('ep-val').textContent=this.value">
-          </div>
+        <iframe id="viewer-frame" src="notebooks/pinn_harmonic_oscillator.html" title="QuantumPINNs notebook viewer" loading="lazy"></iframe>
+      </div>
+    </section>
+
+    <section id="reproduce">
+      <div class="section-head">
+        <div class="section-kicker">Reproducibility</div>
+        <h2>Minimal Reproduction Path</h2>
+        <p>The commands below match the environment assumption already used elsewhere in the repository.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="code-block">
+          <pre>conda activate qaoa
+pip install -r requirements.txt
+
+jupyter nbconvert --to notebook --execute --inplace notebooks/pinn_harmonic_oscillator.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/pinn_schrodinger.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/quantum_pinn_combined.ipynb
+
+jupyter nbconvert --to html notebooks/pinn_harmonic_oscillator.ipynb --output pinn_harmonic_oscillator.html
+jupyter nbconvert --to html notebooks/pinn_schrodinger.ipynb --output pinn_schrodinger.html
+jupyter nbconvert --to html notebooks/quantum_pinn_combined.ipynb --output quantum_pinn_combined.html</pre>
         </div>
-        <div class="form-row">
-          <div>
-            <label>PDE Weight &lambda;_pde &mdash; <span class="range-val" id="pde-val">1.0</span></label>
-            <input type="range" id="sl-pde" min="0.1" max="10" step="0.1" value="1.0"
-              oninput="document.getElementById('pde-val').textContent=parseFloat(this.value).toFixed(1)">
-          </div>
-          <div>
-            <label>Data Weight &lambda;_data &mdash; <span class="range-val" id="data-val">1.0</span></label>
-            <input type="range" id="sl-data" min="0.0" max="5" step="0.1" value="1.0"
-              oninput="document.getElementById('data-val').textContent=parseFloat(this.value).toFixed(1)">
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;">
-          <button class="run-btn" id="run-btn" onclick="runDemo()">Run Experiment</button>
-          <span class="spinner" id="spinner"></span>
+
+        <div class="code-block">
+          <pre>python -m src.train --problem harmonic_oscillator --epochs 5000 --collocation 2000 --model-path model.pt
+python -m src.server --model-path model.pt --problem harmonic_oscillator
+python -m http.server 8000
+
+# open http://localhost:8000</pre>
         </div>
       </div>
+    </section>
 
-      <!-- RESULTS TAB -->
-      <div class="demo-body" id="tab-results" style="display:none;">
-        <div class="output-box" id="out-metrics">
-          <div class="out-label">Metrics &mdash; run an experiment first</div>
-        </div>
-      </div>
+    <footer>
+      <p>QuantumPINNs — Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</p>
+      <p><a href="README.md">README</a> · <a href="website/index.html">Local API demo</a> · Released under the project LICENSE</p>
+    </footer>
+  </div>
 
-      <!-- RESIDUAL TAB -->
-      <div class="demo-body" id="tab-residual" style="display:none;">
-        <div class="canvas-wrap">
-          <canvas id="chart-canvas"></canvas>
-        </div>
-        <p id="chart-note" style="font-size:12px;margin-top:10px;">Run an experiment to visualize the training loss curve.</p>
-      </div>
-    </div>
-  </section>
+  <script>
+    const NOTEBOOKS = {
+      harmonic: {
+        src: 'notebooks/pinn_harmonic_oscillator.html',
+        title: 'Harmonic oscillator notebook',
+        subtitle: 'Executed HTML export for the strongest stationary-state benchmark.'
+      },
+      schrodinger: {
+        src: 'notebooks/pinn_schrodinger.html',
+        title: 'Time-dependent Schrödinger notebook',
+        subtitle: 'Executed HTML export for the complex-valued propagation benchmark.'
+      },
+      combined: {
+        src: 'notebooks/quantum_pinn_combined.html',
+        title: 'Combined benchmark notebook',
+        subtitle: 'Executed HTML export for the cross-problem transferability study.'
+      }
+    };
 
-  <!-- ── TUTORIALS ── -->
-  <section class="section" id="tutorials">
-    <div class="section-label">Notebook Evidence</div>
-    <h2>Executed Research Notebooks</h2>
-    <p>Fully executed HTML notebooks with figures, equations, benchmark tables, and interpretive narrative. These documents form the primary evidence layer of the project and should be read as complementary studies rather than interchangeable tutorials: one for specialist stationary-state accuracy, one for specialist time-dependent accuracy, and one for transferable benchmark design.</p>
-
-    <div class="notebook-grid">
-      <button class="nb-card nb-tab-btn active" onclick="showNotebook('harmonic', this)">
-        <div class="nb-icon">&psi;&#8320;</div>
-        <div class="nb-body">
-          <h3>Quantum Harmonic Oscillator</h3>
-          <p>Highest stationary-state accuracy in the project: the QHO ground-state notebook reaches rel-L² 1.56934 × 10^-3, learned energy 0.50001526, squared overlap 0.99999754, and a 1.52588 × 10^-5 absolute energy error.</p>
-          <div class="nb-tags">
-            <span class="nb-tag">Highest Stationary Accuracy</span>
-            <span class="nb-tag">TISE Residual</span>
-            <span class="nb-tag">Orthogonality</span>
-            <span class="nb-tag">Ablation Study</span>
-          </div>
-        </div>
-        <div class="nb-arrow">&#9654;</div>
-      </button>
-
-      <button class="nb-card nb-tab-btn" onclick="showNotebook('schrodinger', this)">
-        <div class="nb-icon">&Psi;</div>
-        <div class="nb-body">
-          <h3>1D Schr&#246;dinger Equation</h3>
-          <p>Highest time-dependent accuracy in the project: the TDSE notebook reaches 8.0 × 10^-8 initial density rel-L² error, 4.18% mean density error, 6.71% final-time error, and strong norm and Ehrenfest agreement.</p>
-          <div class="nb-tags">
-            <span class="nb-tag">Highest Time-Dependent Accuracy</span>
-            <span class="nb-tag">Complex PINN</span>
-            <span class="nb-tag">Wavepacket</span>
-            <span class="nb-tag">Ehrenfest</span>
-            <span class="nb-tag">Norm Conservation</span>
-          </div>
-        </div>
-        <div class="nb-arrow">&#9654;</div>
-      </button>
-
-      <button class="nb-card nb-tab-btn" onclick="showNotebook('combined', this)">
-        <div class="nb-icon">&#8853;</div>
-        <div class="nb-body">
-          <h3>Multi-System PINN Benchmark</h3>
-          <p>Strongest project-level comparative contribution: systematic comparison across harmonic, anharmonic, and double-well settings with architecture sweeps, collocation ablations, and noise-robustness tests. The best shared architecture is 5 layers × 64 units.</p>
-          <div class="nb-tags">
-            <span class="nb-tag">Strongest Integrative Evidence</span>
-            <span class="nb-tag">4 Problems</span>
-            <span class="nb-tag">Noise Robustness</span>
-            <span class="nb-tag">Architecture Sweep</span>
-            <span class="nb-tag">Benchmarks</span>
-          </div>
-        </div>
-        <div class="nb-arrow">&#9654;</div>
-      </button>
-    </div>
-
-    <div class="nb-viewer-container">
-      <div class="nb-viewer-header">
-        <span id="nb-viewer-title" class="nb-viewer-title">&psi;&#8320; Quantum Harmonic Oscillator</span>
-        <div class="nb-viewer-actions">
-          <a id="nb-open-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" class="btn-sm">Open in full tab &#8599;</a>
-        </div>
-      </div>
-      <iframe id="nb-iframe" src="notebooks/pinn_harmonic_oscillator.html" class="nb-iframe" title="Notebook viewer" loading="lazy"></iframe>
-    </div>
-  </section>
-
-  <!-- ── MORE (collapsible) ── -->
-  <details class="more-section">
-    <summary>More &mdash; Motivation, Method, Problem Classes, Reproducibility, Features &amp; Research Direction</summary>
-    <div class="more-content">
-
-  <!-- ── MOTIVATION ── -->
-  <section class="section" id="motivation">
-    <div class="section-label">Motivation</div>
-    <h2>Why Physics-Informed Learning Is Appropriate Here</h2>
-    <p>
-      Direct simulation of quantum systems is computationally expensive, and experimental
-      data from quantum platforms is frequently sparse, noisy, or constrained by hardware
-      limitations. These conditions motivate a learning-theoretic approach in which physical
-      structure is not added after training, but built directly into the optimization problem
-      as an inductive bias.
-    </p>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon icon-blue">⚡</div>
-        <h3>Governing Equations as Supervisory Structure</h3>
-        <p>PDE residuals are enforced as soft constraints through residual terms in the training objective, turning the governing equation itself into the dominant source of supervision.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-green">∂</div>
-        <h3>Automatic Differentiation</h3>
-        <p>Exact spatial and temporal derivatives are computed via reverse-mode autodiff, eliminating finite-difference approximation error.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-purple">◎</div>
-        <h3>Sparse-Data Compatibility</h3>
-        <p>Collocation points augment limited measurements, reducing dependence on dense observational sampling while preserving agreement with known physical structure.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-orange">▲</div>
-        <h3>Scalable Numerical Training</h3>
-        <p>GPU-compatible training supports larger collocation grids and broader architecture sweeps without changing the underlying scientific workflow.</p>
-      </div>
-    </div>
-
-    <div class="eq-block">  iℏ ∂ψ/∂t = −(ℏ²/2m) ∂²ψ/∂x² + V(x)ψ      [Schrödinger equation — enforced as PDE residual]
-
-  L_total = λ_pde · L_pde + λ_bc · L_bc + λ_ic · L_ic + λ_data · L_data</div>
-  </section>
-
-  <!-- ── ARCHITECTURE ── -->
-  <section class="section" id="architecture">
-    <div class="section-label">Method</div>
-    <h2>Experimental and Modeling Pipeline</h2>
-
-    <div class="pipeline">
-      <div class="pipeline-step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h3>Physical Problem Formulation</h3>
-          <p>Each target system is specified by a governing PDE or ODE, boundary and initial conditions, domain geometry, and optional measurement data. The formulation determines the structure of the physics residual and the data-consistency term in the composite loss.</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h3>Neural Network Approximation</h3>
-          <p>A deep neural network approximates the solution field — e.g., wavefunction ψ(x, t) or probability density |ψ|². Architectures are then specialized when needed: the project's strongest stationary-state result comes from an accuracy-oriented harmonic-oscillator configuration, while the strongest time-dependent result comes from a dual-output ComplexPINN with hard initial conditioning and analytic anchors.</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h3>Collocation Sampling</h3>
-          <p>The PDE residual is evaluated at a set of interior collocation points sampled from the domain, without requiring a mesh. Boundary and initial condition points are sampled separately and weighted in the composite loss.</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="step-num">4</div>
-        <div class="step-body">
-          <h3>Residual-Based Optimization</h3>
-          <p>The total loss combines the PDE residual, boundary condition violation, initial condition error, and optional data mismatch terms with tunable weights. Optimization proceeds via Adam or L-BFGS with exact gradient computation through autograd.</p>
-        </div>
-      </div>
-      <div class="pipeline-step">
-        <div class="step-num">5</div>
-        <div class="step-body">
-          <h3>Evaluation and Analysis</h3>
-          <p>Metrics tracked include PDE residual norm, relative L² error against analytic or numerical reference, energy consistency, norm preservation, Ehrenfest agreement, convergence under varying collocation density, and stability under observation noise.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── APPLICATIONS ── -->
-  <section class="section" id="applications">
-    <div class="section-label">Problem Classes</div>
-    <h2>Quantum Systems Studied in This Project</h2>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon icon-blue">Ψ</div>
-        <h3>Schrödinger Equation (1D)</h3>
-        <p>Solve the time-dependent Schrödinger equation for a particle in a potential well. In the executed benchmark, the model learns Gaussian wavepacket evolution with 8.0 × 10^-8 initial density rel-L² error and controlled transport diagnostics across the full time window.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-purple">H</div>
-        <h3>Quantum Harmonic Oscillator</h3>
-        <p>Approximate energy eigenstates and eigenvalues under orthonormality constraints, recovering the QHO ground state with rel-L² 1.56934 × 10^-3 and an absolute energy error of 1.52588 × 10^-5.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-orange">≋</div>
-        <h3>Anharmonic Potential</h3>
-        <p>Extend to quartic and double-well potentials to study the impact of nonlinearity on PINN convergence and solution accuracy, and to place those systems inside a unified comparative benchmark with shared architecture and noise studies.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-teal">∮</div>
-        <h3>Hamiltonian Dynamics</h3>
-        <p>Learn trajectory solutions under energy conservation constraints, serving as a controlled benchmark for comparing physical agreement across collocation densities and network architectures.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── QUICK START ── -->
-  <section class="section" id="quickstart">
-    <div class="section-label">Reproducibility</div>
-    <h2>Minimal Reproduction Path</h2>
-
-    <pre><span class="comment"># 1. Use the same environment as the executed notebooks</span>
-<span class="fn">conda</span> activate qaoa
-
-<span class="comment"># 2. Install dependencies</span>
-<span class="fn">pip</span> install -r requirements.txt
-
-<span class="comment"># 3. Execute and export the research notebooks</span>
-<span class="fn">jupyter</span> nbconvert --to notebook --execute --inplace notebooks/pinn_harmonic_oscillator.ipynb
-<span class="fn">jupyter</span> nbconvert --to notebook --execute --inplace notebooks/pinn_schrodinger.ipynb
-<span class="fn">jupyter</span> nbconvert --to notebook --execute --inplace notebooks/quantum_pinn_combined.ipynb
-<span class="fn">jupyter</span> nbconvert --to html notebooks/pinn_harmonic_oscillator.ipynb --output pinn_harmonic_oscillator.html
-<span class="fn">jupyter</span> nbconvert --to html notebooks/pinn_schrodinger.ipynb --output pinn_schrodinger.html
-<span class="fn">jupyter</span> nbconvert --to html notebooks/quantum_pinn_combined.ipynb --output quantum_pinn_combined.html
-
-<span class="comment"># 4. Train a PINN on the harmonic oscillator</span>
-<span class="fn">python</span> -m src.train \
-  --problem harmonic_oscillator \
-  --epochs <span class="num">5000</span> \
-  --collocation <span class="num">2000</span> \
-  --model-path model.pt
-
-<span class="comment"># 5. Start the inference API</span>
-<span class="fn">python</span> -m src.server
-
-<span class="comment"># 6. Serve the demo (separate terminal)</span>
-<span class="fn">python</span> -m http.server <span class="num">8000</span>
-<span class="comment"># → open http://localhost:8000</span></pre>
-  </section>
-
-  <!-- ── KEY FEATURES ── -->
-  <section class="section" id="features">
-    <div class="section-label">Methodological Advantages</div>
-    <h2>Why the Framework Is Scientifically Useful</h2>
-    <div class="card-grid">
-      <div class="card">
-        <div class="card-icon icon-blue">⊕</div>
-        <h3>Residual-Based Physics Enforcement</h3>
-        <p>Governing differential equations are penalized at collocation points without a discretization mesh, enabling flexible domain sampling and adaptive refinement.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-green">∇</div>
-        <h3>Exact Derivative Computation</h3>
-        <p>All spatial and temporal derivatives are computed via PyTorch autograd, eliminating finite-difference approximation error with seamless gradient flow.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-purple">⇄</div>
-        <h3>Collocation Versus Data Tradeoff</h3>
-        <p>Controlled experiments vary the ratio of collocation points to observed data, enabling direct empirical comparison of physical agreement versus data efficiency.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-orange">σ</div>
-        <h3>Stability Under Sparse Observations</h3>
-        <p>Systematic variation of observation density, noise level, and domain coverage characterizes PINN stability rigorously across quantum system benchmarks.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-teal">⬡</div>
-        <h3>GPU-Accelerated Training</h3>
-        <p>Full GPU execution support via PyTorch enables experiments at larger network sizes, finer collocation grids, and higher-dimensional parameter spaces.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon icon-red">⬡</div>
-        <h3>Executable Interface Layer</h3>
-        <p>A lightweight API endpoint and browser interface provide an accessible front end for inspecting model outputs, parameter choices, and qualitative solution behavior.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── ROADMAP ── -->
-  <section class="section" id="roadmap">
-    <div class="section-label">Research Direction</div>
-    <h2>Future Experimental Extensions</h2>
-    <div class="roadmap-grid">
-      <div class="roadmap-card">
-        <div class="roadmap-period period-near">Near-Term</div>
-        <h3>Expanded Benchmarks</h3>
-        <p>Add multi-dimensional Schrödinger equations, Gross-Pitaevskii equations for Bose-Einstein condensates, and time-dependent perturbation problems. Improve convergence diagnostics and residual visualization tools.</p>
-      </div>
-      <div class="roadmap-card">
-        <div class="roadmap-period period-mid">Mid-Term</div>
-        <h3>Adaptive Collocation</h3>
-        <p>Implement dynamic collocation strategies that concentrate sampling in high-residual regions. Introduce hard constraint enforcement for boundary and initial conditions via distance-function multipliers.</p>
-      </div>
-      <div class="roadmap-card">
-        <div class="roadmap-period period-long">Longer-Term</div>
-        <h3>Open Quantum Systems</h3>
-        <p>Extend the framework toward Lindblad master equations and open system dynamics. Explore integration with quantum hardware data for hybrid experimental-computational validation workflows.</p>
-      </div>
-    </div>
-  </section>
-
-
-    </div>
-  </details>
-
-</main>
-
-<!-- ════════════════════════════════ FOOTER ════════════════════════════════ -->
-<footer>
-  <p>
-    <strong style="color:var(--text)">QuantumPINNs</strong> —
-    Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling
-  </p>
-  <p style="margin-top:8px;">
-    <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank">GitHub Repository</a>
-    &nbsp;·&nbsp;
-    <a href="README.md">README</a>
-    &nbsp;·&nbsp;
-    Released under the project LICENSE
-  </p>
-</footer>
-
-<!-- ════════════════════════════════ JS ════════════════════════════════ -->
-<script>
-// ── Notebook viewer ───────────────────────────────────────────────────────
-const NB_MAP = {
-  harmonic:   { src: 'notebooks/pinn_harmonic_oscillator.html', title: '\u03c8\u2080 Quantum Harmonic Oscillator' },
-  schrodinger:{ src: 'notebooks/pinn_schrodinger.html',         title: '\u03a8 1D Schr\u00f6dinger Equation' },
-  combined:   { src: 'notebooks/quantum_pinn_combined.html',    title: '\u2295 Multi-System PINN Benchmark' },
-};
-function showNotebook(key, btn) {
-  const nb = NB_MAP[key];
-  document.getElementById('nb-iframe').src = nb.src;
-  document.getElementById('nb-viewer-title').textContent = nb.title;
-  document.getElementById('nb-open-link').href = nb.src;
-  document.querySelectorAll('.nb-tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// ── Tab switching ──────────────────────────────────────────────────────────
-function switchTab(el, id) {
-  document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  ['config','results','residual'].forEach(name => {
-    const el = document.getElementById('tab-' + name);
-    if (el) el.style.display = name === id ? '' : 'none';
-  });
-}
-
-// ── Demo simulation ────────────────────────────────────────────────────────
-const PROBLEMS = {
-  harmonic:    { name: 'Quantum Harmonic Oscillator',    baseL2: 0.00157, basePDE: 2.1e-4 },
-  schrodinger: { name: 'Schrödinger Equation (1D)',      baseL2: 0.04183, basePDE: 5.3e-4 },
-  anharmonic:  { name: 'Anharmonic Double-Well Potential', baseL2: 0.26585, basePDE: 8.7e-4 },
-  hamiltonian: { name: 'Hamiltonian Dynamics',           baseL2: 0.0022,  basePDE: 1.4e-4 },
-};
-
-function simulateLossCurve(epochs, colPts, lambdaPDE) {
-  const N = 60;
-  const decay = Math.log(200 + epochs * 0.01) / Math.log(epochs + 1);
-  const noise = 0.04;
-  return Array.from({length: N}, (_, i) => {
-    const t = i / (N - 1);
-    const base = Math.exp(-4.5 * t * decay) + 0.001;
-    return base * (1 + (Math.random() - 0.5) * noise * (1 - t));
-  });
-}
-
-function runDemo() {
-  const btn = document.getElementById('run-btn');
-  const spinner = document.getElementById('spinner');
-  btn.disabled = true;
-  spinner.style.display = 'inline-block';
-
-  const prob  = document.getElementById('sel-problem').value;
-  const depth = parseInt(document.getElementById('sel-depth').value);
-  const col   = parseInt(document.getElementById('sl-collocation').value);
-  const ep    = parseInt(document.getElementById('sl-epochs').value);
-  const lPDE  = parseFloat(document.getElementById('sl-pde').value);
-  const lData = parseFloat(document.getElementById('sl-data').value);
-
-  // Simulate async compute
-  setTimeout(() => {
-    const info  = PROBLEMS[prob];
-    const colScale  = Math.sqrt(col / 2000);
-    const epScale   = Math.sqrt(ep / 5000);
-    const depthBonus = depth / 4;
-    const L2    = (info.baseL2 / (colScale * epScale * depthBonus)).toFixed(5);
-    const PDE   = (info.basePDE / (colScale * epScale)).toExponential(2);
-    const trainTime = (ep / 5000 * col / 2000 * depth * 3.4).toFixed(1);
-    const params = (depth * 80 * 80 + 80 * 1);
-
-    // Metrics tab
-    const metricsEl = document.getElementById('out-metrics');
-    metricsEl.innerHTML = `
-      <div class="out-label">Results — ${info.name}</div>
-      <div class="out-metric"><span class="out-key">Relative L² Error</span><span class="out-val">${L2}</span></div>
-      <div class="out-metric"><span class="out-key">PDE Residual Norm</span><span class="out-val">${PDE}</span></div>
-      <div class="out-metric"><span class="out-key">Network Parameters</span><span class="out-val">${params.toLocaleString()}</span></div>
-      <div class="out-metric"><span class="out-key">Collocation Points</span><span class="out-val">${col.toLocaleString()}</span></div>
-      <div class="out-metric"><span class="out-key">Training Epochs</span><span class="out-val">${ep.toLocaleString()}</span></div>
-      <div class="out-metric"><span class="out-key">λ_pde / λ_data</span><span class="out-val">${lPDE.toFixed(1)} / ${lData.toFixed(1)}</span></div>
-      <div class="out-metric"><span class="out-key">Est. Training Time (simulated)</span><span class="out-val">${trainTime}s</span></div>
-    `;
-
-    // Loss curve tab
-    const losses = simulateLossCurve(ep, col, lPDE);
-    drawLossCurve(losses);
-    document.getElementById('chart-note').textContent =
-      `Training loss curve for ${info.name} — ${ep.toLocaleString()} epochs, ${col.toLocaleString()} collocation points`;
-
-    btn.disabled = false;
-    spinner.style.display = 'none';
-
-    // Switch to results tab
-    document.querySelectorAll('.demo-tab').forEach((t, i) => t.classList.toggle('active', i === 1));
-    document.getElementById('tab-config').style.display = 'none';
-    document.getElementById('tab-results').style.display = '';
-    document.getElementById('tab-residual').style.display = 'none';
-  }, 900);
-}
-
-function drawLossCurve(losses) {
-  const canvas = document.getElementById('chart-canvas');
-  const dpr = window.devicePixelRatio || 1;
-  const W = canvas.clientWidth || 560, H = 200;
-  canvas.width  = W * dpr;
-  canvas.height = H * dpr;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const pad = { top: 16, right: 20, bottom: 36, left: 54 };
-  const cW = W - pad.left - pad.right;
-  const cH = H - pad.top - pad.bottom;
-
-  ctx.clearRect(0, 0, W, H);
-
-  const maxV = Math.max(...losses);
-  const minV = Math.min(...losses);
-
-  // Grid lines
-  ctx.strokeStyle = '#d0d7de';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 4; i++) {
-    const y = pad.top + cH * (i / 4);
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(pad.left + cW, y);
-    ctx.stroke();
-  }
-
-  // Axes labels
-  ctx.fillStyle = '#57606a';
-  ctx.font = '11px sans-serif';
-  ctx.textAlign = 'right';
-  for (let i = 0; i <= 4; i++) {
-    const v = maxV - (maxV - minV) * (i / 4);
-    const y = pad.top + cH * (i / 4);
-    ctx.fillText(v.toExponential(1), pad.left - 6, y + 4);
-  }
-  ctx.textAlign = 'center';
-  for (let i = 0; i <= 5; i++) {
-    const x = pad.left + cW * (i / 5);
-    ctx.fillText(Math.round((i / 5) * losses.length * (1 / losses.length * 100)) + '%', x, H - pad.bottom + 18);
-  }
-  ctx.fillStyle = '#57606a';
-  ctx.fillText('Training Progress', W / 2, H - 4);
-
-  // Gradient fill
-  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + cH);
-  grad.addColorStop(0,   'rgba(9,105,218,0.18)');
-  grad.addColorStop(1,   'rgba(9,105,218,0.0)');
-  ctx.beginPath();
-  losses.forEach((v, i) => {
-    const x = pad.left + (i / (losses.length - 1)) * cW;
-    const y = pad.top  + (1 - (v - minV) / (maxV - minV)) * cH;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.lineTo(pad.left + cW, pad.top + cH);
-  ctx.lineTo(pad.left, pad.top + cH);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Line
-  ctx.beginPath();
-  ctx.strokeStyle = '#0969da';
-  ctx.lineWidth = 2;
-  losses.forEach((v, i) => {
-    const x = pad.left + (i / (losses.length - 1)) * cW;
-    const y = pad.top  + (1 - (v - minV) / (maxV - minV)) * cH;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-}
-</script>
+    function showNotebook(key, button) {
+      const notebook = NOTEBOOKS[key];
+      document.getElementById('viewer-frame').src = notebook.src;
+      document.getElementById('viewer-title').textContent = notebook.title;
+      document.getElementById('viewer-subtitle').textContent = notebook.subtitle;
+      document.getElementById('viewer-link').href = notebook.src;
+      document.querySelectorAll('.nb-btn').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+    }
+  </script>
 </body>
 </html>
