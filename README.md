@@ -22,7 +22,7 @@ Taken together, the notebooks show that the same PINN framework can support near
 | Time-dependent Schrödinger | Initial density relative L2 error $7.92 \times 10^{-8}$ and final density relative L2 error $5.66 \times 10^{-2}$ with predicted norm near unity | Shows that the propagation model remains accurate and physically structured across the time interval |
 | Combined benchmark | Best shared architecture is 5 layers x 64 units with relative L2 $0.26585$ | Supplies the project-level transferability result rather than another specialist accuracy claim |
 
-## Visual Evidence
+## Benchmark Figures
 
 These figures are generated from the benchmark CSV files committed in the repository, so they render reliably in both the README and the landing page.
 
@@ -48,11 +48,11 @@ The combined benchmark identifies depth as the strongest lever in the tested gri
 
 ![Combined benchmark summary](outputs/combined_summary.svg)
 
-The cross-problem study should be read as a transferability benchmark. Its main value is comparative evidence across systems and robustness under noisy inputs, not replacing the specialist notebooks as the highest-accuracy results.
+The cross-problem study should be read as a transferability benchmark. Its main value is systematic comparison across systems and robustness under noisy inputs, not replacing the specialist notebooks as the highest-accuracy results.
 
 ## Notebook Guide
 
-| Notebook | Role | Best reported evidence |
+| Notebook | Role | Best reported result |
 |---|---|---|
 | notebooks/pinn_harmonic_oscillator.ipynb | Specialist stationary-state study | Ground-state relative L2 $1.56927 \times 10^{-3}$, learned energy $0.50001526$, absolute energy error $1.52588 \times 10^{-5}$ |
 | notebooks/pinn_schrodinger.ipynb | Specialist time-dependent study | Initial density relative L2 $7.92 \times 10^{-8}$, final density relative L2 $5.66 \times 10^{-2}$, norm range approximately $[0.993, 1.012]$ |
