@@ -73,9 +73,7 @@
     .hero {
       padding: 72px 0 42px;
       display: grid;
-      grid-template-columns: 1.3fr 0.9fr;
-      gap: 28px;
-      align-items: start;
+      gap: 24px;
     }
     .hero-copy {
       background: rgba(255, 254, 251, 0.82);
@@ -83,6 +81,9 @@
       border-radius: 28px;
       padding: 38px;
       box-shadow: var(--shadow);
+      max-width: 1000px;
+      margin: 0 auto;
+      text-align: center;
     }
     .eyebrow {
       display: inline-block;
@@ -100,15 +101,30 @@
       font-family: var(--font-serif);
       line-height: 1.15;
     }
-    h1 { font-size: clamp(2.4rem, 5vw, 4.5rem); }
+    h1 {
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      margin-bottom: 10px;
+      letter-spacing: -0.04em;
+    }
     h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); }
     h3 { font-size: 1.2rem; }
     p { margin: 0 0 14px; color: var(--muted); }
+    .hero-title-line {
+      margin: 0 0 22px;
+      font-size: clamp(0.9rem, 1.15vw, 1.08rem);
+      font-weight: 600;
+      letter-spacing: 0.045em;
+      text-transform: uppercase;
+      color: var(--accent);
+      white-space: nowrap;
+      line-height: 1.25;
+    }
     .hero-actions {
       display: flex;
       gap: 14px;
       flex-wrap: wrap;
       margin-top: 24px;
+      justify-content: center;
     }
     .button {
       display: inline-flex;
@@ -129,7 +145,9 @@
 
     .hero-panel {
       display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
+      align-items: stretch;
     }
     .metric {
       background: rgba(255, 254, 251, 0.88);
@@ -292,11 +310,16 @@
       .hero,
       .grid-3,
       .grid-2,
-      .notebook-grid {
+      .notebook-grid,
+      .hero-panel {
         grid-template-columns: 1fr;
       }
       nav { margin-left: 0; }
       .viewer-head { flex-direction: column; align-items: flex-start; }
+      .hero-title-line {
+        white-space: normal;
+        letter-spacing: 0.035em;
+      }
     }
   </style>
 </head>
@@ -319,7 +342,8 @@
     <section class="hero">
       <div class="hero-copy">
         <div class="eyebrow">Research Project</div>
-        <h1>Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</h1>
+        <h1>QuantumPINNs</h1>
+        <div class="hero-title-line">Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</div>
         <p>
           This project is organized around one coherent question: when the governing quantum physics is known, how far can a PINN go without dense labeled solution data? The answer in this repository is built from three non-redundant studies: a specialist harmonic-oscillator benchmark, a specialist time-dependent Schrödinger benchmark, and a shared cross-problem benchmark that tests transferability rather than repeating the same accuracy claim.
         </p>
