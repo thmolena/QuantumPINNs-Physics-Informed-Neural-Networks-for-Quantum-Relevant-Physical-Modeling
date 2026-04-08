@@ -2,67 +2,78 @@
 
 [![Project Website](https://img.shields.io/badge/Project%20Website-GitHub%20Pages-0969da?style=for-the-badge)](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
 
-> A unified PINN study for stationary and time-dependent quantum systems, organized around three complementary claims: high-accuracy eigenstate recovery, structured wavepacket propagation, and cross-problem transferability under a shared benchmark protocol.
+> A single-paper PINN study for quantum modeling: specialist stationary-state accuracy, physics-checked time-dependent propagation, and a shared comparative benchmark that separates reusable design choices from one-problem tuning.
 
-## Overview
+## Abstract
 
-This repository studies whether physics-informed neural networks can recover useful quantum solutions when the governing equation is known and dense supervision is unnecessary or expensive. The project is built around three executed notebooks that serve different roles rather than repeating the same story.
+This repository is organized as one coherent paper supported by three executed notebooks. The paper asks whether physics-informed neural networks can recover quantum states and quantum dynamics from governing equations and sparse physical structure, without relying on dense supervised solution labels.
 
-1. The harmonic-oscillator notebook is the specialist stationary-state study. It jointly learns the wavefunction and eigenvalue and provides the strongest single-problem accuracy result in the repository.
-2. The time-dependent Schrödinger notebook is the specialist propagation study. It learns the real and imaginary parts of the wavefunction and evaluates them with conservation-aware diagnostics.
-3. The combined notebook is the comparative study. It asks which modeling choices remain credible when the problem class changes, using architecture and noise sweeps across multiple systems.
+The empirical story is intentionally cumulative. The harmonic-oscillator notebook establishes the best specialist accuracy result in the repository, the time-dependent Schrödinger notebook shows that the same framework supports complex-valued wavepacket propagation with quantitative physical diagnostics, and the combined benchmark evaluates which modeling choices remain defensible when the problem class changes. Read together, the notebooks support a single claim: physics-structured inductive bias improves both the credibility and the reproducibility of PINN-based quantum modeling.
 
-Taken together, the notebooks show that the same PINN framework can support near-analytic accuracy on a canonical eigenproblem, stable full-interval propagation on a complex-valued dynamics benchmark, and useful design guidance in a standardized cross-problem setting.
+For a NeurIPS audience, the most important point is not merely that a PINN performs well on one canonical benchmark. The important point is that the modeling claim is explicit, the evidence is comparative rather than anecdotal, the ablations identify what matters, and the released artifacts make the argument reproducible.
 
-## Key Results
+## Central Paper Claim
 
-| Study | Main result | Why it matters |
+The submitted paper makes four linked claims.
+
+1. Physics-structured inductive bias can produce near-analytic stationary-state recovery on a canonical quantum eigenproblem.
+2. The same framework can support complex-valued time-dependent propagation with density, norm, phase, and transport-aware diagnostics.
+3. A shared benchmark is necessary to distinguish specialist tuning from design choices that transfer across problem classes.
+4. The strongest machine-learning contribution is therefore comparative evidence and reproducibility, not a single benchmark win in isolation.
+
+## Headline Results
+
+| Evidence layer | Headline result | Why it matters |
 |---|---|---|
-| Harmonic oscillator | Relative L2 error $1.56927 \times 10^{-3}$ and learned energy $0.50001526$ for the ground state | Shows that the stationary-state PINN can recover both shape and eigenvalue to near-analytic precision |
-| Time-dependent Schrödinger | Initial density relative L2 error $7.92 \times 10^{-8}$ and final density relative L2 error $5.66 \times 10^{-2}$ with predicted norm near unity | Shows that the propagation model remains accurate and physically structured across the time interval |
-| Combined benchmark | Best shared architecture is 5 layers x 64 units with relative L2 $0.26585$ | Supplies the project-level transferability result rather than another specialist accuracy claim |
+| Harmonic oscillator | Relative L2 error $1.56927 \times 10^{-3}$, learned energy $0.50001526$, absolute energy error $1.52588 \times 10^{-5}$ | Establishes the paper's strongest specialist accuracy result and shows near-analytic recovery of both state shape and eigenvalue |
+| Time-dependent Schrödinger | Initial density relative L2 error $7.92 \times 10^{-8}$, final density relative L2 error $5.66 \times 10^{-2}$, predicted norm close to unity | Shows that the framework extends beyond static eigenproblems to controlled complex-valued dynamics |
+| Combined benchmark | Best shared architecture is 5 layers x 64 units with relative L2 $0.26585$ and modest degradation under added noise | Supplies the paper's most NeurIPS-relevant evidence: which design choices remain effective across tasks |
 
-## Benchmark Figures
+## Best Visual Evidence
 
-These figures are generated from the benchmark CSV files committed in the repository, so they render reliably in both the README and the landing page.
+These figures are generated from committed CSV artifacts in `outputs/`, so the README and landing page remain synchronized and stable.
 
-### Harmonic oscillator benchmark
+### Figure 1. Harmonic-oscillator benchmark
 
 ![Harmonic oscillator benchmark](outputs/qho_benchmark.svg)
 
-The stationary-state notebook is strongest on the ground state, where it reaches relative L2 error $1.56927 \times 10^{-3}$ and absolute energy error $1.52588 \times 10^{-5}$. Higher modes remain informative but become progressively harder.
+This figure carries the strongest single numerical claim in the repository. The ground state reaches relative L2 error $1.56927 \times 10^{-3}$ with very low energy error, and the executed notebook expands that result with the highest-value specialist visualizations: `qho_ground_state_analysis.png`, `qho_overlap_matrix.png`, and `qho_ablation.png`.
 
-### Time-dependent Schrödinger benchmark
+### Figure 2. Time-dependent Schrödinger benchmark
 
 ![Time-dependent Schrodinger benchmark](outputs/schrodinger_benchmark.svg)
 
-The propagation notebook starts essentially exact at $t = 0$ and retains controlled density error through the time window while keeping the predicted norm close to one.
+This figure summarizes the dynamics claim. The PINN is essentially exact at the initial slice and remains controlled at later times while preserving norm behavior close to one. The executed notebook adds the richer visual record through `schrodinger_density_heatmap.png`, `schrodinger_phase.png`, `schrodinger_current_snapshots.png`, and `schrodinger_ehrenfest.png`.
 
-### Shared architecture sweep
+### Figure 3. Shared architecture sweep
 
 ![Combined architecture sweep](outputs/combined_architecture.svg)
 
-The combined benchmark identifies depth as the strongest lever in the tested grid, with the 5-layer, 64-unit model clearly outperforming the shallower alternatives.
+This figure is where the paper moves beyond one-problem performance reporting. It identifies depth as the strongest lever in the tested shared benchmark and isolates the 5-layer, 64-unit model as the best architecture under the common protocol.
 
-### Combined benchmark robustness
+### Figure 4. Transferability and robustness summary
 
 ![Combined benchmark summary](outputs/combined_summary.svg)
 
-The cross-problem study should be read as a transferability benchmark. Its main value is systematic comparison across systems and robustness under noisy inputs, not replacing the specialist notebooks as the highest-accuracy results.
+This is the most important figure for the overall machine-learning narrative. It shows that the shared formulation remains interpretable across multiple quantum problems and degrades only modestly under added input noise. The combined notebook supplements it with `combined_scaling_study.png`, `combined_noise_study.png`, and `combined_summary_barchart.png`.
 
-## Notebook Guide
+## How the Three Notebooks Support One Paper
 
-| Notebook | Role | Best reported result |
-|---|---|---|
-| notebooks/pinn_harmonic_oscillator.ipynb | Specialist stationary-state study | Ground-state relative L2 $1.56927 \times 10^{-3}$, learned energy $0.50001526$, absolute energy error $1.52588 \times 10^{-5}$ |
-| notebooks/pinn_schrodinger.ipynb | Specialist time-dependent study | Initial density relative L2 $7.92 \times 10^{-8}$, final density relative L2 $5.66 \times 10^{-2}$, norm range approximately $[0.993, 1.012]$ |
-| notebooks/quantum_pinn_combined.ipynb | Comparative benchmark study | Best shared architecture 5 layers x 64 units with relative L2 $0.26585$ and mild sensitivity to added noise |
+| Notebook | Paper role | Best figures to inspect | Main claim it supports |
+|---|---|---|---|
+| `notebooks/pinn_harmonic_oscillator.ipynb` | Specialist stationary-state evidence | Ground-state analysis, overlap matrix, ablation summary, analytic eigenstates | Physics-structured PINNs can recover a canonical eigenstate with near-analytic accuracy |
+| `notebooks/pinn_schrodinger.ipynb` | Specialist time-dependent evidence | Density heatmap, phase plot, exact-vs-PINN snapshots, Ehrenfest diagnostics | The same framework supports complex-valued quantum dynamics with physically meaningful checks |
+| `notebooks/quantum_pinn_combined.ipynb` | Comparative machine-learning evidence | Architecture sweep, scaling study, noise robustness, shared summary bars | The broader claim should be judged by transferability, ablation, and robustness rather than a single favorable benchmark |
 
-For the clearest reading order, start with the harmonic oscillator notebook, continue to the time-dependent notebook, and then use the combined notebook to interpret transferability and design tradeoffs.
+Recommended reading order:
 
-## Method Summary
+1. Start with the harmonic-oscillator notebook for the cleanest specialist accuracy claim.
+2. Continue to the time-dependent Schrödinger notebook for the strongest dynamics evidence.
+3. Finish with the combined notebook, where the paper's broader comparative and transferability claims are tested.
 
-### Time-independent branch
+## Method at a Glance
+
+### Stationary-state branch
 
 The stationary branch solves
 
@@ -70,7 +81,7 @@ $$
 -\frac{1}{2}\psi''(x) + V(x)\psi(x) = E\psi(x)
 $$
 
-with a neural network for $\psi(x)$ and a learned scalar parameter for $E$. The training objective combines PDE residual minimization with boundary behavior and problem-specific physical consistency terms.
+with a neural network for $\psi(x)$ and a learned scalar parameter for $E$. The formulation emphasizes hard physical structure, boundary behavior, parity control, and operator-consistency terms that make the eigenvalue claim quantitatively defensible.
 
 ### Time-dependent branch
 
@@ -80,61 +91,13 @@ $$
 i\frac{\partial \psi}{\partial t} = \left[-\frac{1}{2}\frac{\partial^2}{\partial x^2} + V(x)\right]\psi(x,t)
 $$
 
-using a dual-output network for the real and imaginary wavefunction components. The executed benchmark uses hard initial conditioning and sparse analytic guidance to stabilize learning over the whole spacetime domain.
+using a dual-output network for the real and imaginary components. The evaluation focuses on density fidelity, norm preservation, phase structure, and transport-adjacent behavior rather than only pointwise visual agreement.
 
 ### Comparative branch
 
-The combined notebook reuses the same PINN logic across multiple quantum problems, then varies architecture depth, width, collocation settings, and noisy inputs to separate specialist tuning from choices that transfer more broadly.
+The combined notebook reuses the same PINN logic across multiple quantum-relevant settings, then varies depth, width, scaling, collocation behavior, and input noise to separate reusable modeling choices from benchmark-specific tuning.
 
-## Repository Structure
-
-```text
-QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/
-├── README.md
-├── index.html
-├── requirements.txt
-├── data/
-│   ├── molecular_vibrational_anchors.csv
-│   ├── quantum_application_domains.csv
-│   ├── schrodinger_sample.csv
-│   └── wavepacket_application_anchors.csv
-├── notebooks/
-│   ├── pinn_harmonic_oscillator.ipynb
-│   ├── pinn_harmonic_oscillator.html
-│   ├── pinn_schrodinger.ipynb
-│   ├── pinn_schrodinger.html
-│   ├── quantum_pinn_combined.ipynb
-│   └── quantum_pinn_combined.html
-├── outputs/
-│   ├── combined_arch_grid.csv
-│   ├── combined_architecture.svg
-│   ├── combined_noise_robustness.csv
-│   ├── combined_scaling_matrix.csv
-│   ├── combined_summary.csv
-│   ├── combined_summary.svg
-│   ├── harmonic_oscillator_loss.csv
-│   ├── qho_activation_ablation.csv
-│   ├── qho_benchmark.svg
-│   ├── qho_collocation_ablation.csv
-│   ├── qho_depth_ablation.csv
-│   ├── qho_full_benchmark.csv
-│   ├── schrodinger_benchmark.csv
-│   ├── schrodinger_benchmark.svg
-│   └── schrodinger_predictions.csv
-├── src/
-│   ├── data.py
-│   ├── physics.py
-│   ├── pinn.py
-│   ├── server.py
-│   └── train.py
-└── website/
-    ├── demo.js
-    ├── index.html
-    ├── README_SITE.md
-    └── style.css
-```
-
-## Reproducing the Results
+## Reproducing the Paper Artifacts
 
 ```bash
 conda activate qaoa
@@ -157,12 +120,32 @@ python -m http.server 8000
 
 | File | Purpose |
 |---|---|
-| outputs/qho_full_benchmark.csv | Stationary-state benchmark across harmonic-oscillator eigenstates |
-| outputs/schrodinger_benchmark.csv | Time-resolved density and norm diagnostics for the TDSE study |
-| outputs/combined_summary.csv | Standardized summary across the shared benchmark problems |
-| outputs/combined_arch_grid.csv | Depth-width sweep for the comparative benchmark |
-| outputs/combined_noise_robustness.csv | Robustness of the shared benchmark to noisy inputs |
-| outputs/harmonic_oscillator_loss.csv | Training loss trace for the direct training module |
+| `outputs/qho_full_benchmark.csv` | Stationary-state benchmark across harmonic-oscillator eigenstates |
+| `outputs/schrodinger_benchmark.csv` | Time-resolved density and norm diagnostics for the TDSE study |
+| `outputs/combined_summary.csv` | Standardized summary across the shared benchmark problems |
+| `outputs/combined_arch_grid.csv` | Depth-width sweep for the comparative benchmark |
+| `outputs/combined_noise_robustness.csv` | Noise robustness under the shared benchmark protocol |
+| `outputs/harmonic_oscillator_loss.csv` | Training loss trace for the direct training module |
+
+## Repository Structure
+
+```text
+QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/
+├── README.md
+├── index.html
+├── requirements.txt
+├── data/
+├── notebooks/
+│   ├── pinn_harmonic_oscillator.ipynb
+│   ├── pinn_harmonic_oscillator.html
+│   ├── pinn_schrodinger.ipynb
+│   ├── pinn_schrodinger.html
+│   ├── quantum_pinn_combined.ipynb
+│   └── quantum_pinn_combined.html
+├── outputs/
+├── src/
+└── website/
+```
 
 ## License
 

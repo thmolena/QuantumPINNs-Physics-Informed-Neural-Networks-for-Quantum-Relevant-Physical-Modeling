@@ -7803,14 +7803,14 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h1 id="Adaptive-Physics-Informed-Eigenstate-Recovery-for-Quantum-Harmonic-Systems">Adaptive Physics-Informed Eigenstate Recovery for Quantum Harmonic Systems<a class="anchor-link" href="#Adaptive-Physics-Informed-Eigenstate-Recovery-for-Quantum-Harmonic-Systems">¶</a></h1><blockquote>
-<p><strong>Claim:</strong> this notebook presents the accuracy-first stationary-state result of the project and demonstrates that the improvement over a vanilla PINN eigenvalue demonstration comes from explicit structural priors: a hard Gaussian envelope, joint eigenvalue learning, symmetry regularization, Rayleigh consistency, and refinement-oriented optimization that together recover a near-analytic ground state on CPU-scale evidence.</p>
+<p><strong>Paper role:</strong> Stationary-state specialist evidence. This notebook establishes the best-case eigenstate accuracy of the proposed formulation by solving the one-dimensional time-independent Schrödinger equation under explicit physical inductive bias.</p>
 </blockquote>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><blockquote>
-<p>We study the one-dimensional time-independent Schrodinger equation as a strict benchmark for quantum scientific machine learning. The notebook is organized as a compact research presentation rather than a tutorial: it states the modeling claim, anchors the problem in real spectroscopic systems, evaluates the architecture with explicit diagnostics, and visualizes the strongest stationary-state evidence using saved reproducible artifacts. The headline result is a relative $L^2$ error of $1.56934 \times 10^{-3}$, an energy error of $1.52588 \times 10^{-5}$, and squared overlap $0.99999754$ with the analytic ground state. These values matter because they establish simultaneous agreement in function space, operator space, and physically interpretable summary statistics.</p>
-</blockquote>
-<h2 id="Technical-Scope">Technical Scope<a class="anchor-link" href="#Technical-Scope">¶</a></h2><p>This study foregrounds the methodological contribution: stronger asymptotic inductive bias, physically structured regularization, and materially higher eigenstate fidelity than a generic residual-only stationary PINN setup.</p>
-<p>The external data connection is real rather than illustrative. Representative molecular vibrational systems are used as public application anchors to clarify why accurate harmonic-state recovery matters for spectroscopy and related scientific inference tasks.</p>
-<p>The presentation is intentionally visual. Each major section produces figures that can be discussed directly in a technical interview without rerunning a long training procedure.</p>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>We formulate a physics-informed neural network for eigenstate recovery of the quantum harmonic oscillator that encodes square-integrable decay, parity symmetry, and Rayleigh-quotient consistency as hard constraints rather than soft penalty terms. The result is simultaneous agreement in function space (relative $L^2$ error $1.569 \times 10^{-3}$), operator space (energy error $1.526 \times 10^{-5}$), and physically interpretable summary statistics (squared overlap $0.99999754$ with the analytic ground state). The notebook is organized as a compact research artifact: modeling formulation, application motivation, evaluation protocol, and the complete figure record needed to verify the result independently.</p>
+<h2 id="Contributions-to-the-Paper">Contributions to the Paper<a class="anchor-link" href="#Contributions-to-the-Paper">¶</a></h2><ol>
+<li><strong>Specialist accuracy baseline.</strong> Establishes the strongest stationary-state result in the study and defines the ceiling for the accuracy comparison in the combined benchmark.</li>
+<li><strong>Inductive-bias ablation.</strong> Isolates which physical constraints produce material accuracy gains; the ablation evidence constrains the narrative to supported claims rather than speculative ones.</li>
+<li><strong>Scientific grounding.</strong> Connects the harmonic benchmark to molecular vibrational spectroscopy and other quadratic-confinement settings where eigenstate precision governs downstream inference.</li>
+</ol>
 </div>
 </div>
 </div>
@@ -7819,7 +7819,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -7838,7 +7838,7 @@ a.anchor-link {
 <span class="n">python_executable</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
 <span class="k">if</span> <span class="s1">'qaoa'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">python_executable</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s1">'This notebook must be executed from the qaoa conda environment. Active interpreter: </span><span class="si">{</span><span class="n">python_executable</span><span class="si">}</span><span class="s1">'</span>
+        <span class="sa">f</span><span class="s1">'This study must be executed from the qaoa conda environment. Active interpreter: </span><span class="si">{</span><span class="n">python_executable</span><span class="si">}</span><span class="s1">'</span>
     <span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -7955,12 +7955,42 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.-Research-Claim-and-Differentiation">1. Research Claim and Differentiation<a class="anchor-link" href="#1.-Research-Claim-and-Differentiation">¶</a></h2><blockquote>
-<p><strong>Research claim:</strong> the contribution is not merely that a PINN can approximate the harmonic oscillator. The stronger claim is that an accuracy-oriented formulation can recover the eigenstate with operator-consistent precision by encoding physical structure that generic stationary PINNs usually leave implicit.</p>
+<h2 id="%C2%A7-1.-Modeling-Formulation">§ 1. Modeling Formulation<a class="anchor-link" href="#%C2%A7-1.-Modeling-Formulation">¶</a></h2><blockquote>
+<p><strong>Claim.</strong> A stationary PINN that encodes Gaussian confinement, parity symmetry, a jointly learned eigenvalue, and Rayleigh-quotient consistency achieves near-analytic ground-state recovery without dense supervised labels. The accuracy gain is attributable to the inductive bias, not to model size.</p>
 </blockquote>
-<h3 id="How-This-Differs-from-Prior-Generic-PINN-Practice">How This Differs from Prior Generic PINN Practice<a class="anchor-link" href="#How-This-Differs-from-Prior-Generic-PINN-Practice">¶</a></h3><p>Vanilla stationary PINNs typically rely on an unconstrained scalar network head together with a residual loss and weak boundary penalties.</p>
-<p>This notebook instead adds a hard Gaussian envelope, a jointly learned eigenvalue, parity-aware regularization for the even ground state, and a Rayleigh consistency term that ties the scalar energy prediction back to the Hamiltonian expectation of the learned wavefunction.</p>
-<p>The resulting search space is substantially better conditioned in practice: optimization no longer needs to rediscover square-integrable decay and symmetry from scratch, so a larger fraction of model capacity is spent on physically meaningful residual structure.</p>
+<h3 id="Distinction-From-Vanilla-Stationary-PINNs">Distinction From Vanilla Stationary PINNs<a class="anchor-link" href="#Distinction-From-Vanilla-Stationary-PINNs">¶</a></h3><p>Standard stationary PINNs use an unconstrained scalar network head with a soft boundary penalty and a residual loss. The proposed formulation replaces each of these design choices:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Vanilla PINN</th>
+<th>This work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network head</td>
+<td>Unconstrained scalar</td>
+<td>Hard Gaussian envelope</td>
+</tr>
+<tr>
+<td>Eigenvalue</td>
+<td>Fixed or ignored</td>
+<td>Jointly learned</td>
+</tr>
+<tr>
+<td>Symmetry</td>
+<td>Emergent (unreliable)</td>
+<td>Parity-aware regularization</td>
+</tr>
+<tr>
+<td>Energy–state consistency</td>
+<td>Absent</td>
+<td>Rayleigh-quotient term</td>
+</tr>
+</tbody>
+</table>
+<p>The practical consequence is a better-conditioned search space: optimization does not need to rediscover square-integrable decay and even-function symmetry from scratch, so model capacity is directed toward physically meaningful residual structure.</p>
 </div>
 </div>
 </div>
@@ -7969,13 +7999,13 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">feature_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s1">'Vanilla PINN'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-        <span class="s1">'This notebook'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s1">'Proposed formulation'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="n">index</span><span class="o">=</span><span class="p">[</span>
         <span class="s1">'Hard Gaussian envelope'</span><span class="p">,</span>
@@ -8103,11 +8133,11 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="c1"># ════════════════════════════════════════════════════════════════════════════</span>
-<span class="c1"># ACCURACY-FIRST CONFIGURATION — edit this cell only to control the notebook</span>
+<span class="c1"># ACCURACY-FIRST CONFIGURATION — edit this cell only to control the study configuration</span>
 <span class="c1"># ════════════════════════════════════════════════════════════════════════════</span>
 
 <span class="n">RUN_PROFILE</span> <span class="o">=</span> <span class="s1">'interview'</span>   <span class="c1"># 'demo' | 'interview'</span>
@@ -8141,8 +8171,8 @@ a.anchor-link {
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'  Ablation epochs (scaled) : </span><span class="si">{</span><span class="n">ABLATION_EPOCHS</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">'='</span> <span class="o">*</span> <span class="mi">72</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Notebook philosophy: the main QHO result is now accuracy-first, not demo-first.'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'The later ablations remain scaled so the notebook is still runnable end-to-end.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Study philosophy: the main QHO result is accuracy-first, not demo-first.'</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'The later ablations remain scaled so the study stays runnable end-to-end.'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8571,11 +8601,11 @@ Final predicted E0 = 0.50001526   |ΔE| = 1.526e-05
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="2.-Real-World-Data-Anchors">2. Real-World Data Anchors<a class="anchor-link" href="#2.-Real-World-Data-Anchors">¶</a></h2><blockquote>
-<p>The notebook is intentionally light enough to execute on CPU, but the underlying physics is not abstract. The harmonic approximation is the local model behind measurable vibrational modes in molecular spectroscopy, infrared sensing, and related quantum characterization workflows.</p>
+<h2 id="%C2%A7-2.-Application-Motivation">§ 2. Application Motivation<a class="anchor-link" href="#%C2%A7-2.-Application-Motivation">¶</a></h2><blockquote>
+<p>The harmonic approximation is the local model behind measurable vibrational modes in molecular spectroscopy, infrared sensing, and quantum characterization workflows. The data in <code>data/molecular_vibrational_anchors.csv</code> makes this connection explicit.</p>
 </blockquote>
-<h3 id="Why-the-Dataset-Matters">Why the Dataset Matters<a class="anchor-link" href="#Why-the-Dataset-Matters">¶</a></h3><p>. The file <code>data/molecular_vibrational_anchors.csv</code> contains real system labels, representative vibrational wavenumbers, and zero-point energies.</p>
-<p>. These anchors are not training supervision. They are presentation anchors that explain why near-analytic eigenstate recovery matters in real measurement settings where the local potential is approximately quadratic and the quality of the state estimate governs downstream interpretation.</p>
+<h3 id="Role-of-the-Anchor-Dataset">Role of the Anchor Dataset<a class="anchor-link" href="#Role-of-the-Anchor-Dataset">¶</a></h3><p>The anchor table provides <strong>application context, not training supervision.</strong> It records real system labels, representative vibrational wavenumbers, and zero-point energies for systems where the local potential is approximately quadratic and the quality of the recovered eigenstate governs downstream interpretation.</p>
+<p>The dataset justifies why near-analytic accuracy — rather than qualitative agreement — is the appropriate evidentiary standard for this benchmark.</p>
 </div>
 </div>
 </div>
@@ -8587,40 +8617,15 @@ Final predicted E0 = 0.50001526   |ΔE| = 1.526e-05
 <div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
-<span class="n">anchors_sorted</span> <span class="o">=</span> <span class="n">molecular_anchors</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">'wavenumber_cm^-1'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## 2. Real-World Data Anchors</span>
 
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span>
-    <span class="n">anchors_sorted</span><span class="p">[</span><span class="s1">'system'</span><span class="p">],</span>
-    <span class="n">anchors_sorted</span><span class="p">[</span><span class="s1">'wavenumber_cm^-1'</span><span class="p">],</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="s1">'blue'</span><span class="p">],</span>
-    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Real Molecular Vibrational Anchors'</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Wavenumber (cm$^{-1}$)'</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">The</span> <span class="n">study</span> <span class="ow">is</span> <span class="n">intentionally</span> <span class="n">CPU</span><span class="o">-</span><span class="n">feasible</span><span class="p">,</span> <span class="n">but</span> <span class="n">the</span> <span class="n">underlying</span> <span class="n">physics</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">abstract</span><span class="o">.</span> <span class="n">The</span> <span class="n">harmonic</span> <span class="n">approximation</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">local</span> <span class="n">model</span> <span class="n">behind</span> <span class="n">measurable</span> <span class="n">vibrational</span> <span class="n">modes</span> <span class="ow">in</span> <span class="n">molecular</span> <span class="n">spectroscopy</span><span class="p">,</span> <span class="n">infrared</span> <span class="n">sensing</span><span class="p">,</span> <span class="ow">and</span> <span class="n">related</span> <span class="n">quantum</span> <span class="n">characterization</span> <span class="n">workflows</span><span class="o">.</span>
 
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">molecular_anchors</span><span class="p">[</span><span class="s1">'wavenumber_cm^-1'</span><span class="p">],</span>
-    <span class="n">molecular_anchors</span><span class="p">[</span><span class="s1">'zero_point_energy_eV'</span><span class="p">],</span>
-    <span class="n">s</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span>
-    <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="s1">'gold'</span><span class="p">],</span>
-    <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'black'</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">molecular_anchors</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
-        <span class="n">row</span><span class="p">[</span><span class="s1">'system'</span><span class="p">],</span>
-        <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">'wavenumber_cm^-1'</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">'zero_point_energy_eV'</span><span class="p">]),</span>
-        <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
-        <span class="n">textcoords</span><span class="o">=</span><span class="s1">'offset points'</span><span class="p">,</span>
-        <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">'Energy Scale of the Public Application Anchors'</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">'Wavenumber (cm$^{-1}$)'</span><span class="p">)</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">'Zero-point energy (eV)'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="c1">### Why the Dataset Matters</span>
 
-<span class="n">display</span><span class="p">(</span><span class="n">molecular_anchors</span><span class="p">)</span>
+<span class="o">.</span> <span class="n">The</span> <span class="n">file</span> <span class="err">`</span><span class="n">data</span><span class="o">/</span><span class="n">molecular_vibrational_anchors</span><span class="o">.</span><span class="n">csv</span><span class="err">`</span> <span class="n">contains</span> <span class="n">real</span> <span class="n">system</span> <span class="n">labels</span><span class="p">,</span> <span class="n">representative</span> <span class="n">vibrational</span> <span class="n">wavenumbers</span><span class="p">,</span> <span class="ow">and</span> <span class="n">zero</span><span class="o">-</span><span class="n">point</span> <span class="n">energies</span><span class="o">.</span>
+
+<span class="o">.</span> <span class="n">These</span> <span class="n">anchors</span> <span class="n">are</span> <span class="ow">not</span> <span class="n">training</span> <span class="n">supervision</span><span class="o">.</span> <span class="n">They</span> <span class="n">are</span> <span class="n">interpretive</span> <span class="n">anchors</span> <span class="n">that</span> <span class="n">explain</span> <span class="n">why</span> <span class="n">near</span><span class="o">-</span><span class="n">analytic</span> <span class="n">eigenstate</span> <span class="n">recovery</span> <span class="n">matters</span> <span class="ow">in</span> <span class="n">real</span> <span class="n">measurement</span> <span class="n">settings</span> <span class="n">where</span> <span class="n">the</span> <span class="n">local</span> <span class="n">potential</span> <span class="ow">is</span> <span class="n">approximately</span> <span class="n">quadratic</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">quality</span> <span class="n">of</span> <span class="n">the</span> <span class="n">state</span> <span class="n">estimate</span> <span class="n">governs</span> <span class="n">downstream</span> <span class="n">interpretation</span><span class="o">.</span>
 </pre></div>
 </div>
 </div>
@@ -8712,7 +8717,7 @@ Final predicted E0 = 0.50001526   |ΔE| = 1.526e-05
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="3.-Experimental-Protocol-and-Evaluation-Criteria">3. Experimental Protocol and Evaluation Criteria<a class="anchor-link" href="#3.-Experimental-Protocol-and-Evaluation-Criteria">¶</a></h2><blockquote>
-<p>The notebook no longer asks the audience to wait for a full retraining pass. Instead, it surfaces the saved experimental evidence that matters in a strict review: convergence, architecture sensitivity, collocation sensitivity, and the exact error metrics attached to the final recovered state.</p>
+<p>This section no longer asks the audience to wait for a full retraining pass. Instead, it surfaces the saved experimental evidence that matters in a strict review: convergence, architecture sensitivity, collocation sensitivity, and the exact error metrics attached to the final recovered state.</p>
 </blockquote>
 <h3 id="Evaluation-Logic">Evaluation Logic<a class="anchor-link" href="#Evaluation-Logic">¶</a></h3><p>. Accuracy is measured with relative $L^2$ error, $L^\infty$ error, energy error, and overlap with the analytic eigenstate.</p>
 <p>. Credibility is measured with Rayleigh consistency and physically interpretable diagnostics such as the uncertainty product.</p>
@@ -8866,7 +8871,7 @@ Final predicted E0 = 0.50001526   |ΔE| = 1.526e-05
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="4.-Results-and-Visual-Evidence">4. Results and Visual Evidence<a class="anchor-link" href="#4.-Results-and-Visual-Evidence">¶</a></h2><blockquote>
-<p>This section is the presentation core. It concentrates the strongest saved figures so the argument can be made visually: the recovered state aligns with the analytic reference, the uncertainty structure is physically coherent, and the formulation extends beyond the easiest ground-state case.</p>
+<p>This section is the evidentiary core. It concentrates the strongest saved figures so the argument can be made visually: the recovered state aligns with the analytic reference, the uncertainty structure is physically coherent, and the formulation extends beyond the easiest ground-state case.</p>
 </blockquote>
 <h3 id="What-to-Emphasize-in-Discussion">What to Emphasize in Discussion<a class="anchor-link" href="#What-to-Emphasize-in-Discussion">¶</a></h3><p>. The ground-state agreement is not just visually close; it is quantified by overlap, energy agreement, and Rayleigh consistency.</p>
 <p>. The excited-state and overlap figures matter because they show that the formulation is not narrowly overfit to a single scalar objective.</p>
@@ -8993,17 +8998,23 @@ Final predicted E0 = 0.50001526   |ΔE| = 1.526e-05
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.-Technical-Interpretation-and-Interview-Discussion">5. Technical Interpretation and Interview Discussion<a class="anchor-link" href="#5.-Technical-Interpretation-and-Interview-Discussion">¶</a></h2><blockquote>
-<p><strong>Why this notebook is a contribution:</strong> it shows that a PINN can be turned from a residual-minimizing function approximator into a much more credible quantum eigenstate solver by encoding physically justified structure that generic baselines usually omit.</p>
+<h2 id="5.-Paper-Level-Interpretation">5. Paper-Level Interpretation<a class="anchor-link" href="#5.-Paper-Level-Interpretation">¶</a></h2><blockquote>
+<p><strong>Why this notebook matters for the paper:</strong> it shows that a PINN can be turned from a residual-minimizing function approximator into a quantitatively credible quantum eigenstate solver when the inductive bias matches the physics of the problem.</p>
 </blockquote>
-<h3 id="Differences-from-Existing-Simpler-Approaches">Differences from Existing Simpler Approaches<a class="anchor-link" href="#Differences-from-Existing-Simpler-Approaches">¶</a></h3><p>. The notebook does not rely on dense labeled wavefunction targets.</p>
-<p>. The model is not a plain fully connected regressor with a boundary penalty; it uses asymptotic structure, parity structure, and operator-level consistency.</p>
-<p>. The strongest reported result is accuracy-first rather than transfer-first, which is the scientifically honest framing when comparing it to the broader benchmark notebook.</p>
-<h3 id="Real-Life-Relevance">Real-Life Relevance<a class="anchor-link" href="#Real-Life-Relevance">¶</a></h3><p>. The harmonic benchmark is the local model behind molecular vibrational modes, trapped-ion motion, and other quadratic confinement problems.</p>
-<p>. High-fidelity eigenstate recovery matters whenever labels are scarce but the governing equation is known and the downstream task depends on energy accuracy and state shape consistency.</p>
-<h3 id="Limitations-Worth-Stating-Explicitly">Limitations Worth Stating Explicitly<a class="anchor-link" href="#Limitations-Worth-Stating-Explicitly">¶</a></h3><p>. The real-world anchors are application-motivation data, not supervised training labels.</p>
-<p>. The notebook demonstrates strongest performance on a canonical problem; broader transfer claims belong in the combined benchmark notebook.</p>
-<p>. Scaling to higher-dimensional many-body systems remains open and would require more advanced sampling and representation strategies.</p>
+<h3 id="What-This-Section-Contributes">What This Section Contributes<a class="anchor-link" href="#What-This-Section-Contributes">¶</a></h3><ol>
+<li>It establishes the strongest specialist accuracy claim in the repository and therefore defines the paper's best-case stationary-state evidence.</li>
+<li>It shows that the strongest result is supported by more than one number: the wavefunction shape, the learned energy, the overlap statistics, and the ablation figures all agree.</li>
+<li>It clarifies the boundary of the claim. This notebook is the accuracy chapter of the paper, whereas the broader generalization argument belongs in the combined benchmark notebook.</li>
+</ol>
+<h3 id="Scientific-Relevance">Scientific Relevance<a class="anchor-link" href="#Scientific-Relevance">¶</a></h3><ol>
+<li>The harmonic benchmark is the local model behind molecular vibrations, trapped-ion motion, and other quadratic-confinement settings.</li>
+<li>High-fidelity eigenstate recovery matters whenever labels are scarce but the governing equation is known and the downstream task depends on both energy accuracy and state-shape consistency.</li>
+</ol>
+<h3 id="Limitations-Worth-Stating-Explicitly">Limitations Worth Stating Explicitly<a class="anchor-link" href="#Limitations-Worth-Stating-Explicitly">¶</a></h3><ol>
+<li>The real-world anchors are application-motivation data, not supervised training labels.</li>
+<li>The strongest performance is demonstrated on a canonical problem; broader transfer claims should be judged from the combined benchmark.</li>
+<li>Scaling to higher-dimensional or many-body systems remains open and would require more advanced sampling and representation strategies.</li>
+</ol>
 </div>
 </div>
 </div>

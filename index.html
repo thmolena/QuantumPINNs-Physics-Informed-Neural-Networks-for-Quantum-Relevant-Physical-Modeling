@@ -73,7 +73,7 @@
     .hero {
       padding: 72px 0 42px;
       display: grid;
-      gap: 24px;
+        gap: 32px;
     }
     .hero-copy {
       background: rgba(255, 254, 251, 0.82);
@@ -81,9 +81,9 @@
       border-radius: 28px;
       padding: 38px;
       box-shadow: var(--shadow);
-      max-width: 1000px;
-      margin: 0 auto;
-      text-align: center;
+        max-width: 960px;
+        margin: 0 auto 0 0;
+      text-align: left;
     }
     .eyebrow {
       display: inline-block;
@@ -124,7 +124,7 @@
       gap: 14px;
       flex-wrap: wrap;
       margin-top: 24px;
-      justify-content: center;
+      justify-content: flex-start;
     }
     .button {
       display: inline-flex;
@@ -148,6 +148,8 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
       align-items: stretch;
+        max-width: 960px;
+      margin-right: auto;
     }
     .metric {
       background: rgba(255, 254, 251, 0.88);
@@ -172,7 +174,8 @@
 
     section { margin-top: 42px; }
     .section-head {
-      max-width: 780px;
+      max-width: 960px;
+      margin-right: auto;
       margin-bottom: 22px;
     }
     .section-kicker {
@@ -330,8 +333,8 @@
       <nav>
         <a href="#results">Results</a>
         <a href="#figures">Figures</a>
-        <a href="#notebooks">Notebooks</a>
-        <a href="#reproduce">Reproduce</a>
+        <a href="#notebooks">Supplementary</a>
+        <a href="#reproduce">Reproducibility</a>
         <a href="README.md">README</a>
         <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">GitHub</a>
       </nav>
@@ -341,14 +344,14 @@
   <div class="shell">
     <section class="hero">
       <div class="hero-copy">
-        <div class="eyebrow">Research Project</div>
+        <div class="eyebrow">NeurIPS Submission Demo</div>
         <h1>QuantumPINNs</h1>
         <div class="hero-title-line">Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</div>
         <p>
-          This project is organized around one coherent question: when the governing quantum physics is known, how far can a PINN go without dense labeled solution data? The answer in this repository is built from three non-redundant studies: a specialist harmonic-oscillator benchmark, a specialist time-dependent Schrödinger benchmark, and a shared cross-problem benchmark that tests transferability rather than repeating the same accuracy claim.
+          We study whether physics-informed neural networks can recover quantum states and quantum dynamics from governing equations and sparse physical structure, without relying on dense supervised solution labels.
         </p>
         <p>
-          The landing page uses only figures backed by CSV artifacts committed in the repository, so the benchmark figures shown here are stable and reproducible.
+          The empirical evidence is cumulative: a harmonic-oscillator benchmark establishes near-analytic stationary-state recovery, a time-dependent Schrödinger benchmark demonstrates complex-valued propagation with physics-aware diagnostics, and a shared comparative benchmark tests transferability, ablations, and robustness under a common protocol. The central machine-learning contribution is the comparative evidence, not a single favorable benchmark result.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="#figures">View Benchmark Figures</a>
@@ -378,23 +381,23 @@
 
     <section id="results">
       <div class="section-head">
-        <div class="section-kicker">Research Logic</div>
-        <h2>Three Studies With Different Jobs</h2>
-        <p>The repository is strongest when read as a sequence. The harmonic-oscillator notebook establishes specialist stationary-state accuracy, the time-dependent notebook establishes structured complex-valued propagation, and the combined benchmark explains which design choices survive when the problem class changes.</p>
+        <div class="section-kicker">Empirical Summary</div>
+        <h2>Primary Experimental Results</h2>
+        <p>The paper-level claim is that physics-structured inductive bias makes PINNs more credible for quantum modeling, and that this claim should be defended with both specialist benchmarks and comparative evidence. The three notebooks therefore serve distinct roles: best-case stationary-state fidelity, physics-checked time evolution, and transferability under controlled architectural and robustness studies.</p>
       </div>
 
       <div class="grid-3">
         <article class="card">
-          <h3>Stationary-state benchmark</h3>
-          <p>The harmonic-oscillator study jointly learns the wavefunction and eigenvalue. Its ground-state result is the most accurate numerical result in the repository.</p>
+          <h3>Specialist accuracy</h3>
+          <p>The harmonic-oscillator notebook is the accuracy frontier of the paper. It shows that explicit physical structure can recover the ground state with near-analytic agreement in both wavefunction shape and eigenvalue.</p>
         </article>
         <article class="card">
-          <h3>Time-dependent benchmark</h3>
-          <p>The Schrödinger study predicts the real and imaginary wavefunction components across space and time, then evaluates them with density and norm diagnostics.</p>
+          <h3>Physics-checked dynamics</h3>
+          <p>The time-dependent Schrödinger notebook demonstrates that the same framework extends beyond static eigenproblems to complex-valued propagation, with density, norm, phase, and transport-aware diagnostics.</p>
         </article>
         <article class="card">
-          <h3>Comparative benchmark</h3>
-          <p>The combined study is intentionally broader than the specialist notebooks. Its role is to quantify transferability, architecture sensitivity, and robustness.</p>
+          <h3>Transferability and ablation</h3>
+          <p>The combined benchmark is where the broader machine-learning claim is tested. It identifies which design choices survive a change in problem class and which should be treated honestly as specialist tuning.</p>
         </article>
       </div>
 
@@ -402,26 +405,26 @@
         <table>
           <thead>
             <tr>
-              <th>Study</th>
-              <th>Main result</th>
-              <th>Interpretation</th>
+              <th>Evidence layer</th>
+              <th>Headline result</th>
+              <th>Paper-level interpretation</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>Harmonic oscillator</td>
               <td>Relative L2 1.56927 × 10^-3 and learned energy 0.50001526</td>
-              <td>Near-analytic recovery on the canonical eigenproblem.</td>
+              <td>Best-case stationary-state fidelity under physics-structured inductive bias.</td>
             </tr>
             <tr>
               <td>Time-dependent Schrödinger</td>
               <td>Initial density relative L2 7.92 × 10^-8 and final density relative L2 5.66 × 10^-2</td>
-              <td>Accurate propagation with predicted norm close to one.</td>
+              <td>Complex-valued propagation remains quantitatively controlled across the spacetime window.</td>
             </tr>
             <tr>
               <td>Combined benchmark</td>
               <td>Best shared architecture 5 layers × 64 units with relative L2 0.26585</td>
-              <td>Design guidance across problem classes rather than another specialist ceiling result.</td>
+              <td>The most NeurIPS-relevant result: comparative evidence for what generalizes across tasks.</td>
             </tr>
           </tbody>
         </table>
@@ -430,33 +433,33 @@
 
     <section id="figures">
       <div class="section-head">
-        <div class="section-kicker">CSV-Backed Benchmark Figures</div>
-        <h2>Stable Figures for the Main Claims</h2>
-        <p>These figures come from the benchmark tables in outputs, not from absent notebook-export PNG files. That makes the landing page self-consistent and keeps the README and the site aligned.</p>
+        <div class="section-kicker">Main Figures</div>
+        <h2>Core Empirical Visualizations</h2>
+        <p>These four figures summarize the strongest empirical claims in the submission. They are generated from committed CSV artifacts so the website and README stay synchronized, while the executed notebooks expose the richer supplementary figure sets behind each claim.</p>
       </div>
 
       <div class="grid-2">
         <article class="figure">
           <img src="outputs/qho_benchmark.svg" alt="Harmonic oscillator benchmark chart" loading="lazy" />
           <div class="figure-copy">
-            <h3>Harmonic-oscillator specialist result</h3>
-            <p>The ground state is the clearest success case in the repository: very low relative error together with very low energy error.</p>
+            <h3>Specialist stationary-state accuracy</h3>
+            <p>This benchmark carries the strongest single number in the repository: near-analytic ground-state recovery, supported in the notebook by detailed ground-state, overlap-matrix, and ablation visualizations.</p>
           </div>
         </article>
 
         <article class="figure">
           <img src="outputs/schrodinger_benchmark.svg" alt="Time-dependent Schrodinger benchmark chart" loading="lazy" />
           <div class="figure-copy">
-            <h3>Wavepacket propagation benchmark</h3>
-            <p>The time-dependent study begins essentially exact at the initial condition and stays physically plausible through the interval, with the norm remaining close to unity.</p>
+            <h3>Wavepacket propagation with physics-aware checks</h3>
+            <p>The propagation benchmark begins essentially exact at the initial slice and remains controlled at later times. The executed notebook expands this claim with density heatmaps, phase structure, current snapshots, and Ehrenfest diagnostics.</p>
           </div>
         </article>
 
         <article class="figure">
           <img src="outputs/combined_architecture.svg" alt="Combined benchmark architecture grid" loading="lazy" />
           <div class="figure-copy">
-            <h3>Architecture sensitivity in the shared benchmark</h3>
-            <p>Depth is the strongest lever in the tested sweep, and the 5-layer, 64-unit model is the best shared configuration.</p>
+            <h3>Architecture sensitivity under a shared protocol</h3>
+            <p>This is where the paper moves from benchmark performance to model-selection evidence. Depth is the strongest lever in the tested sweep, and the 5-layer, 64-unit model is the best shared configuration.</p>
           </div>
         </article>
 
@@ -464,7 +467,7 @@
           <img src="outputs/combined_summary.svg" alt="Combined benchmark summary and noise robustness" loading="lazy" />
           <div class="figure-copy">
             <h3>Transferability and robustness</h3>
-            <p>The combined notebook adds breadth: multiple problems under one protocol and only modest variation as input noise is increased.</p>
+            <p>This figure highlights the part of the paper that matters most beyond a single benchmark win: the same formulation remains interpretable across multiple problems and shows only modest degradation under added input noise.</p>
           </div>
         </article>
       </div>
@@ -472,29 +475,29 @@
 
     <section id="notebooks">
       <div class="section-head">
-        <div class="section-kicker">Executed Notebook Layer</div>
-        <h2>Notebook Viewer</h2>
-        <p>The notebooks remain the primary technical record. The cards below switch the embedded viewer without duplicating the full narrative on this page.</p>
+        <div class="section-kicker">Supplementary Results</div>
+        <h2>Executed Notebook Record</h2>
+        <p>Each notebook functions as one section of the submitted paper. The embedded exports contain the full tables, supplementary figures, and interpretation needed to defend the headline claims shown above.</p>
       </div>
 
       <div class="notebook-grid">
         <button class="nb-btn active" data-key="harmonic" onclick="showNotebook('harmonic', this)">
           <h3>Harmonic oscillator</h3>
-          <p>Specialist stationary-state notebook with the strongest accuracy result in the repository.</p>
-          <span class="nb-tag">Highest stationary accuracy</span>
-          <span class="nb-tag">Eigenvalue recovery</span>
+          <p>Specialist stationary-state notebook for the paper's strongest absolute accuracy result.</p>
+          <span class="nb-tag">Ground-state analysis</span>
+          <span class="nb-tag">Overlap matrix</span>
         </button>
         <button class="nb-btn" data-key="schrodinger" onclick="showNotebook('schrodinger', this)">
           <h3>Time-dependent Schrödinger</h3>
-          <p>Complex-valued propagation notebook with density and norm diagnostics.</p>
-          <span class="nb-tag">Wavepacket propagation</span>
-          <span class="nb-tag">Complex PINN</span>
+          <p>Complex-valued propagation notebook with the paper's strongest dynamics diagnostics.</p>
+          <span class="nb-tag">Density heatmap</span>
+          <span class="nb-tag">Ehrenfest diagnostics</span>
         </button>
         <button class="nb-btn" data-key="combined" onclick="showNotebook('combined', this)">
           <h3>Combined benchmark</h3>
-          <p>Cross-problem benchmark that compares architecture, scaling, and noise sensitivity.</p>
-          <span class="nb-tag">Transferability</span>
+          <p>Cross-problem benchmark that supports the transferability and ablation claims.</p>
           <span class="nb-tag">Architecture sweep</span>
+          <span class="nb-tag">Noise robustness</span>
         </button>
       </div>
 
@@ -502,7 +505,7 @@
         <div class="viewer-head">
           <div>
             <h3 id="viewer-title" style="margin-bottom:4px;">Harmonic oscillator notebook</h3>
-            <p id="viewer-subtitle" style="margin:0;">Executed HTML export for the strongest stationary-state benchmark.</p>
+            <p id="viewer-subtitle" style="margin:0;">Executed HTML export for the specialist stationary-state evidence and its supporting visual diagnostics.</p>
           </div>
           <a class="button" id="viewer-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" rel="noopener noreferrer">Open in full tab</a>
         </div>
@@ -513,7 +516,7 @@
     <section id="reproduce">
       <div class="section-head">
         <div class="section-kicker">Reproducibility</div>
-        <h2>Minimal Reproduction Path</h2>
+        <h2>Reproducibility Protocol</h2>
         <p>The commands below match the environment assumption already used elsewhere in the repository.</p>
       </div>
 
@@ -552,17 +555,17 @@ python -m http.server 8000
       harmonic: {
         src: 'notebooks/pinn_harmonic_oscillator.html',
         title: 'Harmonic oscillator notebook',
-        subtitle: 'Executed HTML export for the strongest stationary-state benchmark.'
+        subtitle: 'Executed HTML export for the specialist stationary-state evidence and its supporting visual diagnostics.'
       },
       schrodinger: {
         src: 'notebooks/pinn_schrodinger.html',
         title: 'Time-dependent Schrödinger notebook',
-        subtitle: 'Executed HTML export for the complex-valued propagation benchmark.'
+        subtitle: 'Executed HTML export for the complex-valued propagation evidence, including density, phase, and transport-aware diagnostics.'
       },
       combined: {
         src: 'notebooks/quantum_pinn_combined.html',
         title: 'Combined benchmark notebook',
-        subtitle: 'Executed HTML export for the cross-problem transferability study.'
+        subtitle: 'Executed HTML export for the transferability, ablation, scaling, and robustness evidence that anchors the broader paper claim.'
       }
     };
 

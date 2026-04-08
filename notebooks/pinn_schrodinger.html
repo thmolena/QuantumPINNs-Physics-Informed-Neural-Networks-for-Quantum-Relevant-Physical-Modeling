@@ -7802,15 +7802,15 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Complex-Valued-Physics-Informed-Wavepacket-Dynamics-for-the-Time-Dependent-Schrodinger-Equation">Complex-Valued Physics-Informed Wavepacket Dynamics for the Time-Dependent Schrodinger Equation<a class="anchor-link" href="#Complex-Valued-Physics-Informed-Wavepacket-Dynamics-for-the-Time-Dependent-Schrodinger-Equation">¶</a></h1><blockquote>
-<p><strong>Claim:</strong> this notebook presents the project's strongest time-dependent result and argues that the contribution is not merely a visually plausible heatmap, but a physically checked complex-valued propagation model with controlled density error, norm stability, and transport diagnostics under a CPU-scale workflow.</p>
+<h1 id="Complex-Valued-Physics-Informed-Wavepacket-Dynamics-for-the-Time-Dependent-Schr%C3%B6dinger-Equation">Complex-Valued Physics-Informed Wavepacket Dynamics for the Time-Dependent Schrödinger Equation<a class="anchor-link" href="#Complex-Valued-Physics-Informed-Wavepacket-Dynamics-for-the-Time-Dependent-Schr%C3%B6dinger-Equation">¶</a></h1><blockquote>
+<p><strong>Paper role:</strong> Time-dependent dynamics evidence. This notebook extends the physics-informed framework from stationary eigenstate recovery to complex-valued wavepacket propagation, showing that physically interpretable diagnostics remain defensible across the full spacetime domain.</p>
 </blockquote>
-<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><blockquote>
-<p>We study a dual-output physics-informed neural network for the one-dimensional time-dependent Schrodinger equation. The notebook is organized as a presentation artifact for strict technical review: it states the modeling claim, grounds the benchmark in real experimental wavepacket regimes, summarizes the evaluation protocol, and then visualizes the saved evidence for density transport, phase structure, norm preservation, and Ehrenfest behavior. The key contribution relative to a generic PINN baseline is the use of a complex-valued architecture with hard initial conditioning and sparse analytic anchors, which materially reduces drift at early times and keeps the learned field interpretable over the full spacetime domain.</p>
-</blockquote>
-<h2 id="Technical-Scope">Technical Scope<a class="anchor-link" href="#Technical-Scope">¶</a></h2><p>The central technical question in this study is whether the learned field behaves like quantum dynamics rather than merely interpolating a convenient reference surface.</p>
-<p>The application anchors are drawn from experimentally meaningful electron, neutron, and cold-atom regimes so that the transport benchmark is connected to real coherent-matter settings rather than presented as a toy example.</p>
-<p>The cells remain intentionally lightweight and visualization-heavy so the notebook can be executed directly in qaoa without a long retraining pass.</p>
+<h2 id="Abstract">Abstract<a class="anchor-link" href="#Abstract">¶</a></h2><p>We formulate a dual-output physics-informed neural network for the one-dimensional time-dependent Schrödinger equation. The architecture uses a shared trunk with separate real and imaginary heads, hard initial conditioning, sparse analytic anchors, and explicit norm control. Against a free Gaussian wavepacket benchmark with a known analytic solution, the model achieves a mean density relative $L^2$ error of $7.92 \times 10^{-8}$ and maximum norm deviation below $2 \times 10^{-3}$. The notebook presents the spacetime density field, phase structure, probability current, and Ehrenfest behavior as the complete evidentiary record.</p>
+<h2 id="Contributions-to-the-Paper">Contributions to the Paper<a class="anchor-link" href="#Contributions-to-the-Paper">¶</a></h2><ol>
+<li><strong>Dynamics evidence.</strong> Demonstrates that the physics-informed framework is not restricted to stationary benchmarks; the same design philosophy produces a quantitatively defensible propagation model for a qualitatively different governing equation.</li>
+<li><strong>Physically grounded diagnostics.</strong> Norm preservation, Ehrenfest behavior, and phase structure are reported alongside density error, providing a richer evidentiary basis than a single scalar metric.</li>
+<li><strong>Transport grounding.</strong> Connects the wavepacket benchmark to electron imaging, neutron interferometry, and cold-atom expansion regimes where coherent transport is experimentally observable.</li>
+</ol>
 </div>
 </div>
 </div>
@@ -7819,7 +7819,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -7838,7 +7838,7 @@ a.anchor-link {
 <span class="n">python_executable</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
 <span class="k">if</span> <span class="s1">'qaoa'</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">python_executable</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s1">'This notebook must be executed from the qaoa conda environment. Active interpreter: </span><span class="si">{</span><span class="n">python_executable</span><span class="si">}</span><span class="s1">'</span>
+        <span class="sa">f</span><span class="s1">'This study must be executed from the qaoa conda environment. Active interpreter: </span><span class="si">{</span><span class="n">python_executable</span><span class="si">}</span><span class="s1">'</span>
     <span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -7959,12 +7959,47 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="1.-Research-Claim-and-Differentiation">1. Research Claim and Differentiation<a class="anchor-link" href="#1.-Research-Claim-and-Differentiation">¶</a></h2><blockquote>
-<p><strong>Research claim:</strong> the contribution is a complex-valued, physically checked propagation model, not a scalar PINN accompanied by an appealing animation. The architecture and diagnostics are chosen so that real and imaginary structure, norm evolution, and transport behavior can all be defended quantitatively.</p>
+<h2 id="%C2%A7-1.-Modeling-Formulation">§ 1. Modeling Formulation<a class="anchor-link" href="#%C2%A7-1.-Modeling-Formulation">¶</a></h2><blockquote>
+<p><strong>Claim.</strong> A dual-output complex PINN with hard initial conditioning and sparse analytic anchors recovers the density field, phase structure, norm, and Ehrenfest behavior of a free Gaussian wavepacket to quantitatively defensible precision. The improvement over a scalar baseline is attributable to the complex-valued architecture and early-time anchoring.</p>
 </blockquote>
-<h3 id="How-This-Differs-from-Simpler-PINN-Baselines">How This Differs from Simpler PINN Baselines<a class="anchor-link" href="#How-This-Differs-from-Simpler-PINN-Baselines">¶</a></h3><p>A generic TDSE PINN often treats the problem as a soft initial-condition fit with a residual loss and comparatively weak control over phase coherence and transport diagnostics.</p>
-<p>This notebook instead uses a shared-trunk dual-output network, hard initial conditioning, sparse analytic anchors, normalization control, and Ehrenfest-aware diagnostics.</p>
-<p>The practical consequence is that the model spends less optimization capacity relearning known structure at $t=0$ and more capacity preserving a physically credible trajectory throughout spacetime.</p>
+<h3 id="Distinction-From-Simpler-TDSE-Baselines">Distinction From Simpler TDSE Baselines<a class="anchor-link" href="#Distinction-From-Simpler-TDSE-Baselines">¶</a></h3><p>Standard TDSE PINNs often treat the problem as a scalar initial-condition fit with soft penalties and comparatively weak controls over phase coherence and transport diagnostics.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Generic TDSE PINN</th>
+<th>This work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Output head</td>
+<td>Single scalar</td>
+<td>Dual real/imaginary output</td>
+</tr>
+<tr>
+<td>Initial conditioning</td>
+<td>Soft penalty</td>
+<td>Hard conditioning</td>
+</tr>
+<tr>
+<td>Analytic anchors</td>
+<td>Absent</td>
+<td>Sparse exact-solution anchors</td>
+</tr>
+<tr>
+<td>Norm control</td>
+<td>None</td>
+<td>Explicit normalization term</td>
+</tr>
+<tr>
+<td>Diagnostics</td>
+<td>Density only</td>
+<td>Density, norm, phase, Ehrenfest</td>
+</tr>
+</tbody>
+</table>
+<p>Hard early-time conditioning reduces the risk that optimization capacity is spent relearning known initial structure, directing more capacity toward physically faithful trajectory propagation.</p>
 </div>
 </div>
 </div>
@@ -7973,13 +8008,13 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">feature_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="s1">'Vanilla PINN'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-        <span class="s1">'This notebook'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s1">'Proposed formulation'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
     <span class="p">},</span>
     <span class="n">index</span><span class="o">=</span><span class="p">[</span>
         <span class="s1">'Dual-output complex head'</span><span class="p">,</span>
@@ -8105,11 +8140,11 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="2.-Real-World-Data-Anchors">2. Real-World Data Anchors<a class="anchor-link" href="#2.-Real-World-Data-Anchors">¶</a></h2><blockquote>
-<p>The benchmark remains CPU-friendly, but the physics is experimentally meaningful. The public anchor dataset in <code>data/wavepacket_application_anchors.csv</code> ties the notebook to coherent transport regimes used in electron imaging, neutron interferometry, and ultracold-atom expansion.</p>
+<h2 id="%C2%A7-2.-Application-Motivation">§ 2. Application Motivation<a class="anchor-link" href="#%C2%A7-2.-Application-Motivation">¶</a></h2><blockquote>
+<p>The benchmark uses an analytically tractable free Gaussian wavepacket, but the regimes it represents are experimentally real. The anchor data in <code>data/wavepacket_application_anchors.csv</code> connects the analysis to coherent transport settings used in electron imaging, neutron interferometry, and ultracold-atom expansion.</p>
 </blockquote>
-<h3 id="Why-the-Dataset-Matters">Why the Dataset Matters<a class="anchor-link" href="#Why-the-Dataset-Matters">¶</a></h3><p>. The de Broglie length scale changes materially across these regimes, so a method that recovers phase-sensitive transport under known physics has scientific value beyond this one-dimensional example.</p>
-<p>. The anchor table is interpretive, not supervisory: it justifies why accurate wavepacket propagation is worth presenting as a real modeling capability.</p>
+<h3 id="Role-of-the-Anchor-Dataset">Role of the Anchor Dataset<a class="anchor-link" href="#Role-of-the-Anchor-Dataset">¶</a></h3><p>The de Broglie wavelength changes by several orders of magnitude across these regimes, so a model that recovers accurate phase-sensitive transport from the governing equation has scientific value beyond this one-dimensional case.</p>
+<p>The anchor table is <strong>interpretive, not supervisory</strong>: it justifies why accurate wavepacket propagation constitutes a meaningful capability claim rather than a toy benchmark result.</p>
 </div>
 </div>
 </div>
@@ -8239,7 +8274,7 @@ a.anchor-link {
 </blockquote>
 <h3 id="Evaluation-Logic">Evaluation Logic<a class="anchor-link" href="#Evaluation-Logic">¶</a></h3><p>. The first requirement is local fidelity: the learned density must stay close to the reference at each time slice.</p>
 <p>. The second requirement is global physical credibility: the norm should remain near unity throughout propagation.</p>
-<p>. The third requirement is interpretability: the notebook should show where errors accumulate rather than hiding them behind a single summary scalar.</p>
+<p>. The third requirement is interpretability: the analysis should show where errors accumulate rather than hiding them behind a single summary scalar.</p>
 </div>
 </div>
 </div>
@@ -8584,17 +8619,23 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.-Technical-Interpretation-and-Interview-Discussion">5. Technical Interpretation and Interview Discussion<a class="anchor-link" href="#5.-Technical-Interpretation-and-Interview-Discussion">¶</a></h2><blockquote>
-<p><strong>Why this notebook is a contribution:</strong> it shows a credible complex-valued PINN workflow for quantum transport in which the learned field is evaluated through density, norm, phase, and transport-adjacent diagnostics rather than a single reconstructed surface.</p>
+<h2 id="5.-Paper-Level-Interpretation">5. Paper-Level Interpretation<a class="anchor-link" href="#5.-Paper-Level-Interpretation">¶</a></h2><blockquote>
+<p><strong>Why this notebook matters for the paper:</strong> it demonstrates that the same framework used for specialist stationary-state recovery can also produce a physically checked complex-valued propagation model, rather than only a visually plausible animation.</p>
 </blockquote>
-<h3 id="Differences-from-Existing-Simpler-Approaches">Differences from Existing Simpler Approaches<a class="anchor-link" href="#Differences-from-Existing-Simpler-Approaches">¶</a></h3><p>. The notebook does not collapse the TDSE to a scalar real-valued regression target.</p>
-<p>. The model uses hard structure at the initial slice and light analytic anchoring instead of depending on dense labels throughout spacetime.</p>
-<p>. The evaluation is physics-aware: norm drift and trajectory behavior are treated as first-class signals, not afterthoughts.</p>
-<h3 id="Real-Life-Relevance">Real-Life Relevance<a class="anchor-link" href="#Real-Life-Relevance">¶</a></h3><p>. The benchmark connects directly to electron imaging, neutron interferometry, and cold-atom expansion settings where coherent transport is observable and phase-aware modeling matters.</p>
-<p>. A method that learns from the governing equation and sparse anchors is useful precisely when dense labels are expensive or operationally unavailable.</p>
-<h3 id="Limitations-Worth-Stating-Explicitly">Limitations Worth Stating Explicitly<a class="anchor-link" href="#Limitations-Worth-Stating-Explicitly">¶</a></h3><p>. The benchmark is still one-dimensional and analytically tractable, so it is a controlled demonstration rather than a full experimental simulator.</p>
-<p>. The public anchor dataset is for application motivation, not direct supervision.</p>
-<p>. Scaling to higher-dimensional transport or open-system dynamics would require more expressive representations and more careful sampling strategies.</p>
+<h3 id="What-This-Section-Contributes">What This Section Contributes<a class="anchor-link" href="#What-This-Section-Contributes">¶</a></h3><ol>
+<li>It establishes the paper's dynamics evidence through density, norm, phase, and transport-aware diagnostics.</li>
+<li>It shows that the model does not merely match one surface at one time, but remains quantitatively interpretable across the spacetime window.</li>
+<li>It complements the harmonic-oscillator notebook by testing the framework on a qualitatively different task before the full transferability analysis in the combined benchmark.</li>
+</ol>
+<h3 id="Scientific-Relevance">Scientific Relevance<a class="anchor-link" href="#Scientific-Relevance">¶</a></h3><ol>
+<li>The benchmark connects directly to electron imaging, neutron interferometry, and cold-atom expansion settings where coherent transport is observable and phase-aware modeling matters.</li>
+<li>A method that learns from the governing equation and sparse anchors is useful precisely when dense labels are expensive or operationally unavailable.</li>
+</ol>
+<h3 id="Limitations-Worth-Stating-Explicitly">Limitations Worth Stating Explicitly<a class="anchor-link" href="#Limitations-Worth-Stating-Explicitly">¶</a></h3><ol>
+<li>The benchmark is still one-dimensional and analytically tractable, so it is a controlled demonstration rather than a full experimental simulator.</li>
+<li>The public anchor dataset is for application motivation, not direct supervision.</li>
+<li>Scaling to higher-dimensional transport or open-system dynamics would require more expressive representations and more careful sampling strategies.</li>
+</ol>
 </div>
 </div>
 </div>
