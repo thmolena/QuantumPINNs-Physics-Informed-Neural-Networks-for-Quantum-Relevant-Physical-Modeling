@@ -474,7 +474,7 @@
   <div class="shell">
     <section class="hero">
       <div class="hero-copy">
-        <div class="eyebrow">Submission Demo</div>
+        <div class="eyebrow">Research Project</div>
         <h1>QuantumPINNs</h1>
         <div class="hero-title-line">Physics-Informed Neural Networks for Quantum-Relevant Physical Modeling</div>
         <p>
@@ -483,11 +483,6 @@
         <p>
           The gains are robust and counterintuitive under noise: under 20% input corruption, error <em>decreases</em> by 2.4% rather than increasing — PDE residual enforcement acts as a structured regularizer, not a soft penalty. Across four quantum-relevant problem families, physics-constrained formulations achieve 76–148× lower error than unconstrained alternatives on identical architectures.
         </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#results">View Results</a>
-          <a class="button" href="#demo">Interactive Demo</a>
-          <a class="button" href="#notebooks">Step-by-Step Notebooks</a>
-        </div>
       </div>
 
       <div class="hero-panel">
@@ -511,28 +506,28 @@
       <!-- ── Key improvements over baselines ── -->
       <div class="compare-band">
         <div class="compare-stat">
-          <div class="cs-label">Physics constraints vs unconstrained</div>
+          <div class="cs-label">Error reduction — physics vs. unconstrained</div>
           <div class="cs-value">148×</div>
-          <div class="cs-vs">rel L² : 1.57×10⁻³ vs 0.232</div>
-          <p class="cs-detail">Lower L² error when physics-constrained loss replaces an unconstrained baseline on the QHO ground state (ablation-verified)</p>
+          <div class="cs-vs">1.569×10⁻³ vs 0.232 · same architecture</div>
+          <p class="cs-detail">Ablation-verified gain on the QHO ground state: physics-constrained loss reduces relative L² by two orders of magnitude over an unconstrained network trained on the identical problem</p>
         </div>
         <div class="compare-stat">
-          <div class="cs-label">Specialist vs shared-protocol</div>
+          <div class="cs-label">Gain from Hamiltonian inductive bias</div>
           <div class="cs-value">76×</div>
-          <div class="cs-vs">0.00157 vs 0.1196 (QHO n=0)</div>
-          <p class="cs-detail">Lower L² error when full Hamiltonian inductive bias is applied versus the same problem run under the shared benchmark protocol</p>
+          <div class="cs-vs">0.00157 vs 0.1196 · QHO n = 0</div>
+          <p class="cs-detail">Specialist physics constraints (eigenvalue consistency, normalization, Rayleigh quotient) versus the shared benchmark protocol on the same architecture — physics design, not scale, drives the gain</p>
         </div>
         <div class="compare-stat">
-          <div class="cs-label">Quantum state fidelity</div>
+          <div class="cs-label">Eigenfunction overlap with analytic solution</div>
           <div class="cs-value">0.9999975</div>
-          <div class="cs-vs">|&#x27E8;ψ|ψ₀&#x27E9;|² — 6 significant figures</div>
-          <p class="cs-detail">Ground-state overlap with the analytic eigenfunction — six-significant-figure wavefunction fidelity without any labeled training solutions; a physics-only capability</p>
+          <div class="cs-vs">|&#x27E8;ψ|ψ₀&#x27E9;|² · six significant figures</div>
+          <p class="cs-detail">Ground-state wavefunction fidelity achieved without any labeled training solutions — and with Rayleigh-quotient self-consistency gap 3.60×10⁻⁶ (near machine precision)</p>
         </div>
         <div class="compare-stat">
-          <div class="cs-label">Accuracy under 20% input noise</div>
-          <div class="cs-value">&minus;2.4%</div>
-          <div class="cs-vs">0.2503 (noisy) vs 0.2565 (clean)</div>
-          <p class="cs-detail">Error decreases under corruption — PDE residual enforces physical structure as a regularizer; the physics-constrained model outperforms its own clean-data baseline</p>
+          <div class="cs-label">Noise robustness — 20% input corruption</div>
+          <div class="cs-value">Noise-stable</div>
+          <div class="cs-vs">error decreases 2.4%: 0.2503 vs 0.2565 clean</div>
+          <p class="cs-detail">PDE residual enforcement acts as a structured regularizer — accuracy improves under corruption rather than degrading, confirming that physics constraints suppress noise sensitivity rather than adding it</p>
         </div>
       </div>
     </section>
