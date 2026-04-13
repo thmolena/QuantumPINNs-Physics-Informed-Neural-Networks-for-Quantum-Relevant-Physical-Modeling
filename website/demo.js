@@ -62,10 +62,10 @@ async function checkHealth() {
     el.textContent = data.model_loaded
       ? "API online — model loaded"
       : "API online — no model loaded";
-    el.style.color = data.model_loaded ? "#3fb950" : "#ffa657";
+    el.style.color = data.model_loaded ? "#215f46" : "#8c5a1b";
   } catch {
     el.textContent = "API offline";
-    el.style.color = "#ff7b72";
+    el.style.color = "#9c2f2f";
   }
 }
 
