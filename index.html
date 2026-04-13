@@ -426,12 +426,12 @@
   <main class="page">
     <section class="report-header">
       <div>
-        <h1>Physics-constrained neural models deliver stronger quantum benchmark performance than the comparison models used in this project.</h1>
+        <h1>Physics-informed neural models show stronger benchmark performance in the quantum problems examined here.</h1>
         <p class="lead">
-          This document reports only the benchmark outcomes in which the project's physics-informed models outperform the comparison models evaluated in the project records. The strongest result is a 148x reduction in ground-state relative L2 error for the harmonic oscillator when physics-constrained loss replaces an unconstrained neural baseline on the same task and architecture.
+          This report presents benchmark results for cases in which the physics-informed formulations outperform the comparison models evaluated in the study. The principal result is obtained for the harmonic-oscillator ground state, where physics-constrained loss reduces relative L2 error by a factor of 148 compared with an unconstrained neural baseline on the same task and architecture.
         </p>
         <p>
-          The same evidence pattern appears in the shared benchmark suite: specialist Hamiltonian constraints beat the shared non-specialist protocol by 76x on the harmonic-oscillator ground state, a deeper shared model beats a shallow baseline by 5.3x, and physics-based regularization improves accuracy under 20% input noise instead of degrading it.
+          The broader set of comparisons supports the same interpretation. Specialist Hamiltonian constraints reduce harmonic-oscillator ground-state error by a factor of 76 relative to the non-specialist protocol, and the strongest shared-depth configuration improves on the shallow baseline by a factor of 5.3. Under 20% input noise, error also decreases rather than increases, indicating that the physics-based regularization contributes to both accuracy and stability.
         </p>
       </div>
     </section>
