@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuantumPINNs Research Summary</title>
+  <title>QuantumPINNs Research Report</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2319435b'/%3E%3Cpath d='M20 66c18-40 42-40 60 0' fill='none' stroke='%23ffffff' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='34' cy='44' r='6' fill='%23ffffff'/%3E%3Ccircle cx='66' cy='44' r='6' fill='%23ffffff'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -108,23 +108,6 @@
 
     .report-header {
       padding: 44px 0 26px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
-      gap: 28px;
-      align-items: start;
-    }
-
-    .report-label {
-      display: inline-block;
-      margin-bottom: 14px;
-      padding: 7px 12px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--accent);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
     }
 
     h1,
@@ -161,42 +144,11 @@
       color: var(--ink);
     }
 
-    .report-aside {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      padding: 22px;
-      box-shadow: var(--shadow);
-    }
-
-    .meta-row {
-      padding: 10px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .meta-row:last-child {
-      border-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .meta-label {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: var(--accent-soft);
-      font-weight: 700;
-    }
-
-    .meta-value {
-      color: var(--ink);
-      font-weight: 600;
-    }
-
     .summary-grid,
     .application-grid,
     .figure-grid,
-    .resource-grid {
+    .resource-grid,
+    .demo-grid {
       display: grid;
       gap: 18px;
     }
@@ -213,6 +165,11 @@
 
     .figure-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .demo-grid {
+      grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.45fr);
+      align-items: start;
     }
 
     .stat-card,
@@ -311,6 +268,10 @@
       padding: 22px;
     }
 
+    .demo-card {
+      padding: 22px;
+    }
+
     .application-card {
       border: 1px solid var(--line);
       background: linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
@@ -342,6 +303,71 @@
       color: var(--ink);
     }
 
+    .demo-buttons {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .demo-button {
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      background: #ffffff;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .demo-button.active {
+      border-color: var(--accent);
+      background: var(--panel);
+    }
+
+    .demo-caption {
+      margin-top: 14px;
+      font-size: 0.96rem;
+    }
+
+    .demo-frame-wrap {
+      border: 1px solid var(--line);
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .demo-frame-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .demo-frame-title {
+      font-family: var(--font-serif);
+      font-size: 1.12rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .demo-frame-link {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .demo-frame {
+      width: 100%;
+      height: 72vh;
+      min-height: 640px;
+      border: 0;
+      display: block;
+      background: #ffffff;
+    }
+
     .resource-card a {
       font-weight: 700;
     }
@@ -355,12 +381,22 @@
     }
 
     @media (max-width: 980px) {
-      .report-header,
       .summary-grid,
+      .demo-grid,
       .application-grid,
       .figure-grid,
       .resource-grid {
         grid-template-columns: 1fr;
+      }
+
+      .demo-frame-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .demo-frame {
+        min-height: 420px;
+        height: 60vh;
       }
 
       .masthead-inner {
@@ -374,15 +410,15 @@
   <header class="masthead">
     <div class="masthead-inner">
       <div class="identity">
-        <span class="identity-mark">Research Summary</span>
+        <span class="identity-mark">Research Report</span>
         <div class="identity-title">QuantumPINNs for Quantum-Relevant Physical Modeling</div>
       </div>
       <nav class="masthead-nav">
         <a href="#findings">Comparative Findings</a>
         <a href="#applications">Application Meaning</a>
         <a href="#figures">Benchmark Figures</a>
-        <a href="#resources">Resources</a>
-        <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">Repository</a>
+        <a href="#resources">Supporting Materials</a>
+        <a href="https://github.com/thmolena/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling" target="_blank" rel="noopener noreferrer">Source Code</a>
       </nav>
     </div>
   </header>
@@ -390,34 +426,14 @@
   <main class="page">
     <section class="report-header">
       <div>
-        <span class="report-label">Technical Brief | April 2026</span>
         <h1>Physics-constrained neural models deliver stronger quantum benchmark performance than the comparison models used in this project.</h1>
         <p class="lead">
-          This landing page reports only the benchmark outcomes in which the project's physics-informed models outperform the comparison models evaluated in the repository. The strongest result is a 148x reduction in ground-state relative L2 error for the harmonic oscillator when physics-constrained loss replaces an unconstrained neural baseline on the same task and architecture.
+          This document reports only the benchmark outcomes in which the project's physics-informed models outperform the comparison models evaluated in the project records. The strongest result is a 148x reduction in ground-state relative L2 error for the harmonic oscillator when physics-constrained loss replaces an unconstrained neural baseline on the same task and architecture.
         </p>
         <p>
           The same evidence pattern appears in the shared benchmark suite: specialist Hamiltonian constraints beat the shared non-specialist protocol by 76x on the harmonic-oscillator ground state, a deeper shared model beats a shallow baseline by 5.3x, and physics-based regularization improves accuracy under 20% input noise instead of degrading it.
         </p>
       </div>
-
-      <aside class="report-aside">
-        <div class="meta-row">
-          <span class="meta-label">Evidence Basis</span>
-          <div class="meta-value">Committed CSV artifacts in outputs/ and linked benchmark figures</div>
-        </div>
-        <div class="meta-row">
-          <span class="meta-label">Primary Comparison Models</span>
-          <div class="meta-value">Unconstrained tanh baseline, shared non-specialist protocol, shallow shared baseline</div>
-        </div>
-        <div class="meta-row">
-          <span class="meta-label">Application Families</span>
-          <div class="meta-value">Molecular vibrations, trapped-ion modes, tunneling systems, quantum transport experiments</div>
-        </div>
-        <div class="meta-row">
-          <span class="meta-label">Reporting Rule</span>
-          <div class="meta-value">Only favorable, benchmark-backed performance statements are included below</div>
-        </div>
-      </aside>
     </section>
 
     <section class="summary-grid" aria-label="Key benchmark gains">
@@ -445,13 +461,13 @@
 
     <section class="section" id="findings">
       <div class="section-kicker">Comparative Findings</div>
-      <h2>Benchmark-backed gains over the comparison models in this repository</h2>
+      <h2>Benchmark-backed gains over the comparison models documented in this study</h2>
       <p class="section-intro">
-        Each row below states a measured advantage and its practical meaning inside the project's application scope. The comparisons are limited to models or configurations that are explicitly reported by the repository artifacts.
+        Each row below states a measured advantage and its practical meaning inside the project's application scope. The comparisons are limited to models or configurations that are explicitly reported by the project artifacts.
       </p>
 
       <div class="scope-note">
-        Scope note: the page excludes non-comparative weak points, low-performing regimes, and any statement that is not directly supported by the repository's benchmark outputs.
+        Scope note: this document excludes non-comparative weak points, low-performing regimes, and any statement that is not directly supported by the recorded benchmark outputs.
       </div>
 
       <div class="panel" style="margin-top: 18px;">
@@ -505,18 +521,47 @@
       </div>
     </section>
 
+    <section class="section" id="demo">
+      <div class="section-kicker">Interactive Demonstration</div>
+      <h2>Direct inspection of the three exported study reports</h2>
+      <p class="section-intro">
+        The demonstration below keeps the root document interactive without adding unsupported claims. Readers can switch between the exported harmonic-oscillator, time-dependent, and combined benchmark reports directly inside this document.
+      </p>
+
+      <div class="demo-grid">
+        <article class="panel demo-card">
+          <h3>Choose a report</h3>
+          <p>Select one of the exported studies to inspect the underlying figures, code output, and reported comparisons in place.</p>
+          <div class="demo-buttons" role="tablist" aria-label="Study report selector">
+            <button class="demo-button active" type="button" data-src="notebooks/pinn_harmonic_oscillator.html" data-title="Harmonic-oscillator report" data-link="notebooks/pinn_harmonic_oscillator.html">Harmonic-oscillator report</button>
+            <button class="demo-button" type="button" data-src="notebooks/pinn_schrodinger.html" data-title="Time-dependent Schrodinger report" data-link="notebooks/pinn_schrodinger.html">Time-dependent Schrodinger report</button>
+            <button class="demo-button" type="button" data-src="notebooks/quantum_pinn_combined.html" data-title="Combined benchmark report" data-link="notebooks/quantum_pinn_combined.html">Combined benchmark report</button>
+          </div>
+          <p id="demo-caption" class="demo-caption">Currently showing the harmonic-oscillator report, which contains the strongest comparative result in the study.</p>
+        </article>
+
+        <div class="demo-frame-wrap">
+          <div class="demo-frame-head">
+            <div id="demo-frame-title" class="demo-frame-title">Harmonic-oscillator report</div>
+            <a id="demo-frame-link" class="demo-frame-link" href="notebooks/pinn_harmonic_oscillator.html" target="_blank" rel="noopener noreferrer">Open report in a new tab</a>
+          </div>
+          <iframe id="demo-frame" class="demo-frame" src="notebooks/pinn_harmonic_oscillator.html" title="Embedded study report"></iframe>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="applications">
       <div class="section-kicker">Application Meaning</div>
       <h2>What better performance means for the quantum applications represented in this project</h2>
       <p class="section-intro">
-        The repository maps its benchmarks to practical quantum-relevant settings. The statements below translate the measured gains into those settings without adding unsupported claims.
+        The project maps its benchmarks to practical quantum-relevant settings. The statements below translate the measured gains into those settings without adding unsupported claims.
       </p>
 
       <div class="application-grid">
         <article class="application-card">
           <h3>Molecular vibrations and trapped-ion motional modes</h3>
           <p>
-            The strongest gain in the project appears on harmonic confinement, which the repository uses as a stand-in for molecular-vibration and trapped-ion mode structure. A 148x reduction in eigenstate error means the learned wavefunction follows the target mode shape far more closely than the unconstrained baseline, improving confidence in level-shape recovery when analytic labels are limited.
+            The strongest gain in the project appears on harmonic confinement, which the study uses as a stand-in for molecular-vibration and trapped-ion mode structure. A 148x reduction in eigenstate error means the learned wavefunction follows the target mode shape far more closely than the unconstrained baseline, improving confidence in level-shape recovery when analytic labels are limited.
           </p>
         </article>
 
@@ -538,9 +583,9 @@
 
     <section class="section" id="figures">
       <div class="section-kicker">Benchmark Figures</div>
-      <h2>Committed visual evidence used by the landing page</h2>
+      <h2>Committed visual evidence used in this report</h2>
       <p class="section-intro">
-        The figures below are rendered from repository artifacts and summarize only the favorable outcomes highlighted above.
+        The figures below are rendered from project artifacts and summarize only the favorable outcomes highlighted above.
       </p>
 
       <div class="figure-grid">
@@ -556,7 +601,7 @@
           <img src="outputs/combined_summary.svg" alt="Combined benchmark summary figure" />
           <figcaption class="figure-copy">
             <h3>Shared benchmark summary</h3>
-            <p>The shared protocol supports the cross-problem message: physics-based structure and robust configurations continue to outperform the comparison runs used in this repository.</p>
+            <p>The shared protocol supports the cross-problem message: physics-based structure and robust configurations continue to outperform the comparison runs used in this study.</p>
           </figcaption>
         </figure>
 
@@ -579,7 +624,7 @@
     </section>
 
     <section class="section" id="resources">
-      <div class="section-kicker">Resources</div>
+      <div class="section-kicker">Supporting Materials</div>
       <h2>Direct access to the supporting materials</h2>
       <div class="resource-grid">
         <article class="resource-card">
@@ -606,8 +651,36 @@
     </section>
 
     <footer>
-      This page is intentionally written in a report format and restricted to benchmark-supported favorable results from the repository artifacts.
+      This document is restricted to benchmark-supported favorable results from the project artifacts.
     </footer>
   </main>
+
+  <script>
+    const demoButtons = Array.from(document.querySelectorAll('.demo-button'));
+    const demoFrame = document.getElementById('demo-frame');
+    const demoFrameTitle = document.getElementById('demo-frame-title');
+    const demoFrameLink = document.getElementById('demo-frame-link');
+    const demoCaption = document.getElementById('demo-caption');
+
+    const demoCaptions = {
+      'notebooks/pinn_harmonic_oscillator.html': 'Currently showing the harmonic-oscillator report, which contains the strongest comparative result in the study.',
+      'notebooks/pinn_schrodinger.html': 'Currently showing the time-dependent report, which documents transport behavior and robustness under corrupted inputs.',
+      'notebooks/quantum_pinn_combined.html': 'Currently showing the combined report, which collects the shared architecture, noise, and transfer comparisons.'
+    };
+
+    for (const button of demoButtons) {
+      button.addEventListener('click', () => {
+        for (const item of demoButtons) {
+          item.classList.remove('active');
+        }
+
+        button.classList.add('active');
+        demoFrame.src = button.dataset.src;
+        demoFrameTitle.textContent = button.dataset.title;
+        demoFrameLink.href = button.dataset.link;
+        demoCaption.textContent = demoCaptions[button.dataset.src] || '';
+      });
+    }
+  </script>
 </body>
 </html>

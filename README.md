@@ -1,34 +1,32 @@
 # QuantumPINNs for Quantum-Relevant Physical Modeling
 
-[![Project Website](https://img.shields.io/badge/Project%20Website-GitHub%20Pages-0969da?style=for-the-badge)](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
+[Project Report](https://thmolena.github.io/QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/)
 
-> Technical brief: this README is aligned with the root landing page and reports only the benchmark outcomes in which the repository's physics-constrained models outperform the comparison models evaluated in the project artifacts.
+## Summary
 
-## Executive Summary
-
-The repository studies Physics-Informed Neural Networks for quantum-relevant physical modeling and emphasizes comparative results supported directly by committed benchmark artifacts. The principal result is a **148x reduction in ground-state relative L2 error** on the harmonic oscillator when physics-constrained loss replaces an unconstrained neural baseline on the same task and architecture.
+The project studies Physics-Informed Neural Networks for quantum-relevant physical modeling and emphasizes comparative results supported directly by committed benchmark artifacts. The principal result is a **148x reduction in ground-state relative L2 error** on the harmonic oscillator when physics-constrained loss replaces an unconstrained neural baseline on the same task and architecture.
 
 The same comparative pattern extends through the shared benchmark suite. Specialist Hamiltonian constraints outperform the shared non-specialist protocol by **76x** on the harmonic-oscillator ground state. Within the shared protocol, a deeper model improves on the shallow baseline by **5.3x**. Under **20% input noise**, error improves by **2.4%** rather than degrading, indicating that PDE-based regularization strengthens robustness under corrupted inputs.
 
 ## Comparative Findings
 
-All quantitative statements below are drawn from committed CSV artifacts in `outputs/`. Comparison models are limited to configurations explicitly evaluated in the repository.
+All quantitative statements below are drawn from committed CSV artifacts in `outputs/`. Comparison models are limited to configurations explicitly evaluated in the project records.
 
 | Measured result | Project model | Comparison model | Why the gain matters |
 |---|---|---|---|
 | Ground-state harmonic-oscillator relative L2 error | **0.001569** | 0.2323 from the unconstrained tanh baseline | **148x lower error** means substantially more faithful eigenstate recovery for the confinement settings used in this project as proxies for molecular vibrations and trapped-ion motional modes. |
 | Specialist Hamiltonian formulation on QHO `n = 0` | **0.001569** | 0.1196 from the shared non-specialist protocol | **76x lower error** shows that eigenvalue consistency, normalization, and symmetry constraints improve performance beyond what shared architecture alone achieves. |
-| Shared benchmark architecture depth, 5 layers x 64 units | **0.2658** | 1.4193 from the 2-layer x 64-unit baseline | **5.3x lower error** indicates that the stronger shared configuration transfers more effectively across the repository's confinement, tunneling, and transport problem families. |
+| Shared benchmark architecture depth, 5 layers x 64 units | **0.2658** | 1.4193 from the 2-layer x 64-unit baseline | **5.3x lower error** indicates that the stronger shared configuration transfers more effectively across the study's confinement, tunneling, and transport problem families. |
 | Noise robustness in the shared benchmark | **0.2503** at 20% input noise | 0.2565 on the clean-input reference run | **2.4% lower error under corruption** shows that the model remains reliable when inputs are imperfect, which is directly relevant to measurement-like transport data. |
 | Collocation efficiency for the shared QHO study | **0.24794** with 100 collocation points | 0.24773 with 2000 collocation points | **Within 0.1% of the denser setting** means essentially the same reported accuracy can be reached with 20x fewer collocation points. |
 
 ## Application Meaning
 
-The repository links its benchmark families to practical quantum-relevant domains. The statements below interpret only the positive comparative evidence reported in the benchmark outputs.
+The project links its benchmark families to practical quantum-relevant domains. The statements below interpret only the positive comparative evidence reported in the benchmark outputs.
 
 ### Molecular vibrations and trapped-ion motional modes
 
-The harmonic-confinement benchmark is used in the repository as a representative structure for molecular vibrations and trapped-ion motional dynamics. The 148x improvement over the unconstrained baseline means the learned eigenstate follows the target mode shape much more closely in the canonical setting used to anchor those applications.
+The harmonic-confinement benchmark is used in the study as a representative structure for molecular vibrations and trapped-ion motional dynamics. The 148x improvement over the unconstrained baseline means the learned eigenstate follows the target mode shape much more closely in the canonical setting used to anchor those applications.
 
 ### Tunneling systems such as ammonia inversion and coupled quantum dots
 
@@ -36,11 +34,11 @@ The shared benchmark is designed to transfer beyond quadratic confinement into t
 
 ### Electron imaging, neutron interferometry, and cold-atom transport
 
-The transport-facing result highlighted by the repository is robustness. Error improves rather than deteriorates when 20% input noise is injected, indicating that the physics-constrained formulation is better matched to measurement-like conditions where inputs are not perfectly clean.
+The transport-facing result highlighted by the study is robustness. Error improves rather than deteriorates when 20% input noise is injected, indicating that the physics-constrained formulation is better matched to measurement-like conditions where inputs are not perfectly clean.
 
 ## Visual Evidence
 
-These figures are generated from committed CSV-backed SVG artifacts in `outputs/`, keeping the README and landing pages aligned.
+These figures are generated from committed CSV-backed SVG artifacts in `outputs/`, keeping the README and the main report aligned.
 
 ### Harmonic-oscillator benchmark
 
@@ -52,7 +50,7 @@ This figure summarizes the central comparative result: physics-constrained train
 
 ![Combined benchmark summary](outputs/combined_summary.svg)
 
-This figure supports the cross-problem claim that structured physics constraints and stronger shared configurations outperform the comparison runs used across the repository.
+This figure supports the cross-problem claim that structured physics constraints and stronger shared configurations outperform the comparison runs used across the study.
 
 ### Shared architecture sweep
 
@@ -110,7 +108,7 @@ python -m http.server 8000
 | `outputs/combined_noise_robustness.csv` | Shared noise-robustness benchmark |
 | `outputs/qho_collocation_ablation.csv` | Shared collocation-efficiency comparison |
 
-## Repository Structure
+## Project Structure
 
 ```text
 QuantumPINNs-Physics-Informed-Neural-Networks-for-Quantum-Relevant-Physical-Modeling/
